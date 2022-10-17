@@ -56,7 +56,7 @@ class Early_Exit_DNN(nn.Module):
 
 
 	def countFlops(self, model):
-	    input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
+	    input_data = torch.rand(1, 3, self.input_dim, self.input_dim)
 	    flops, all_data = count_ops(model, input, print_readable=False, verbose=False)
 	    return flops
 
