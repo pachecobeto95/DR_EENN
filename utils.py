@@ -1,7 +1,6 @@
 from torchvision import datasets, transforms
 import torch, os, sys, requests
 import numpy as np
-import config
 import pandas as pd
 
 
