@@ -39,8 +39,8 @@ class Early_Exit_DNN(nn.Module):
 		self.distribution = distribution
 		self.device = device
 
-	build_early_exit_dnn = self.select_dnn_architecture_model()
-	build_early_exit_dnn()
+		build_early_exit_dnn = self.select_dnn_architecture_model()
+		build_early_exit_dnn()
 
 	def select_dnn_architecture_model(self):
 		"""
