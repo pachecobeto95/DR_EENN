@@ -92,8 +92,8 @@ class Early_Exit_DNN(nn.Module):
 
 
 		self.stages.append(nn.Sequential(*self.layers))
-    
+
 		self.classifier = backbone_model.classifier
 
-	    #self.set_device()
-    	self.softmax = nn.Softmax(dim=1)
+		#self.set_device()
+		self.softmax = nn.Softmax(dim=1)
