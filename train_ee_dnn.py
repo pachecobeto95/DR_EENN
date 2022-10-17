@@ -12,6 +12,8 @@ def main(args):
 		os.makedirs(indices_path)
 
 	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path)
+	print(train_loader)
+	print("ok")
 
 
 if (__name__ == "__main__"):
