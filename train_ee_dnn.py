@@ -8,6 +8,9 @@ def main(args):
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name)
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 
+	print(len(os.listdir(dataset_path)))
+
+	sys.exit()
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	if not (os.path.exists(indices_path)):
@@ -21,6 +24,8 @@ def main(args):
 	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
+
+
 
 
 
