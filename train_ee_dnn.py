@@ -38,7 +38,10 @@ if (__name__ == "__main__"):
 		help='Train Batch Size. Default: %s'%(256))
 
 	parser.add_argument('--h_flip_prob', type=float, default=0.5, 
-		help='Train Batch Size. Default: %s'%(0.5))
+		help='Probability of Flippling horizontally. Default: %s'%(0.5))
+
+	parser.add_argument('--equalize_prob', type=float, default=0.5, 
+		help='Probability of Equalize. Default: %s'%(0.5))
 
 	parser.add_argument('--input_dim', type=int, default=256, 
 		help='Input Dim. Default: %s'%(256))
