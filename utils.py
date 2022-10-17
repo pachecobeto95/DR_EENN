@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_indices(dataset, split_ratio):
+def get_indices_caltech256(dataset, split_ratio):
 	
 	nr_samples = len(dataset)
 	indices = list(range(nr_samples))
