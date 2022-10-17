@@ -11,7 +11,7 @@ def main(args):
 	if not (os.path.exists(indices_path)):
 		os.makedirs(indices_path)
 
-	train_loader, val_loader, test_loader = load_caltech256(args, dataset_path, indices_path)
+	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path)
 
 
 if (__name__ == "__main__"):
