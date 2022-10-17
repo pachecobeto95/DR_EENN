@@ -55,6 +55,11 @@ class Early_Exit_DNN(nn.Module):
 		raise Exception("This DNN backbone model has not implemented yet.")
 
 
+	def countFlops(self, model):
+	    input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
+	    flops, all_data = count_ops(model, input, print_readable=False, verbose=False)
+	    return flops
+
 	def early_exit_mobilenet(self):
 
 		self.stages = nn.ModuleList()
@@ -66,8 +71,6 @@ class Early_Exit_DNN(nn.Module):
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
-
-		print(backbone_model)
 
 		# This obtains the flops total of the backbone model
 		self.total_flops = self.countFlops(backbone_model)
