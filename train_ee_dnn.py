@@ -40,4 +40,6 @@ if (__name__ == "__main__"):
 	parser.add_argument('--dim', type=int, default=224, 
 		help='Dim. Default: %s'%(224))
 
+	args = parser.parse_args()
+
 	main(args)
