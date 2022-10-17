@@ -1,6 +1,7 @@
 import os, time, sys, json, os, argparse, torch
 import numpy as np
-import utils, config
+import utils, config, ee_dnn
+
 
 def main(args):
 
@@ -17,9 +18,9 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 
 	#Instantiate the Early-exit DNN model.
-	#ee_model = Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim)
+	ee_model = ee_dnn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
 	#Load the trained early-exit DNN model.
-	#ee_model = ee_model.to(device)
+	ee_model = ee_model.to(device)
 
 
 
@@ -60,6 +61,9 @@ if (__name__ == "__main__"):
 	parser.add_argument('--cuda', type=bool, default=config.cuda, help='Cuda? Default: %s'%(config.cuda))
 
 	parser.add_argument('--n_branches', type=int, default=config.n_branches, help='Number of side branches.')
+
+	parser.add_argument('--exit_type', type=str, default=config.exit_type, 
+		help='Exit Type. Default: %s'%(config.exit_type))
 
 	args = parser.parse_args()
 

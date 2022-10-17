@@ -13,5 +13,6 @@ dim = 224
 seed = 42
 cuda = True
 n_branches = 1
+exit_type = "bnpool"
 
 nr_class_dict = {"caltech256": 258}
