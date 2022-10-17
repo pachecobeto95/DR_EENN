@@ -11,3 +11,5 @@ equalize_prob = 0.5
 input_dim = 256
 dim = 224
 seed = 42
+cuda = True
+n_branches = 1
