@@ -1,6 +1,6 @@
 import os, time, sys, json, os, argparse, torch
 import numpy as np
-import utils, config, ee_dnn
+import utils, config, ee_nn
 
 
 def main(args):
