@@ -65,6 +65,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--exit_type', type=str, default=config.exit_type, 
 		help='Exit Type. Default: %s'%(config.exit_type))
 
+	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Backbone DNN is pretrained.')
+
 	args = parser.parse_args()
 
 	main(args)
