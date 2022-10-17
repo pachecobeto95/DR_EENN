@@ -58,7 +58,14 @@ class Early_Exit_DNN(nn.Module):
 	def early_exit_mobilenet(self):
 		print("ok")
 
-	    # Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-	    backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
+		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
+		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
 
-	    print(backbone_model)
+		print(backbone_model)
+
+
+
+
+
+
+
