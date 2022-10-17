@@ -18,7 +18,7 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 
 	#Instantiate the Early-exit DNN model.
-	ee_model = ee_dnn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
+	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
