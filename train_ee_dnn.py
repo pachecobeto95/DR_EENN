@@ -5,7 +5,13 @@ import utils
 def main(args):
 
 	DIR_NAME = os.path.dirname(__file__)
-	print(DIR_NAME)
+	dataset_path = os.path.join(DIR_NAME, "datasets", "caltech256")
+	indices_path = os.path.join(DIR_NAME, "indices")
+
+	if not (os.path.exists(indices_path)):
+		os.makedirs(indices_path)
+
+	train_loader, val_loader, test_loader = load_caltech256(args, dataset_path, indices_path)
 
 
 if (__name__ == "__main__"):
@@ -39,6 +45,9 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--dim', type=int, default=224, 
 		help='Dim. Default: %s'%(224))
+
+	parser.add_argument('--seed', type=int, default=42, 
+		help='Seed. Default: %s'%(42))
 
 	args = parser.parse_args()
 

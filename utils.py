@@ -23,11 +23,11 @@ def get_indices(dataset, split_ratio):
 	return train_idx, val_idx, test_idx
 
 
-def load_caltech256(args, dataset_path, save_indices_path, seed):
+def load_caltech256(args, dataset_path, save_indices_path):
 	mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 	
-	torch.manual_seed(seed)
-	np.random.seed(seed=seed)
+	torch.manual_seed(args.seed)
+	np.random.seed(seed=args.seed)
 
 	transformations_train = transforms.Compose([
 		transforms.Resize(args.input_dim),
