@@ -39,4 +39,22 @@ class Early_Exit_DNN(nn.Module):
 		self.distribution = distribution
 		self.device = device
 
-		print(model_name)
+	build_early_exit_dnn = self.select_dnn_architecture_model()
+	build_early_exit_dnn()
+
+	def select_dnn_architecture_model(self):
+		"""
+		This method selects the backbone to insert the early exits.
+		"""
+
+		architecture_dnn_model_dict = {"mobilenet": self.early_exit_mobilenet}
+
+		return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
+
+	def invalid_model(self):
+		raise Exception("This DNN backbone model has not implemented yet.")
+
+
+	def early_exit_mobilenet(self):
+		print("ok")
+		
