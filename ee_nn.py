@@ -87,4 +87,13 @@ class Early_Exit_DNN(nn.Module):
 			self.layers.append(block)
 
 			if(nr_block > self.early_exit_point_location):
-				self.add_exit_block()				
+				self.add_exit_block()
+
+
+
+		self.stages.append(nn.Sequential(*self.layers))
+    
+		self.classifier = backbone_model.classifier
+
+	    #self.set_device()
+    	self.softmax = nn.Softmax(dim=1)
