@@ -38,6 +38,7 @@ class Early_Exit_DNN(nn.Module):
 		self.exit_type = exit_type
 		self.distribution = distribution
 		self.device = device
+		self.early_exit_point_location = 10
 
 		build_early_exit_dnn = self.select_dnn_architecture_model()
 		build_early_exit_dnn()
@@ -72,13 +73,18 @@ class Early_Exit_DNN(nn.Module):
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
 
+		print(backbone_model)
+		sys.exit()
+
 		# This obtains the flops total of the backbone model
 		self.total_flops = self.countFlops(backbone_model)
 
 		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
 		#self.threshold_flop_list = self.where_insert_early_exits()
 
-		for i, block in enumerate(backbone_model.features.children()):
-			print(i, block)
-			if(i > 5):
-				sys.exit()	
+		for nr_block, block in enumerate(backbone_model.features.children()):
+			
+			self.layers.append(block)
+
+			if(nr_block > self.early_exit_point_location):
+				self.add_exit_block()				
