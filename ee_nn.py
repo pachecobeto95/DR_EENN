@@ -70,7 +70,7 @@ class Early_Exit_DNN(nn.Module):
 		last_channel = 1280
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
-		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
+		backbone_model = models.mobilenet_v2(self.pretrained)
 
 		# This obtains the flops total of the backbone model
 		self.total_flops = self.countFlops(backbone_model)
