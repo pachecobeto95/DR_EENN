@@ -34,7 +34,7 @@ def load_caltech256(args, dataset_path, save_indices_path, seed):
 		transforms.Resize(args.input_dim),
 		transforms.RandomHorizontalFlip(p=args.h_flip_prob),
 		transforms.RandomEqualize([args.equalize_prob]),
-		transforms.ColorJitter(.4, .4, .4)
+		transforms.ColorJitter(.4, .4, .4),
 		transforms.Resize(args.dim),
 		#transforms.CenterCrop(args.dim)
 		transforms.ToTensor(), 
