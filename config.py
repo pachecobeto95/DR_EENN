@@ -13,3 +13,5 @@ dim = 224
 seed = 42
 cuda = True
 n_branches = 1
+
+nr_class_dict = {"caltech256": 258}
