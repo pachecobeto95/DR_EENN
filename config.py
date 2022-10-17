@@ -14,5 +14,6 @@ seed = 42
 cuda = True
 n_branches = 1
 exit_type = "bnpool"
+pretrained = True
 
 nr_class_dict = {"caltech256": 258}
