@@ -38,3 +38,5 @@ class Early_Exit_DNN(nn.Module):
 		self.exit_type = exit_type
 		self.distribution = distribution
 		self.device = device
+
+		print(model_name)
