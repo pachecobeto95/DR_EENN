@@ -8,9 +8,6 @@ def main(args):
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name)
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 
-	print(len(os.listdir(dataset_path)))
-
-	sys.exit()
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	if not (os.path.exists(indices_path)):
