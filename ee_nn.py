@@ -12,8 +12,6 @@ class EarlyExitBlock(nn.Module):
 	def __init__(self, input_shape, n_classes, exit_type, device):
 		super(EarlyExitBlock, self).__init__()
 		self.input_shape = input_shape
-		print(input_shape)
-		sys.exit()
 
 	def forward(self, x):
 		return x
@@ -21,7 +19,7 @@ class EarlyExitBlock(nn.Module):
 
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
-		device, exit_type: str, distribution="linear"):
+		device, exit_type: str, distribution="linear", ee_point_location=None):
 
 		super(Early_Exit_DNN, self).__init__()
 
@@ -49,7 +47,7 @@ class Early_Exit_DNN(nn.Module):
 		self.exit_type = exit_type
 		self.distribution = distribution
 		self.device = device
-		self.early_exit_point_location = 10
+		self.ee_point_location = ee_point_location
 
 		build_early_exit_dnn = self.select_dnn_architecture_model()
 		build_early_exit_dnn()
@@ -99,7 +97,6 @@ class Early_Exit_DNN(nn.Module):
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
-
 		print(backbone_model)
 		sys.exit()
 
