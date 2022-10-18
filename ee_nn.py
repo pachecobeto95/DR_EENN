@@ -9,7 +9,7 @@ from torch import Tensor
 
 
 class EarlyExitBlock(nn.Module):
-	def __init__(self, input_shape, pool_size, n_classes, exit_type, device):
+	def __init__(self, input_shape, n_classes, exit_type, device):
 		super(EarlyExitBlock, self).__init__()
 		self.input_shape = input_shape
 		print(input_shape)
