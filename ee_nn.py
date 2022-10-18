@@ -8,6 +8,17 @@ from pthflops import count_ops
 from torch import Tensor
 
 
+class EarlyExitBlock(nn.Module):
+	def __init__(self, input_shape, pool_size, n_classes, exit_type, device):
+		super(EarlyExitBlock, self).__init__()
+		self.input_shape = input_shape
+		print(input_shape)
+		sys.exit()
+
+	def forward(self, x):
+		return x
+
+
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
 		device, exit_type: str, distribution="linear"):
@@ -60,6 +71,22 @@ class Early_Exit_DNN(nn.Module):
 	    input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
 	    flops, all_data = count_ops(model, input_data, print_readable=False, verbose=False)
 	    return flops
+
+
+	def add_exit_block(self):
+		"""
+		This method adds an early exit in the suitable position.
+		"""
+		input_tensor = torch.rand(1, 3, self.input_dim, self.input_dim)
+
+		self.stages.append(nn.Sequential(*self.layers))
+		x = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
+
+		feature_shape = nn.Sequential(*self.stages)(x).shape
+		
+		self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device).to(self.device))
+		self.layers = nn.ModuleList()
+		self.stage_id += 1    
 
 	def early_exit_mobilenet(self):
 
