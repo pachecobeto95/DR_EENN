@@ -32,7 +32,7 @@ class EarlyExitBlock(nn.Module):
 			self.layers.append(nn.AdaptiveAvgPool2d(1))
 
 		elif(exit_type == 'conv'):
-			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(1, 1)))
+			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(3, 3)))
 			self.layers.append(nn.BatchNorm2d(last_channel))
 			self.layers.append(nn.ReLU6(inplace=True))
 
