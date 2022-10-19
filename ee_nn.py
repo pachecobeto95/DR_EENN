@@ -64,7 +64,7 @@ class EarlyExitBlock(nn.Module):
 
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
-		device, exit_type: str, distribution="linear", ee_point_location=10):
+		device, exit_type: str, distribution="predefined", ee_point_location=10):
 
 		super(Early_Exit_DNN, self).__init__()
 
@@ -111,10 +111,20 @@ class Early_Exit_DNN(nn.Module):
 
 
 	def countFlops(self, model):
-	    input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
-	    flops, all_data = count_ops(model, input_data, print_readable=False, verbose=False)
-	    return flops
+		input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
+		flops, all_data = count_ops(model, input_data, print_readable=False, verbose=False)
+		return flops
 
+	def is_suitable_for_exit(self, nr_block):
+
+		if(self.distribution=="predefined"):
+			return (self.stage_id < self.n_branches) and (nr_block > self.ee_point_location)
+
+		else:
+			intermediate_model = nn.Sequential(*(list(self.stages)+list(self.layers))).to(self.device)
+			x = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
+			current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
+			return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
 	def add_exit_block(self):
 		"""
@@ -153,6 +163,7 @@ class Early_Exit_DNN(nn.Module):
 			
 			self.layers.append(block)
 			if(nr_block > self.ee_point_location):
+			if (self.is_suitable_for_exit()):
 				self.add_exit_block()
 
 		self.layers.append(nn.AdaptiveAvgPool2d(1))
