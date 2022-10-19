@@ -60,7 +60,13 @@ class EarlyExitBlock(nn.Module):
 		return output_channel, output_width, output_height
 
 	def forward(self, x):
-		return x
+		for layer in self.layers:
+			x = layer(x)
+		#x = x.view(x.size(0), -1)
+		x = torch.flatten(x, 1)
+		output = self.classifier(x)
+
+		return output
 
 
 class Early_Exit_DNN(nn.Module):
@@ -176,7 +182,7 @@ class Early_Exit_DNN(nn.Module):
 		"""
 		This method is used to train the early-exit DNN model
 		"""
-		
+
 		output_list, conf_list, class_list  = [], [], []
 
 		for i, exitBlock in enumerate(self.exits):
