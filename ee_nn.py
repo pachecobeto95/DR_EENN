@@ -38,7 +38,7 @@ class EarlyExitBlock(nn.Module):
 
 		elif(exit_type == 'pooling'):
 			self.layers.append(nn.BatchNorm2d(channel))
-			self.layers.append(nn.MaxPool2d(kernel_size))
+			self.layers.append(nn.MaxPool2d(2))
 
 		elif(exit_type == 'plain'):
 			self.layers = nn.ModuleList()
