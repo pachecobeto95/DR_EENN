@@ -127,7 +127,7 @@ class Early_Exit_DNN(nn.Module):
 
 		feature_shape = nn.Sequential(*self.stages)(x).shape
 		
-		self.exits.append(EarlyExitBlock(feature_shape, self.n_classes, self.exit_type, self.device).to(self.device))
+		self.exits.append(EarlyExitBlock(feature_shape, self.last_channel, self.n_classes, self.exit_type, self.device).to(self.device))
 		self.layers = nn.ModuleList()
 		self.stage_id += 1    
 
@@ -138,7 +138,7 @@ class Early_Exit_DNN(nn.Module):
 		self.layers = nn.ModuleList()
 		self.stage_id = 0
 
-		last_channel = 1280
+		self.last_channel = 1280
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
