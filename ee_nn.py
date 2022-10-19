@@ -7,19 +7,72 @@ import torchvision.models as models
 from pthflops import count_ops
 from torch import Tensor
 
+"""
+(18): ConvBNActivation(
+      (0): Conv2d(320, 1280, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): BatchNorm2d(1280, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU6(inplace=True)
+    )
+  )
+  (classifier): Sequential(
+    (0): Dropout(p=0.2, inplace=False)
+    (1): Linear(in_features=1280, out_features=1000, bias=True)
+"""
 
 class EarlyExitBlock(nn.Module):
-	def __init__(self, input_shape, n_classes, exit_type, device):
+	def __init__(self, input_shape, last_channel, n_classes, exit_type, device):
 		super(EarlyExitBlock, self).__init__()
 		self.input_shape = input_shape
+		_, channel, width, height = input_shape
+		
+		self.layers = nn.ModuleList()
+
+		if (exit_type == 'bnpool'):
+			self.layers.append(nn.BatchNorm2d(channel))
+			self.layers.append(nn.AdaptiveAvgPool2d(1))
+
+		elif(exit_type == 'conv'):
+			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(1, 1)))
+			self.layers.append(nn.BatchNorm2d(channel))
+			self.layers.append(nn.ReLU6(inplace=True))
+
+		elif(exit_type == 'pooling'):
+			self.layers.append(nn.BatchNorm2d(channel))
+			self.layers.append(nn.MaxPool2d(kernel_size))
+
+		elif(exit_type == 'plain'):
+			self.layers = nn.ModuleList()
+
+		#This line defines the data shape that fully-connected layer receives.
+		current_channel, current_width, current_height = self.get_current_data_shape()
+
+	def get_current_data_shape(self):
+		print("Before")
+		print(self.input_shape)
+		_, channel, width, height = self.input_shape
+		temp_layers = nn.Sequential(*self.layers)
+
+		input_tensor = torch.rand(1, channel, width, height)
+		_, output_channel, output_width, output_height = temp_layers(input_tensor).shape
+		print("After")
+		print(output_channel, output_width, output_height)		
+		return output_channel, output_width, output_height
 
 	def forward(self, x):
 		return x
 
+        
+  def forward(self, x):
+    for layer in self.layers:
+      x = layer(x)
+    x = x.view(x.size(0), -1)
+    output = self.classifier(x)
+    return output
+
 
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
-		device, exit_type: str, distribution="linear", ee_point_location=None):
+		device, exit_type: str, distribution="linear", ee_point_location=10):
 
 		super(Early_Exit_DNN, self).__init__()
 
@@ -97,8 +150,6 @@ class Early_Exit_DNN(nn.Module):
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
-		print(backbone_model)
-		sys.exit()
 
 		# This obtains the flops total of the backbone model
 		self.total_flops = self.countFlops(backbone_model)
@@ -109,15 +160,11 @@ class Early_Exit_DNN(nn.Module):
 		for nr_block, block in enumerate(backbone_model.features.children()):
 			
 			self.layers.append(block)
-
-			if(nr_block > self.early_exit_point_location):
+			if(nr_block > self.ee_point_location):
 				self.add_exit_block()
 
-
-
+		self.layers.append(nn.AdaptiveAvgPool2d(1))
 		self.stages.append(nn.Sequential(*self.layers))
 
 		self.classifier = backbone_model.classifier
-
-		#self.set_device()
 		self.softmax = nn.Softmax(dim=1)
