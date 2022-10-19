@@ -33,7 +33,7 @@ class EarlyExitBlock(nn.Module):
 
 		elif(exit_type == 'conv'):
 			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(1, 1)))
-			self.layers.append(nn.BatchNorm2d(channel))
+			self.layers.append(nn.BatchNorm2d(last_channel))
 			self.layers.append(nn.ReLU6(inplace=True))
 
 		elif(exit_type == 'pooling'):
