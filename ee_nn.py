@@ -46,6 +46,9 @@ class EarlyExitBlock(nn.Module):
 
 		#This line defines the data shape that fully-connected layer receives.
 		current_channel, current_width, current_height = self.get_current_data_shape()
+		self.classifier = nn.Sequential(nn.Dropout(0.2), 
+			nn.Linear(current_channel*current_width*current_height, n_classes))
+		self.classifier = self.classifier.to(device)
 
 	def get_current_data_shape(self):
 		print("Before")
