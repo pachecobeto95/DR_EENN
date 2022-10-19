@@ -15,5 +15,9 @@ cuda = True
 n_branches = 1
 exit_type = "bnpool"
 pretrained = True
+distortion_type = "pristine"
+epochs = 200
 
-nr_class_dict = {"caltech256": 258}
+nr_class_dict = {"caltech256": 256}
+distortion_level_dict = {"pristine": [0], "gaussian_blur": [1, 2, 3, 4, 5], "gaussian_noise": [5, 10, 20, 30, 40]}
+

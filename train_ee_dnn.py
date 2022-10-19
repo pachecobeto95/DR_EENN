@@ -1,6 +1,8 @@
-import os, time, sys, json, os, argparse, torch
+import os, time, sys, json, os, argparse, torch, logging
 import numpy as np
+import pandas as pd
 import utils, config, ee_nn
+import torch.optim as optim
 
 
 def main(args):
@@ -13,7 +15,8 @@ def main(args):
 	if not (os.path.exists(indices_path)):
 		os.makedirs(indices_path)
 
-	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path)
+	distortion_values = distortion_level_dict[args.distortion_type]
+	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, distortion_values)
 
 	n_classes = config.nr_class_dict[args.dataset_name]
 
@@ -22,10 +25,47 @@ def main(args):
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
-	x = torch.rand(1, 3, 224, 224).to(device)
-	output = ee_model.forwardTrain(x)
-	print(output[0][0].shape)
-	print("Success")
+	lr = 0.005
+
+	criterion = nn.CrossEntropyLoss()
+	optimizer = optim.SGD(ee_model.parameters(), lr=lr)
+
+	#optimizer = optim.SGD([{'params': ee_model.stages.parameters(), 'lr': lr[0]}, 
+	#	{'params': ee_model.exits.parameters(), 'lr': lr[1]},
+	#	{'params': ee_model.classifier.parameters(), 'lr': lr[0]}])
+
+	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
+	n_exits = args.n_branches + 1
+	loss_weights = np.ones(n_exits)
+
+	epoch, count = 0, 0
+	best_val_loss = np.inf
+	df = pd.DataFrame()
+
+	while (count < args.max_patience):
+		epoch += 1
+		current_result = {}
+		train_result = trainEEDNNs(ee_model, train_loader, optimizer, criterion, n_exits, epoch, device, loss_weights)
+		val_result = evalEEDNNs(ee_model, val_loader, criterion, n_exits, epoch, device, loss_weights)
+
+		current_result.update(train_result), current_result.update(val_result)
+		df = df.append(pd.Series(current_result), ignore_index=True)
+		df.to_csv(history_save_path)
+
+		if (val_result["val_loss"] < best_val_loss):
+			save_dict  = {}	
+			best_val_loss = val_result["val_loss"]
+			count = 0
+
+			save_dict.update(current_result)
+			save_dict.update({"model_state_dict": ee_model.state_dict(), "opt_state_dict": optimizer.state_dict()})
+			torch.save(save_dict, model_save_path)
+
+		else:
+			count += 1
+			print("Current Patience: %s"%(count))
+
+	print("Stop! Patience is finished")
 
 
 
@@ -72,6 +112,24 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Backbone DNN is pretrained.')
 
+	parser.add_argument('--distortion_type', type=bool, default=config.distortion_type, help='Distortion Type.')
+
+	parser.add_argument('--epochs', type=bool, default=config.epochs, help='Epochs.')
+
+	parser.add_argument('--max_patience', type=bool, default=config.max_patience, help='Epochs.')
+
 	args = parser.parse_args()
 
 	main(args)
+
+
+
+
+
+
+
+
+
+
+
+
