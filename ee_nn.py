@@ -61,14 +61,6 @@ class EarlyExitBlock(nn.Module):
 	def forward(self, x):
 		return x
 
-        
-  def forward(self, x):
-    for layer in self.layers:
-      x = layer(x)
-    x = x.view(x.size(0), -1)
-    output = self.classifier(x)
-    return output
-
 
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
