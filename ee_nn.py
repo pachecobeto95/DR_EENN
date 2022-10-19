@@ -162,8 +162,7 @@ class Early_Exit_DNN(nn.Module):
 		for nr_block, block in enumerate(backbone_model.features.children()):
 			
 			self.layers.append(block)
-			if(nr_block > self.ee_point_location):
-			if (self.is_suitable_for_exit()):
+			if (self.is_suitable_for_exit(nr_block)):
 				self.add_exit_block()
 
 		self.layers.append(nn.AdaptiveAvgPool2d(1))
