@@ -24,7 +24,7 @@ def main(args):
 
 	x = torch.rand(1, 3, 224, 224).to(device)
 	output = ee_model.forwardTrain(x)
-	print(output.shape)
+	print(output[0].shape)
 	print("Success")
 
 
