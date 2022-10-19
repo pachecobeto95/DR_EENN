@@ -22,7 +22,10 @@ def main(args):
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
-
+	x = torch.rand(1, 3, 224, 224)
+	output = ee_model.forwardTrain(x)
+	print(output.shape)
+	print("Success")
 
 
 

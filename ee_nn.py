@@ -32,15 +32,16 @@ class EarlyExitBlock(nn.Module):
 			self.layers.append(nn.AdaptiveAvgPool2d(1))
 
 		elif(exit_type == 'conv'):
-			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(3, 3)))
+			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(1,1)))
 			self.layers.append(nn.BatchNorm2d(last_channel))
+			self.layers.append(nn.MaxPool2d(2))
 			self.layers.append(nn.ReLU6(inplace=True))
 
 		elif(exit_type == 'pooling'):
 			self.layers.append(nn.BatchNorm2d(channel))
 			self.layers.append(nn.MaxPool2d(2))
 
-		elif(exit_type == 'plain'):
+		else:
 			self.layers = nn.ModuleList()
 
 		#This line defines the data shape that fully-connected layer receives.
@@ -170,3 +171,35 @@ class Early_Exit_DNN(nn.Module):
 
 		self.classifier = backbone_model.classifier
 		self.softmax = nn.Softmax(dim=1)
+
+	def forwardTrain(self, x):
+		"""
+		This method is used to train the early-exit DNN model
+		"""
+		
+		output_list, conf_list, class_list  = [], [], []
+
+		for i, exitBlock in enumerate(self.exits):
+
+			x = self.stages[i](x)
+			output_branch = exitBlock(x)
+
+			#Confidence is the maximum probability of belongs one of the predefined classes and inference_class is the argmax
+			conf, infered_class = torch.max(self.softmax(output_branch), 1)
+			
+			output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class)
+
+		x = self.stages[-1](x)
+
+		x = torch.flatten(x, 1)
+
+		output = self.classifier(x)
+		infered_conf, infered_class = torch.max(self.softmax(output), 1)
+		output_list.append(output), conf_list.append(infered_conf), class_list.append(infered_class)
+
+		return output_list, conf_list, class_list
+
+
+
+
+
