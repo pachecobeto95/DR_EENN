@@ -176,7 +176,7 @@ def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_
 	model_loss = 0
 	ee_loss, acc_branches = [], []
 
-	for output, inf_class, weight in zip(output_list, class_list, loss_weights):
+	for i, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
 		loss_branch = criterion(output, target)
 		model_loss += weight*loss_branch
 
