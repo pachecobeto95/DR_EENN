@@ -13,7 +13,7 @@ def main(args):
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
 	
-	history_path = os.path.join(config.DIR_NAME, "results", config.dataset_name, config.model_name, 
+	history_path = os.path.join(config.DIR_NAME, "history", config.dataset_name, config.model_name, 
 		"history_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
