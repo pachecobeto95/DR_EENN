@@ -120,7 +120,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	np.random.seed(seed=args.seed)
 
 	transformations_train = transforms.Compose([
-		transforms.Resize(args.input_dim),
+		#transforms.Resize(args.input_dim),
 		#transforms.RandomHorizontalFlip(p=args.h_flip_prob),
 		#transforms.RandomEqualize([args.equalize_prob]),
 		#transforms.ColorJitter(.4, .4, .4),
