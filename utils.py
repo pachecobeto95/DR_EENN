@@ -2,7 +2,7 @@ from torchvision import datasets, transforms
 import torch, os, sys, requests, random, logging, torchvision
 import numpy as np
 import pandas as pd
-
+from tqdm import tqdm
 
 def get_indices_caltech256(dataset, split_ratio):
 	
