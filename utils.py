@@ -119,7 +119,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		transforms.RandomHorizontalFlip(p=args.h_flip_prob),
 		transforms.RandomEqualize([args.equalize_prob]),
 		transforms.ColorJitter(.4, .4, .4),
-		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=0.5),
+		transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.Resize(args.dim),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
