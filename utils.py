@@ -190,7 +190,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	#train_acc_dict = {i: [] for i in range(1, n_exits+1)}
 
 	model.train()
-
+	print(train_loader)
 	for i, (data, target) in enumerate(train_loader, 1):
 		data, target = data.to(device), target.to(device)
 
