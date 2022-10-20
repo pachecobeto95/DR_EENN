@@ -166,13 +166,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1)
 
 	return train_loader, val_loader, test_loader
-
-
-    loss = 0
-    for j, (output, inf_class, weight) in enumerate(zip(output_list, class_list, loss_weights), 1):
-      loss += weight*criterion(output, target)
-      train_acc_dict[j].append(100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0))
-
+	
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
 	ee_loss = []
