@@ -196,7 +196,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 
 	model.train()
 	print(train_loader)
-	for i, (data, target) in enumerate(train_loader, 1):
+	for i, (data, target) in tqdm(enumerate(train_loader, 1)):
 		data, target = data.to(device), target.to(device)
 
 		output_list, conf_list, class_list = model.forwardTrain(data)
