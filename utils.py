@@ -226,7 +226,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 
 	for i in range(n_exits):
 		result_dict.update({"train_ee_acc_%s"%(i+1): avg_ee_acc[i], "train_ee_loss_%s"%(i+1): avg_ee_loss[i]})
-		print("Train EE Loss: %s, Train EE Acc: %s"%(avg_ee_acc[i], avg_ee_loss[i]))
+		print("Train Loss EE %s: %s, Train Acc EE %s: %s"%(i, avg_ee_loss[i], i, avg_ee_acc[i]))
 
 	return result_dict
 
@@ -262,7 +262,7 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 
 	for i in range(n_exits):
 		result_dict.update({"val_ee_acc_%s"%(i+1): avg_ee_acc[i], "val_ee_loss_%s"%(i+1): avg_ee_loss[i]})
-		print("Val EE Loss: %s, Val EE Acc: %s"%(avg_ee_acc[i], avg_ee_loss[i]))
+		print("Val Loss EE %s: %s, Val Acc EE %s: %s"%(i, avg_ee_loss[i], i, avg_ee_acc[i]))
 
 	return result_dict
 
