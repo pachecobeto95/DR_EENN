@@ -126,7 +126,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		])
 
 	transformations_test = transforms.Compose([
-		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=0.5),
+		transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.Resize(args.dim), 
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
