@@ -4,7 +4,7 @@ import pandas as pd
 import utils, config, ee_nn
 import torch.optim as optim
 import torch.nn as nn
-
+from tqdm import tqdm
 
 def main(args):
 
