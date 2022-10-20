@@ -1,5 +1,5 @@
 from torchvision import datasets, transforms
-import torch, os, sys, requests, random, logging
+import torch, os, sys, requests, random, logging, torchvision
 import numpy as np
 import pandas as pd
 
@@ -166,7 +166,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1)
 
 	return train_loader, val_loader, test_loader
-	
+
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
 	ee_loss = []
