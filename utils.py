@@ -7,6 +7,7 @@ import pandas as pd
 def get_indices_caltech256(dataset, split_ratio):
 	
 	nr_samples = len(dataset)
+	print("Nr Samples: %s"%(nr_samples))
 	indices = list(range(nr_samples))
 	np.random.shuffle(indices)
 
@@ -14,12 +15,16 @@ def get_indices_caltech256(dataset, split_ratio):
 
 
 	train_val_idx, test_idx = indices[:train_val_size], indices[train_val_size:]
+	print("Train Indices: %s"%(train_val_idx))
+
 	np.random.shuffle(train_val_idx)
 
 	train_size = len(train_val_idx) - int(np.floor(split_ratio * len(train_val_idx) ))
-
+	print("Train Size: %s"%(train_size))
 	train_idx, val_idx = train_val_idx[:train_size], train_val_idx[train_size:]
 
+	print("Train Indices: %s"%(train_idx))
+	sys.exit()
 	return train_idx, val_idx, test_idx
 
 
