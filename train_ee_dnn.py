@@ -7,8 +7,6 @@ import torch.nn as nn
 from tqdm import tqdm
 
 def main(args):
-	print(len(os.listdir(os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories"))))
-	sys.exit()
 
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories")
 	indices_path = os.path.join(config.DIR_NAME, "indices")
