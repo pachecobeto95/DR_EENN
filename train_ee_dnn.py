@@ -31,7 +31,7 @@ def main(args):
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
-	lr = [1.5e-4, 0.005]
+	lr = [1.5e-4, 0.01]
 	weight_decay = 0.0005
 
 	criterion = nn.CrossEntropyLoss()
