@@ -20,7 +20,7 @@ def main(args):
 	if not (os.path.exists(indices_path)):
 		os.makedirs(indices_path)
 
-	distortion_values = distortion_level_dict[args.distortion_type]
+	distortion_values = config.distortion_level_dict[args.distortion_type]
 	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, distortion_values)
 
 	n_classes = config.nr_class_dict[args.dataset_name]
