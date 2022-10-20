@@ -121,7 +121,9 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--epochs', type=bool, default=config.epochs, help='Epochs.')
 
-	parser.add_argument('--max_patience', type=bool, default=config.max_patience, help='Epochs.')
+	parser.add_argument('--max_patience', type=int, default=config.max_patience, help='Epochs.')
+
+	parser.add_argument('--model_id', type=int, default=1, help='Epochs.')
 
 	args = parser.parse_args()
 
