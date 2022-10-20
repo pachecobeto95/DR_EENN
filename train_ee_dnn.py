@@ -120,7 +120,7 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
 
-	parser.add_argument('--epochs', type=bool, default=config.epochs, help='Epochs.')
+	parser.add_argument('--epochs', type=int, default=config.epochs, help='Epochs.')
 
 	parser.add_argument('--max_patience', type=int, default=config.max_patience, help='Epochs.')
 
