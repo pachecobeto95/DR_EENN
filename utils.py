@@ -110,7 +110,7 @@ class DistortionApplier2(object):
 
 def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
-	
+	print(dataset_path)
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
