@@ -9,6 +9,11 @@ def main(args):
 
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name)
 	indices_path = os.path.join(config.DIR_NAME, "indices")
+	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
+		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, model_id))
+	
+	history_path = os.path.join(config.DIR_NAME, "results", config.dataset_name, config.model_name, 
+		"history_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, model_id))
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
@@ -34,7 +39,7 @@ def main(args):
 	#	{'params': ee_model.exits.parameters(), 'lr': lr[1]},
 	#	{'params': ee_model.classifier.parameters(), 'lr': lr[0]}])
 
-	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
+	#scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 	n_exits = args.n_branches + 1
 	loss_weights = np.ones(n_exits)
 
@@ -45,12 +50,12 @@ def main(args):
 	while (count < args.max_patience):
 		epoch += 1
 		current_result = {}
-		train_result = trainEEDNNs(ee_model, train_loader, optimizer, criterion, n_exits, epoch, device, loss_weights)
-		val_result = evalEEDNNs(ee_model, val_loader, criterion, n_exits, epoch, device, loss_weights)
+		train_result = utils.trainEEDNNs(ee_model, train_loader, optimizer, criterion, n_exits, epoch, device, loss_weights)
+		val_result = utils.evalEEDNNs(ee_model, val_loader, criterion, n_exits, epoch, device, loss_weights)
 
 		current_result.update(train_result), current_result.update(val_result)
 		df = df.append(pd.Series(current_result), ignore_index=True)
-		df.to_csv(history_save_path)
+		df.to_csv(history_path)
 
 		if (val_result["val_loss"] < best_val_loss):
 			save_dict  = {}	
