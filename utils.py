@@ -119,12 +119,13 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
+
 	transformations_train = transforms.Compose([
-		#transforms.Resize(args.input_dim),
-		transforms.Resize((args.dim, args.dim)),
-		transforms.RandomHorizontalFlip(p=0.5),
+		transforms.Resize((args.input_dim, args.input_dim)),
+		transforms.CenterCrop((args.dim, args.dim)),
+		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
-		transforms.ColorJitter(.4, .4, .4),
+		RandomApply([transforms.ColorJitter(brightness=(0.80, 1.20))])
 		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
@@ -132,7 +133,9 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 
 
 	transformations_test = transforms.Compose([
-		transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
+		transforms.Resize((args.input_dim, args.input_dim)),
+		transforms.CenterCrop((args.dim, args.dim)),
+		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.Resize(args.dim), 
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
