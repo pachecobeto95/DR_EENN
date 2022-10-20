@@ -195,8 +195,8 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	#train_acc_dict = {i: [] for i in range(1, n_exits+1)}
 
 	model.train()
-	print(train_loader)
-	for i, (data, target) in tqdm(enumerate(train_loader, 1)):
+
+	for (data, target) in tqdm(train_loader):
 		data, target = data.to(device), target.to(device)
 
 		output_list, conf_list, class_list = model.forwardTrain(data)
@@ -237,7 +237,7 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 	model.eval()
 
 	with torch.no_grad():
-		for i, (data, target) in tqdm(enumerate(val_loader, 1)):
+		for (data, target) in tqdm(val_loader):
 			data, target = data.to(device), target.to(device)
 
 			output_list, conf_list, class_list = model.forwardTrain(data)
