@@ -174,7 +174,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
-	ee_loss = []
+	ee_loss, acc_branches = [], []
 
 	for output, inf_class, weight in zip(output_list, class_list, loss_weights):
 		loss_branch = criterion(output, target)

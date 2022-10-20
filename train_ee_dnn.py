@@ -56,7 +56,7 @@ def main(args):
 
 		current_result.update(train_result), current_result.update(val_result)
 		df = df.append(pd.Series(current_result), ignore_index=True)
-		#df.to_csv(history_path)
+		df.to_csv(history_path)
 
 		if (val_result["val_loss"] < best_val_loss):
 			save_dict  = {}	
@@ -65,7 +65,7 @@ def main(args):
 
 			save_dict.update(current_result)
 			save_dict.update({"model_state_dict": ee_model.state_dict(), "opt_state_dict": optimizer.state_dict()})
-			#torch.save(save_dict, model_save_path)
+			torch.save(save_dict, model_save_path)
 
 		else:
 			count += 1
