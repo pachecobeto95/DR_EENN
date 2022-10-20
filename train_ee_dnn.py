@@ -31,14 +31,15 @@ def main(args):
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
-	lr = 0.005
+	lr = [1.5e-4, 0.005]
+	weight_decay = 0.0005
 
 	criterion = nn.CrossEntropyLoss()
-	optimizer = optim.SGD(ee_model.parameters(), lr=lr)
+	#optimizer = optim.SGD(ee_model.parameters(), lr=lr)
 
-	#optimizer = optim.SGD([{'params': ee_model.stages.parameters(), 'lr': lr[0]}, 
-	#	{'params': ee_model.exits.parameters(), 'lr': lr[1]},
-	#	{'params': ee_model.classifier.parameters(), 'lr': lr[0]}])
+	optimizer = optim.SGD([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
+		{'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
+		{'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
 
 	#scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
 	n_exits = args.n_branches + 1
