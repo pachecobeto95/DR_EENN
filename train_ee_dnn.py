@@ -10,10 +10,10 @@ def main(args):
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name)
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
-		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, model_id))
+		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
 	
 	history_path = os.path.join(config.DIR_NAME, "results", config.dataset_name, config.model_name, 
-		"history_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, model_id))
+		"history_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
