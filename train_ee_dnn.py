@@ -117,7 +117,7 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Backbone DNN is pretrained.')
 
-	parser.add_argument('--distortion_type', type=bool, default=config.distortion_type, help='Distortion Type.')
+	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
 
 	parser.add_argument('--epochs', type=bool, default=config.epochs, help='Epochs.')
 
