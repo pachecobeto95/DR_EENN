@@ -267,13 +267,13 @@ class Early_Exit_DNN(nn.Module):
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
 
 		# It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
-		self.verifies_nr_exits(backbone_model.features)
+		#self.verifies_nr_exits(backbone_model.features)
 
 		# This obtains the flops total of the backbone model
 		self.total_flops = self.countFlops(backbone_model)
 
 		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
-		self.threshold_flop_list = self.where_insert_early_exits()
+		#self.threshold_flop_list = self.where_insert_early_exits()
 
 		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
 		#self.threshold_flop_list = self.where_insert_early_exits()
