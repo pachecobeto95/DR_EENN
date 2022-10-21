@@ -41,7 +41,7 @@ def main(args):
 		{'params': ee_model.exits.parameters(), 'lr': lr[1]},
 		{'params': ee_model.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
 
-	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
+	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 	n_exits = args.n_branches + 1
 	loss_weights = np.ones(n_exits)
 	#loss_weights = [1, 0.5]
