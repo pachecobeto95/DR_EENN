@@ -252,7 +252,107 @@ class Early_Exit_DNN(nn.Module):
 
 		return output_list, conf_list, class_list
 
+	def forwardInferenceNoCalib(self, x):
+		output_list, conf_list, infered_class_list = [], [], []
 
+		for i, exitBlock in enumerate(self.exits):
+			x = self.stages[i](x)
 
+			output_branch = exitBlock(x)
+			conf, infered_class = torch.max(self.softmax(output_branch), 1)
 
+			output_list.append(output_branch), infered_class_list.append(infered_class), conf_list.append(conf)
 
+		x = self.stages[-1](x)
+		x = torch.flatten(x, 1)
+
+		output = self.classifier(x)
+
+		conf, infered_class = torch.max(self.softmax(output), 1)
+
+		output_list.append(output), infered_class_list.append(infered_class), conf_list.append(conf)
+
+		return output_list, conf_list, infered_class_list
+
+	def global_temperature_scaling(self, logits, temp_overall):
+		return torch.div(logits, temp_overall)
+
+	def per_branch_temperature_scaling(self, logits, temp, exit_branch):
+		return torch.div(logits, temp[exit_branch])
+
+	def forwardGlobalCalibration(self, x, temp_overall):
+		output_list, conf_list, class_list = [], [], []
+
+		n_exits = self.n_branches + 1
+
+		for i, exitBlock in enumerate(self.exits):
+			x = self.stages[i](x)
+			output_branch = exitBlock(x)
+
+			output_branch = self.global_temperature_scaling(output_branch, temp_overall)
+
+			conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+			output_list.append(output_branch), conf_list.append(conf_branch), class_list.append(infered_class_branch)
+
+		x = self.stages[-1](x)
+
+		x = torch.flatten(x, 1)
+
+		output = self.classifier(x)
+		output = self.global_temperature_scaling(output, temp_overall)
+
+		conf, infered_class = torch.max(self.softmax(output), 1)
+		output_list.append(output), conf_list.append(conf), class_list.append(infered_class)
+
+		return output_list, conf_list, class_list
+
+	def forwardPerBranchesCalibration(self, x, temp_branches):
+		output_list, conf_list, class_list = [], [], []
+		n_exits = self.n_branches + 1
+
+		for i, exitBlock in enumerate(self.exits):
+			x = self.stages[i](x)
+			output_branch = exitBlock(x)
+			output_branch = self.per_branch_temperature_scaling(output_branch, temp_branches, i)
+
+			conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+			output_list.append(output_branch), conf_list.append(conf_branch), class_list.append(infered_class_branch)
+
+		x = self.stages[-1](x)
+
+		x = torch.flatten(x, 1)
+
+		output = self.classifier(x)
+		output = self.per_branch_temperature_scaling(output, temp_branches, -1)
+
+		conf, infered_class = torch.max(self.softmax(output), 1)
+		output_list.append(output), conf_list.append(conf), class_list.append(infered_class)
+
+		return output_list, conf_list, class_list
+
+	def forwardAllSamplesCalibration(self, x, temp):
+		output_list, conf_list, class_list = [], [], []
+		n_exits = self.n_branches + 1
+
+		for i, exitBlock in enumerate(self.exits):
+			x = self.stages[i](x)
+			output_branch = exitBlock(x)
+			output_branch = self.per_branch_temperature_scaling(output_branch, temp, i)
+
+			conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+			output_list.append(output_branch), conf_list.append(conf_branch), class_list.append(infered_class_branch)
+
+		x = self.stages[-1](x)
+
+		x = torch.flatten(x, 1)
+
+		output = self.classifier(x)
+		output = self.per_branch_temperature_scaling(output, temp, -1)
+		conf, infered_class = torch.max(self.softmax(output), 1)
+
+		output_list.append(output), conf_list.append(conf), class_list.append(infered_class)
+
+		return output_list, conf_list, class_list

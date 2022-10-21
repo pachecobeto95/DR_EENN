@@ -198,7 +198,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	model_acc_list, ee_acc_list = [], []
 	#train_acc_dict = {i: [] for i in range(1, n_exits+1)}
 
-	logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
+	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
 	model.train()
 
 	for (data, target) in tqdm(train_loader):
@@ -225,14 +225,15 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 
 	avg_acc, avg_ee_acc = round(np.mean(model_acc_list), 2), np.mean(ee_acc_list, axis=0)
 
-	logging.debug("Epoch: %s, Train Model Loss: %s, Train Model Acc: %s"%(epoch, avg_loss, avg_acc))
+	#logging.debug("Epoch: %s, Train Model Loss: %s, Train Model Acc: %s"%(epoch, avg_loss, avg_acc))
+	print("Epoch: %s, Train Model Loss: %s, Train Model Acc: %s"%(epoch, avg_loss, avg_acc))
 
 	result_dict = {"epoch": epoch, "train_loss": avg_loss, "train_acc": avg_acc}
 
 	for i in range(n_exits):
 		result_dict.update({"train_ee_acc_%s"%(i+1): avg_ee_acc[i], "train_ee_loss_%s"%(i+1): avg_ee_loss[i]})
-		logging.debug("Epoch: %s, Train Loss EE %s: %s, Train Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
-
+		#logging.debug("Epoch: %s, Train Loss EE %s: %s, Train Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
+		print("Epoch: %s, Train Loss EE %s: %s, Train Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
 	return result_dict
 
 def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weights):
@@ -240,7 +241,7 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 	model_acc_list, ee_acc_list = [], []
 
 	model.eval()
-	logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
+	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
 
 	with torch.no_grad():
 		for (data, target) in tqdm(val_loader):
@@ -262,13 +263,14 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 
 	avg_acc, avg_ee_acc = round(np.mean(model_acc_list), 2), np.mean(ee_acc_list, axis=0)
 
-	logging.debug("Epoch: %s, Val Model Loss: %s, Val Model Acc: %s"%(epoch, avg_loss, avg_acc))
+	#logging.debug("Epoch: %s, Val Model Loss: %s, Val Model Acc: %s"%(epoch, avg_loss, avg_acc))
+	print("Epoch: %s, Val Model Loss: %s, Val Model Acc: %s"%(epoch, avg_loss, avg_acc))
 
 	result_dict = {"epoch": epoch, "val_loss": avg_loss, "val_acc": avg_acc}
 
 	for i in range(n_exits):
 		result_dict.update({"val_ee_acc_%s"%(i+1): avg_ee_acc[i], "val_ee_loss_%s"%(i+1): avg_ee_loss[i]})
-		logging.debug("Epoch: %s, Val Loss EE %s: %s, Val Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
-
+		#logging.debug("Epoch: %s, Val Loss EE %s: %s, Val Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
+		print("Epoch: %s, Val Loss EE %s: %s, Val Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
 	return result_dict
 

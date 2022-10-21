@@ -5,21 +5,40 @@ import utils, config, ee_nn
 import torch.optim as optim
 import torch.nn as nn
 from tqdm import tqdm
+from ee_calibration import calibrating_early_exit_dnn, run_early_exit_inference
+
+
+def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, device, temp_calib_path, result_calib_path):
+	for p_tar in p_tar_list:
+		print("P_tar: %s"%(p_tar))
+
+		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temp_calib_path)
+
+		no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
+
+		calib_overall_result = run_early_exit_inference(calib_models_dict["calib_overall"], test_loader, p_tar, n_branches, device, 
+			model_type="calib_overall")
+
+		calib_branches_result = run_early_exit_inference(calib_models_dict["calib_branches"], test_loader, p_tar, n_branches, device, 
+			model_type="calib_branches")
+
+		calib_all_samples_result = run_early_exit_inference(calib_models_dict["calib_all_samples"], test_loader, p_tar, 
+			n_branches, device, model_type="all_samples")
+
 
 def main(args):
-
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories")
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
 	
-	history_path = os.path.join(config.DIR_NAME, "history", config.dataset_name, config.model_name, 
-		"history_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
+	temp_calib_path = os.path.join(config.DIR_NAME, "result_calib", config.dataset_name, config.model_name, 
+		"temp_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
+
+	result_calib_path = os.path.join(config.DIR_NAME, "result_calib", config.dataset_name, config.model_name, 
+		"calib_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
-
-	if not (os.path.exists(indices_path)):
-		os.makedirs(indices_path)
 
 	distortion_values = config.distortion_level_dict[args.distortion_type]
 	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, distortion_values)
@@ -30,50 +49,12 @@ def main(args):
 	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
+	ee_model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
-	lr = [1.5e-4, 0.005]
-	weight_decay = 0.0005
 
-	criterion = nn.CrossEntropyLoss()
-	#optimizer = optim.SGD(ee_model.parameters(), lr=lr)
+	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
+	run_calibration(ee_model, test_loader, val_loader, p_tar_list, args.n_branches, device, temp_calib_path, result_calib_path)
 
-	optimizer = optim.SGD([{'params': ee_model.stages.parameters(), 'lr': lr[0]}, 
-		{'params': ee_model.exits.parameters(), 'lr': lr[1]},
-		{'params': ee_model.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
-
-	#scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, steps, eta_min=0, last_epoch=-1, verbose=True)
-	n_exits = args.n_branches + 1
-	loss_weights = np.ones(n_exits)
-	#loss_weights = [1, 0.5]
-
-	epoch, count = 0, 0
-	best_val_loss = np.inf
-	df = pd.DataFrame()
-
-	while (count < args.max_patience):
-		epoch += 1
-		current_result = {}
-		train_result = utils.trainEEDNNs(ee_model, train_loader, optimizer, criterion, n_exits, epoch, device, loss_weights)
-		val_result = utils.evalEEDNNs(ee_model, val_loader, criterion, n_exits, epoch, device, loss_weights)
-
-		current_result.update(train_result), current_result.update(val_result)
-		df = df.append(pd.Series(current_result), ignore_index=True)
-		df.to_csv(history_path)
-
-		if (val_result["val_loss"] < best_val_loss):
-			save_dict  = {}	
-			best_val_loss = val_result["val_loss"]
-			count = 0
-
-			save_dict.update(current_result)
-			save_dict.update({"model_state_dict": ee_model.state_dict(), "opt_state_dict": optimizer.state_dict()})
-			torch.save(save_dict, model_save_path)
-
-		else:
-			count += 1
-			print("Current Patience: %s"%(count))
-
-	print("Stop! Patience is finished")
 
 
 
@@ -103,8 +84,6 @@ if (__name__ == "__main__"):
 	parser.add_argument('--h_flip_prob', type=float, default=config.h_flip_prob, 
 		help='Probability of Flipping horizontally.')
 
-	parser.add_argument('--equalize_prob', type=float, default=config.equalize_prob, help='Probability of Equalize.')
-
 	parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
 
 	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
@@ -126,20 +105,8 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--max_patience', type=int, default=config.max_patience, help='Epochs.')
 
-	parser.add_argument('--model_id', type=int, default=config.model_id, help='Epochs.')
+	parser.add_argument('--model_id', type=int, default=1, help='Epochs.')
 
 	args = parser.parse_args()
 
 	main(args)
-
-
-
-
-
-
-
-
-
-
-
-
