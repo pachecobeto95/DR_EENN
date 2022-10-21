@@ -1,5 +1,5 @@
 from torchvision import datasets, transforms
-import torch, os, sys, requests, random, logging, torchvision
+import torch, os, sys, requests, random, logging, torchvision, config
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
