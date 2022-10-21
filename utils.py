@@ -159,14 +159,14 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		#Load the indices to always use the same indices for training, validating and testing.
 		train_idx = np.load(train_idx_path)
 		val_idx = np.load(val_idx_path)
-		test_idx = np.load(test_idx_path)
+		#test_idx = np.load(test_idx_path)
 
 	else:
 		# This line get the indices of the samples which belong to the training dataset and test dataset. 
 		train_idx, val_idx, test_idx = get_indices_caltech256(train_set, args.split_ratio)
 
 		#Save the training, validation and testing indices.
-		np.save(train_idx_path, train_idx), np.save(val_idx_path, val_idx), np.save(test_idx_path, test_idx)
+		np.save(train_idx_path, train_idx), np.save(val_idx_path, val_idx)#, np.save(test_idx_path, test_idx)
 
 	train_data = torch.utils.data.Subset(train_set, indices=train_idx)
 	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
