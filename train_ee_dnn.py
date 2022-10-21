@@ -44,9 +44,9 @@ def main(args):
 	#	{'params': ee_model.exits.parameters(), 'lr': lr[1]},
 	#	{'params': ee_model.classifier.parameters(), 'lr': lr[0]}], momentum=0.9, weight_decay=weight_decay)
 
-	optimizer = optim.Adam([{'params': early_exit_dnn.stages.parameters(), 'lr': lr[0]}, 
-		{'params': early_exit_dnn.exits.parameters(), 'lr': lr[1]},
-		{'params': early_exit_dnn.classifier.parameters(), 'lr': lr[0]}], weight_decay=weight_decay)
+	optimizer = optim.Adam([{'params': ee_model.stages.parameters(), 'lr': lr[0]}, 
+		{'params': ee_model.exits.parameters(), 'lr': lr[1]},
+		{'params': ee_model.classifier.parameters(), 'lr': lr[0]}], weight_decay=weight_decay)
 
 	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 	n_exits = args.n_branches + 1
