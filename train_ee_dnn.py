@@ -43,8 +43,8 @@ def main(args):
 
 	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 	n_exits = args.n_branches + 1
-	loss_weights = np.ones(n_exits)
-	#loss_weights = [1, 0.5]
+	#loss_weights = np.ones(n_exits)
+	loss_weights = [1, 0.5]
 
 	epoch, count = 0, 0
 	best_val_loss = np.inf
