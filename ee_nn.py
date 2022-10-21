@@ -218,6 +218,8 @@ class Early_Exit_DNN(nn.Module):
 	def invalid_model(self):
 		raise Exception("This DNN backbone model has not implemented yet.")
 
+	def invalid_distribution(self):
+		raise Exception("This early-exit distribution has not implemented yet.")
 
 	def countFlops(self, model):
 		input_data = torch.rand(1, 3, self.input_dim, self.input_dim).to(self.device)
