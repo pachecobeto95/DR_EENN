@@ -25,7 +25,7 @@ def get_indices_caltech256(dataset, split_ratio):
 
 	#print("Train Indices: %s"%(train_idx))
 	#sys.exit()
-	return train_idx, test_idx, test_idx
+	return train_val_idx, test_idx, test_idx
 
 
 class DistortionApplier(torchvision.transforms.Lambda):
