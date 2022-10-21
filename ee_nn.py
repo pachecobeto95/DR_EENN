@@ -118,7 +118,7 @@ class EarlyExitBlock(nn.Module):
 
 class Early_Exit_DNN(nn.Module):
 	def __init__(self, model_name: str, n_classes: int, pretrained: bool, n_branches: int, input_dim: int, 
-		device, exit_type: str, distribution="predefined", ee_point_location=10):
+		device, exit_type: str, distribution="linear", ee_point_location=10):
 
 		super(Early_Exit_DNN, self).__init__()
 
