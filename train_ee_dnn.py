@@ -9,8 +9,8 @@ from tqdm import tqdm
 def main(args):
 
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories")
-	#indices_path = os.path.join(config.DIR_NAME, "indices")
-	indices_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "indices")
+	indices_path = os.path.join(config.DIR_NAME, "indices")
+	#indices_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "indices")
 
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
