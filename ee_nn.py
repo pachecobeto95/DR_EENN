@@ -160,6 +160,61 @@ class Early_Exit_DNN(nn.Module):
 
 		return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
 
+
+	def select_distribution_method(self):
+		"""
+		This method selects the distribution method to insert early exits into the middle layers.
+		"""
+		distribution_method_dict = {"linear":self.linear_distribution,
+		"pareto":self.paretto_distribution,
+		"fibonacci":self.fibo_distribution}
+		return distribution_method_dict.get(self.distribution, self.invalid_distribution)
+    
+	def linear_distribution(self, i):
+		"""
+		This method defines the Flops to insert an early exits, according to a linear distribution.
+		"""
+		flop_margin = 1.0 / (self.n_branches+1)
+		return self.total_flops * flop_margin * (i+1)
+
+	def paretto_distribution(self, i):
+		"""
+		This method defines the Flops to insert an early exits, according to a pareto distribution.
+		"""
+		return self.total_flops * (1 - (0.8**(i+1)))
+
+	def fibo_distribution(self, i):
+		"""
+		This method defines the Flops to insert an early exits, according to a fibonacci distribution.
+		"""
+		gold_rate = 1.61803398875
+		return total_flops * (gold_rate**(i - self.num_ee))
+
+	def verifies_nr_exits(self, backbone_model):
+		"""
+		This method verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
+		"""
+    
+		total_layers = len(list(backbone_model.children()))
+		if (self.n_branches >= total_layers):
+			raise Exception("The number of early exits is greater than number of layers in the DNN backbone model.")
+
+
+	def where_insert_early_exits(self):
+		"""
+		This method defines where insert the early exits, according to the dsitribution method selected.
+		Args:
+
+		total_flops: Flops of the backbone (full) DNN model.
+		"""
+		threshold_flop_list = []
+		distribution_method = self.select_distribution_method()
+
+		for i in range(self.n_branches):
+			threshold_flop_list.append(distribution_method(i))
+
+		return threshold_flop_list
+
 	def invalid_model(self):
 		raise Exception("This DNN backbone model has not implemented yet.")
 
@@ -195,6 +250,7 @@ class Early_Exit_DNN(nn.Module):
 		self.layers = nn.ModuleList()
 		self.stage_id += 1    
 
+
 	def early_exit_mobilenet(self):
 
 		self.stages = nn.ModuleList()
@@ -203,6 +259,15 @@ class Early_Exit_DNN(nn.Module):
 		self.stage_id = 0
 
 		self.last_channel = 1280
+
+		# It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
+		self.verifies_nr_exits(backbone_model.features)
+
+		# This obtains the flops total of the backbone model
+		self.total_flops = self.countFlops(backbone_model)
+
+		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
+		self.threshold_flop_list = self.where_insert_early_exits()
 
 		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
 		backbone_model = models.mobilenet_v2(self.pretrained).to(self.device)
@@ -222,8 +287,13 @@ class Early_Exit_DNN(nn.Module):
 		self.layers.append(nn.AdaptiveAvgPool2d(1))
 		self.stages.append(nn.Sequential(*self.layers))
 
-		self.classifier = backbone_model.classifier
+		#self.classifier = backbone_model.classifier
+		self.classifier = nn.Sequential(
+			nn.Dropout(0.2),
+			nn.Linear(self.last_channel, self.n_classes),)
+		
 		self.softmax = nn.Softmax(dim=1)
+
 
 	def forwardTrain(self, x):
 		"""

@@ -8,22 +8,37 @@ from tqdm import tqdm
 from ee_calibration import calibrating_early_exit_dnn, run_early_exit_inference
 
 
-def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, device, temp_calib_path, result_calib_path):
+def save_result(result, save_path):
+	df_result = pd.read_csv(save_path) if (os.path.exists(save_path)) else pd.DataFrame()
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df_result = df_result.append(df)
+	df_result.to_csv(save_path)
+
+
+def save_results(no_calib_result, global_calib_result, per_branch_calib_result, all_samples_calib_result, resultsDict):
+	save_result(no_calib_result, resultsDict["no_calib"])
+	save_result(global_calib_result, resultsDict["global_calib"])
+	save_result(per_branch_calib_result, resultsDict["per_branch_calib"])
+	save_result(all_samples_calib_result, resultsDict["all_samples_calib"])
+
+def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, device, resultsDict, temperatureDict):
 	for p_tar in p_tar_list:
 		print("P_tar: %s"%(p_tar))
 
-		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temp_calib_path)
+		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temperatureDict)
 
 		no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
-		calib_overall_result = run_early_exit_inference(calib_models_dict["calib_overall"], test_loader, p_tar, n_branches, device, 
-			model_type="calib_overall")
+		global_calib_result = run_early_exit_inference(calib_models_dict["global_calib"], test_loader, p_tar, n_branches, device, 
+			model_type="global_calib")
 
-		calib_branches_result = run_early_exit_inference(calib_models_dict["calib_branches"], test_loader, p_tar, n_branches, device, 
-			model_type="calib_branches")
+		per_branch_calib_result = run_early_exit_inference(calib_models_dict["per_branch_calib"], test_loader, p_tar, n_branches, device, 
+			model_type="per_branch_calib")
 
-		calib_all_samples_result = run_early_exit_inference(calib_models_dict["calib_all_samples"], test_loader, p_tar, 
-			n_branches, device, model_type="all_samples")
+		all_samples_calib_result = run_early_exit_inference(calib_models_dict["all_samples_calib"], test_loader, p_tar, 
+			n_branches, device, model_type="all_samples_calib")
+
+		save_results(no_calib_result, global_calib_result, per_branch_calib_result, all_samples_calib_result, resultsDict)
 
 
 def main(args):
@@ -32,11 +47,25 @@ def main(args):
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
 	
-	temp_calib_path = os.path.join(config.DIR_NAME, "result_calib", config.dataset_name, config.model_name, 
-		"temp_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
+	result_path = os.path.join(config.DIR_NAME, "result_calib", config.dataset_name, config.model_name)
+	
+	no_calib_result_path =  os.path.join(result_path, "no_calib_results_%s.csv"%(args.model_id))
+	save_global_calib_path =  os.path.join(result_path, "global_calib_results_%s.csv"%(args.model_id))
+	save_per_branch_calib_path =  os.path.join(result_path, "per_branch_calib_results_%s.csv"%(args.model_id))
+	save_all_samples_calib_path =  os.path.join(result_path, "all_samples_calib_results_%s.csv"%(args.model_id))
 
-	result_calib_path = os.path.join(config.DIR_NAME, "result_calib", config.dataset_name, config.model_name, 
-		"calib_%s_ee_model_%s_%s.csv"%(args.distortion_type, config.model_name, args.model_id))
+	resultsDict = {"no_calib": no_calib_result_path, 
+	"global_calib": save_global_calib_path, 
+	"per_branch_calib": save_per_branch_calib_path,
+	"all_samples_calib": save_all_samples_calib_path}
+
+	save_global_temp_path =  os.path.join(result_path, "global_calib_results_%s.csv"%(args.model_id))
+	save_per_branch_temp_path =  os.path.join(result_path, "per_branch_calib_results_%s.csv"%(args.model_id))
+	save_all_samples_temp_path =  os.path.join(result_path, "all_samples_calib_results_%s.csv"%(args.model_id))
+
+	temperatureDict = {"global_calib": save_global_calib_path, 
+	"per_branch_calib": save_per_branch_calib_path,
+	"all_samples_calib": save_all_samples_calib_path}
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
@@ -53,7 +82,7 @@ def main(args):
 
 
 	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
-	run_calibration(ee_model, test_loader, val_loader, p_tar_list, args.n_branches, device, temp_calib_path, result_calib_path)
+	run_calibration(ee_model, test_loader, val_loader, p_tar_list, args.n_branches, device, resultsDict, temperatureDict)
 
 
 

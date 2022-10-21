@@ -114,15 +114,19 @@ class DistortionApplier2(object):
 		raise Exception("This distortion type has not implemented yet.")
 
 def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
-	mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
+	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
 
 	transformations_train = transforms.Compose([
-		transforms.Resize((args.input_dim, args.input_dim)),
-		transforms.CenterCrop((args.dim, args.dim)),
+		#transforms.Resize((args.input_dim, args.input_dim)),
+		transforms.Resize((224, 224)),
+		transforms.RandomChoice([
+			transforms.ColorJitter(brightness=(0.80, 1.20)),
+			transforms.RandomGrayscale(p = 0.25)]),
+		#transforms.CenterCrop((args.dim, args.dim)),
 		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
 		#transforms.RandomApply([transforms.ColorJitter(brightness=(0.80, 1.20))]),
@@ -131,10 +135,9 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		transforms.Normalize(mean = mean, std = std),
 		])
 
-
 	transformations_test = transforms.Compose([
-		transforms.Resize((args.input_dim, args.input_dim)),
-		transforms.CenterCrop((args.dim, args.dim)),
+		transforms.Resize((224, 224)),
+		#transforms.CenterCrop((args.dim, args.dim)),
 		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.Resize(args.dim), 
 		transforms.ToTensor(), 
@@ -148,16 +151,15 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	val_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-	train_idx_path = os.path.join(save_indices_path, "training_idx_caltech256.npy")
-	val_idx_path = os.path.join(save_indices_path, "validation_idx_caltech256.npy")
-	test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
-
+	train_idx_path = os.path.join(save_indices_path, "training_idx_caltech256_1.npy")
+	val_idx_path = os.path.join(save_indices_path, "validation_idx_caltech256_1.npy")
+	#test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
 
 	if( os.path.exists(train_idx_path) ):
 		#Load the indices to always use the same indices for training, validating and testing.
 		train_idx = np.load(train_idx_path)
 		val_idx = np.load(val_idx_path)
-		test_idx = np.load(test_idx_path)
+		#test_idx = np.load(test_idx_path)
 
 	else:
 		# This line get the indices of the samples which belong to the training dataset and test dataset. 
@@ -168,13 +170,13 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 
 	train_data = torch.utils.data.Subset(train_set, indices=train_idx)
 	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
-	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+	#test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
 	train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size_train, shuffle=True, num_workers=4, pin_memory=True)
 	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
-	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
+	#test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	return train_loader, val_loader, test_loader
+	return train_loader, val_loader, 0
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
