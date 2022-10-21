@@ -9,8 +9,8 @@ from tqdm import tqdm
 def main(args):
 
 	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories")
-	indices_path = os.path.join(config.DIR_NAME, "indices")
-	#indices_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "indices")
+	#indices_path = os.path.join(config.DIR_NAME, "indices")
+	indices_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "indices")
 
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
@@ -29,7 +29,7 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 
 	#Instantiate the Early-exit DNN model.
-	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
+	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, args.distribution)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 
@@ -124,6 +124,9 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--exit_type', type=str, default=config.exit_type, 
 		help='Exit Type. Default: %s'%(config.exit_type))
+
+	parser.add_argument('--distribution', type=str, default=config.distribution, 
+		help='Distribution of the early exits. Default: %s'%(config.distribution))
 
 	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Backbone DNN is pretrained.')
 
