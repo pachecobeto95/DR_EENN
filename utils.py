@@ -17,15 +17,15 @@ def get_indices_caltech256(dataset, split_ratio):
 	train_val_idx, test_idx = indices[:train_val_size], indices[train_val_size:]
 	#print("Train Indices: %s"%(train_val_idx))
 
-	np.random.shuffle(train_val_idx)
+	#np.random.shuffle(train_val_idx)
 
-	train_size = len(train_val_idx) - int(np.floor(split_ratio * len(train_val_idx) ))
+	#train_size = len(train_val_idx) - int(np.floor(split_ratio * len(train_val_idx) ))
 	#print("Train Size: %s"%(train_size))
-	train_idx, val_idx = train_val_idx[:train_size], train_val_idx[train_size:]
+	#train_idx, val_idx = train_val_idx[:train_size], train_val_idx[train_size:]
 
 	#print("Train Indices: %s"%(train_idx))
 	#sys.exit()
-	return train_idx, val_idx, test_idx
+	return train_idx, test_idx, test_idx
 
 
 class DistortionApplier(torchvision.transforms.Lambda):
@@ -125,7 +125,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		transforms.CenterCrop((args.dim, args.dim)),
 		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
-		transforms.RandomApply([transforms.ColorJitter(brightness=(0.80, 1.20))]),
+		#transforms.RandomApply([transforms.ColorJitter(brightness=(0.80, 1.20))]),
 		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
