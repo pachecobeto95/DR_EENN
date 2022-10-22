@@ -27,18 +27,18 @@ def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, devi
 
 		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temperatureDict)
 
-		no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
+		#no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
-		global_calib_result = run_early_exit_inference(calib_models_dict["global_calib"], test_loader, p_tar, n_branches, device, 
-			model_type="global_calib")
+		#global_calib_result = run_early_exit_inference(calib_models_dict["global_calib"], test_loader, p_tar, n_branches, device, 
+		#	model_type="global_calib")
 
-		per_branch_calib_result = run_early_exit_inference(calib_models_dict["per_branch_calib"], test_loader, p_tar, n_branches, device, 
-			model_type="per_branch_calib")
+		#per_branch_calib_result = run_early_exit_inference(calib_models_dict["per_branch_calib"], test_loader, p_tar, n_branches, device, 
+		#	model_type="per_branch_calib")
 
-		all_samples_calib_result = run_early_exit_inference(calib_models_dict["all_samples_calib"], test_loader, p_tar, 
-			n_branches, device, model_type="all_samples_calib")
+		#all_samples_calib_result = run_early_exit_inference(calib_models_dict["all_samples_calib"], test_loader, p_tar, 
+		#	n_branches, device, model_type="all_samples_calib")
 
-		save_results(no_calib_result, global_calib_result, per_branch_calib_result, all_samples_calib_result, resultsDict)
+		#save_results(no_calib_result, global_calib_result, per_branch_calib_result, all_samples_calib_result, resultsDict)
 
 
 def main(args):
