@@ -187,7 +187,7 @@ class BranchesModelWithTemperature(nn.Module):
 			for data, label in tqdm(val_loader):
 				data, label = data.to(self.device), label.to(self.device)
 
-				logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+				logits, _, _, _ = self.model.forwardEval(data, p_tar)
 
 
 				logits_list.append(logits)
