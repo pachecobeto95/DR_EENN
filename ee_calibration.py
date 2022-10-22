@@ -45,7 +45,7 @@ class _ECELoss(nn.Module):
 				avg_confidence_in_bin = confidences[in_bin].mean()
 				ece += torch.abs(avg_confidence_in_bin - accuracy_in_bin) * prop_in_bin
 
-			return ece
+		return ece
 
 
 class BranchesModelWithTemperature(nn.Module):
