@@ -21,7 +21,7 @@ max_patience = 20
 model_id = 1
 distribution = "linear"
 
-nr_class_dict = {"caltech256": 256}
+nr_class_dict = {"caltech256": 257}
 distortion_level_dict = {"pristine": [0], "gaussian_blur": [1, 2, 3, 4, 5], "gaussian_noise": [5, 10, 20, 30, 40]}
 
 logFile = os.path.join(DIR_NAME, "logging_training_%s_%s_%s.csv"%(dataset_name, model_name, model_id))
