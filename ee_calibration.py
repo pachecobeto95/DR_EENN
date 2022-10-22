@@ -185,13 +185,13 @@ class BranchesModelWithTemperature(nn.Module):
 		labels_list = []
 		with torch.no_grad():
 			for data, label in tqdm(val_loader):
-			data, label = data.to(self.device), label.to(self.device)
+				data, label = data.to(self.device), label.to(self.device)
 
-			logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+				logits, _, _, exit_branch = self.model(data, p_tar, training=False)
 
 
-			logits_list.append(logits)
-			labels_list.append(label)
+				logits_list.append(logits)
+				labels_list.append(label)
 		
 		logits = torch.cat(logits_list).cuda()
 		labels = torch.cat(labels_list).cuda()
