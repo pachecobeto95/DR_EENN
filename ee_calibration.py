@@ -271,10 +271,10 @@ class BranchesModelWithTemperature(nn.Module):
 			before_ece_list.append(before_ece)
 
 			def eval():
-			optimizer.zero_grad()
-			loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
-			loss.backward()
-			return loss
+				optimizer.zero_grad()
+				loss = nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+				loss.backward()
+				return loss
 			
 			optimizer.step(eval)
 
