@@ -431,16 +431,16 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 			data, target = data.to(device), target.to(device)
 
 			if (model_type == "no_calib"):
-			_, conf_branches, infered_class_branches = model.forwardAllExits(data)
+				_, conf_branches, infered_class_branches = model.forwardAllExits(data)
 
 			elif(model_type == "calib_overall"):
-			_, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
+				_, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
 
 			elif(model_type == "calib_branches"):
-			_, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
+				_, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
 
 			else:
-			_, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
+				_, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])	
