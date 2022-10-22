@@ -426,30 +426,30 @@ def experiment_early_exit_inference(model, test_loader, p_tar, n_branches, devic
 	model.eval()
 
 	with torch.no_grad():
-	for i, (data, target) in tqdm(enumerate(test_loader, 1)):
-		
-		data, target = data.to(device), target.to(device)
+		for i, (data, target) in tqdm(enumerate(test_loader, 1)):
+			
+			data, target = data.to(device), target.to(device)
 
-		if (model_type == "no_calib"):
-		_, conf_branches, infered_class_branches = model.forwardAllExits(data)
+			if (model_type == "no_calib"):
+			_, conf_branches, infered_class_branches = model.forwardAllExits(data)
 
-		elif(model_type == "calib_overall"):
-		_, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
+			elif(model_type == "calib_overall"):
+			_, conf_branches, infered_class_branches = model.forwardOverallCalibration(data)
 
-		elif(model_type == "calib_branches"):
-		_, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
+			elif(model_type == "calib_branches"):
+			_, conf_branches, infered_class_branches = model.forwardBranchesCalibration(data)
 
-		else:
-		_, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
+			else:
+			_, conf_branches, infered_class_branches = model.forwardAllSamplesCalibration(data)
 
-		conf_branches_list.append([conf.item() for conf in conf_branches])
-		infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])	
-		correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
-		id_list.append(i)
-		target_list.append(target.item())
+			conf_branches_list.append([conf.item() for conf in conf_branches])
+			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])	
+			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
+			id_list.append(i)
+			target_list.append(target.item())
 
-		del data, target
-		torch.cuda.empty_cache()
+			del data, target
+			torch.cuda.empty_cache()
 
 	conf_branches_list = np.array(conf_branches_list)
 	infered_class_branches_list = np.array(infered_class_branches_list)
