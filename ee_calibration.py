@@ -69,12 +69,12 @@ class BranchesModelWithTemperature(nn.Module):
 		self.max_iter = max_iter		#defines the number of iteractions to train the calibration process
 
 		# This line initiates a parameters list of the temperature 
-		self.temperature_branches = [nn.Parameter(1.*torch.ones(1).to(self.device)) for i in range(self.n_exits)]
+		self.temperature_branches = [nn.Parameter(1.5*torch.ones(1).to(self.device)) for i in range(self.n_exits)]
 		self.softmax = nn.Softmax(dim=1)
 
 		# This line initiates a single temperature parameter for the entire early-exit DNN model
-		self.temperature_overall = nn.Parameter(1.*torch.ones(1).to(self.device))
-		self.temperature = nn.Parameter((torch.ones(1) * 1.).to(self.device))
+		self.temperature_overall = nn.Parameter(1.5*torch.ones(1).to(self.device))
+		self.temperature = nn.Parameter((torch.ones(1) * 1.5).to(self.device))
 
 	def temperature_scale(self, logits):
 
