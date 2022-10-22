@@ -365,11 +365,11 @@ class Early_Exit_DNN(nn.Module):
 
 		else:
 			output_list.append(output_branch)
-			conf_list.append(conf)
+			conf_list.append(conf.item())
 			class_list.append(infered_class)
 
 		x = self.stages[-1](x)
-		
+
 		x = torch.flatten(x, 1)
 
 		output = self.classifier(x)
@@ -384,7 +384,7 @@ class Early_Exit_DNN(nn.Module):
 			# If any exit can reach the p_tar value, the output is give by the more confidence output.
 			# If evaluation, it returns max(output), max(conf) and the number of the early exit.
 
-			conf_list.append(conf)
+			conf_list.append(conf.item())
 			class_list.append(infered_class)
 			output_list.append(output)
 			max_conf = np.argmax(conf_list)
