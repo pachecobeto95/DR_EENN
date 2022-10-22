@@ -138,11 +138,11 @@ class BranchesModelWithTemperature(nn.Module):
 		with torch.no_grad():
 			for (data, target) in tqdm(val_loader):
 
-			data, target = data.to(self.device), target.to(self.device)
-			
-			logits, conf, infer_class, exit_branch = self.model(data, p_tar, training=False)
+				data, target = data.to(self.device), target.to(self.device)
+				
+				logits, conf, infer_class, exit_branch = self.model(data, p_tar, training=False)
 
-			logits_list.append(logits), labels_list.append(target)
+				logits_list.append(logits), labels_list.append(target)
 
 		logits_list = torch.cat(logits_list).to(self.device)
 		labels_list = torch.cat(labels_list).to(self.device)
@@ -498,7 +498,7 @@ def run_early_exit_inference(model, test_loader, p_tar, n_branches, device, mode
 
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
-      
+
 			data, target = data.to(device), target.to(device)
 
 			if (model_type == "no_calib"):
