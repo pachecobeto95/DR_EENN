@@ -333,6 +333,7 @@ class BranchesModelWithTemperature(nn.Module):
 				
 				logits, _, _, exit_branch = self.model.forwardEval(data, p_tar)
 
+				print(exit_branch)
 				logits_list[exit_branch].append(logits)
 				labels_list[exit_branch].append(target)
 
