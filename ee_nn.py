@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 from pthflops import count_ops
 from torch import Tensor
+import torch.nn.functional as F
 
 """
 (18): ConvBNActivation(
