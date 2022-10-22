@@ -184,6 +184,8 @@ class BranchesModelWithTemperature(nn.Module):
 		# First: collect all the logits and labels for the validation set
 		logits_list = []
 		labels_list = []
+		self.model.eval()
+
 		with torch.no_grad():
 			for data, label in tqdm(val_loader):
 				data, label = data.to(self.device), label.to(self.device)
@@ -333,7 +335,6 @@ class BranchesModelWithTemperature(nn.Module):
 				
 				logits, _, _, exit_branch = self.model.forwardEval(data, p_tar)
 
-				print(exit_branch)
 				logits_list[exit_branch].append(logits)
 				labels_list[exit_branch].append(target)
 
