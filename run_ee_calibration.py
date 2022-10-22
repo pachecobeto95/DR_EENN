@@ -25,7 +25,7 @@ def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, devi
 	for p_tar in p_tar_list:
 		print("P_tar: %s"%(p_tar))
 
-		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temperatureDict)
+		calib_models_dict = calibrating_early_exit_dnn(model, test_loader, p_tar, n_branches, device, temperatureDict)
 
 		no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
