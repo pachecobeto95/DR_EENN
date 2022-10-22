@@ -359,7 +359,7 @@ class Early_Exit_DNN(nn.Module):
 
 			output_branch = exitBlock(x)
 			conf, infered_class = torch.max(self.softmax(output_branch), 1)
-			
+			print(conf.item())
 			# Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
 			if (conf.item() >= p_tar):
 				return output_branch, conf, infered_class, i+1
