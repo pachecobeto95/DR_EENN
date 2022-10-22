@@ -79,6 +79,7 @@ def main(args):
 		args.distribution)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
+	print(model_save_path)
 	ee_model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
 
