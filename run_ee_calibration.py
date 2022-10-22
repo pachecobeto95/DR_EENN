@@ -75,7 +75,8 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 
 	#Instantiate the Early-exit DNN model.
-	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type)
+	ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, 
+		args.distribution)
 	#Load the trained early-exit DNN model.
 	ee_model = ee_model.to(device)
 	ee_model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
@@ -135,6 +136,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--max_patience', type=int, default=config.max_patience, help='Epochs.')
 
 	parser.add_argument('--model_id', type=int, default=1, help='Epochs.')
+
+	parser.add_argument('--distribution', type=str, default="linear", help='Distribution of early exits.')
 
 	args = parser.parse_args()
 
