@@ -25,7 +25,7 @@ def run_calibration(model, test_loader, val_loader, p_tar_list, n_branches, devi
 	for p_tar in p_tar_list:
 		print("P_tar: %s"%(p_tar))
 
-		calib_models_dict = calibrating_early_exit_dnn(model, test_loader, p_tar, n_branches, device, temperatureDict)
+		calib_models_dict = calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, temperatureDict)
 
 		no_calib_result = run_early_exit_inference(model, test_loader, p_tar, n_branches, device, model_type="no_calib")
 
@@ -81,7 +81,7 @@ def main(args):
 	ee_model = ee_model.to(device)
 	print(model_save_path)
 	ee_model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
-
+	ee_model.eval()
 
 	p_tar_list = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
 	run_calibration(ee_model, test_loader, val_loader, p_tar_list, args.n_branches, device, resultsDict, temperatureDict)
