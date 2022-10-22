@@ -328,12 +328,12 @@ class BranchesModelWithTemperature(nn.Module):
 		with torch.no_grad():
 			for (data, target) in tqdm(val_loader):
 				
-			data, target = data.to(self.device), target.to(self.device)
-			
-			logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+				data, target = data.to(self.device), target.to(self.device)
+				
+				logits, _, _, exit_branch = self.model(data, p_tar, training=False)
 
-			logits_list[exit_branch].append(logits)
-			labels_list[exit_branch].append(target)
+				logits_list[exit_branch].append(logits)
+				labels_list[exit_branch].append(target)
 
 
 		for i in range(self.n_exits):
@@ -359,10 +359,10 @@ class BranchesModelWithTemperature(nn.Module):
 			before_ece_list.append(before_ece)
 			weight_list = np.linspace(1, 0.3, self.n_exits)
 			def eval():
-			optimizer.zero_grad()
-			loss = weight_list[i]*nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
-			loss.backward()
-			return loss
+				optimizer.zero_grad()
+				loss = weight_list[i]*nll_criterion(self.temperature_scale_branches(logit_branch), label_branch)
+				loss.backward()
+				return loss
 			
 			optimizer.step(eval)
 
