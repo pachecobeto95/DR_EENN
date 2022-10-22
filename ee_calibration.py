@@ -240,23 +240,23 @@ class BranchesModelWithTemperature(nn.Module):
 		with torch.no_grad():
 			for (data, target) in tqdm(val_loader):
 				
-			data, target = data.to(self.device), target.to(self.device)
+				data, target = data.to(self.device), target.to(self.device)
 
-			logits, _, _ = self.model.forwardAllExits(data)
+				logits, _, _ = self.model.forwardAllExits(data)
 
 
-			for i in range(self.n_exits):
-				logits_list[i].append(logits[i])
-				labels_list[i].append(target)
+				for i in range(self.n_exits):
+					logits_list[i].append(logits[i])
+					labels_list[i].append(target)
 
 		for i in range(self.n_exits):
 			print("Exit: %s"%(i))
 
 			if (len(logits_list[i]) == 0):
-			before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
-			before_ece_list.append(None), after_ece_list.append(None)
-			temperature_branch_list.append(None)
-			continue
+				before_temperature_nll_list.append(None), after_temperature_nll_list.append(None)
+				before_ece_list.append(None), after_ece_list.append(None)
+				temperature_branch_list.append(None)
+				continue
 
 			self.temperature_branch = nn.Parameter((torch.ones(1)*1.0).to(self.device))
 			optimizer = optim.LBFGS([self.temperature_branch], lr=self.lr, max_iter=self.max_iter)
