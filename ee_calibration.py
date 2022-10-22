@@ -243,7 +243,7 @@ class BranchesModelWithTemperature(nn.Module):
 				
 				data, target = data.to(self.device), target.to(self.device)
 
-				logits, _, _ = self.model.forwardAllExits(data)
+				logits, _, _ = self.model.forwardTrain(data)
 
 
 				for i in range(self.n_exits):
@@ -307,7 +307,7 @@ class BranchesModelWithTemperature(nn.Module):
 
 		self.save_temperature_branches(error_measure_dict, save_branches_path)
 
-	def calibrate_branches(self, val_loader, dataset, p_tar, save_branches_path, data_augmentation=False):
+	def calibrate_branches(self, val_loader, p_tar, save_branches_path, data_augmentation=False):
 		"""
 		This method calibrates for each side branch. In other words, this method finds a temperature parameter 
 		for each side branch of the early-exit DNN model.
@@ -331,7 +331,7 @@ class BranchesModelWithTemperature(nn.Module):
 				
 				data, target = data.to(self.device), target.to(self.device)
 				
-				logits, _, _, exit_branch = self.model(data, p_tar, training=False)
+				logits, _, _, exit_branch = self.model.forwardEval(data, p_tar)
 
 				logits_list[exit_branch].append(logits)
 				labels_list[exit_branch].append(target)
@@ -475,7 +475,7 @@ def calibrating_early_exit_dnn(model, val_loader, p_tar, n_branches, device, tem
 	overall_calibrated_model.calibrate_overall(val_loader, p_tar, temperatureDict["global_calib"])
 
 	branches_calibrated_model = BranchesModelWithTemperature(model, n_branches, device)
-	branches_calibrated_model.calibrate_branches(val_loader, dataset, p_tar, temperatureDict["per_branch_calib"])
+	branches_calibrated_model.calibrate_branches(val_loader, p_tar, temperatureDict["per_branch_calib"])
 
 	branches_calibrated_all_samples = BranchesModelWithTemperature(model, n_branches, device)
 	branches_calibrated_all_samples.calibrate_branches_all_samples(val_loader, p_tar, temperatureDict["all_samples_calib"])
