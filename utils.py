@@ -176,7 +176,7 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
 	#test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	return train_loader, val_loader, 0
+	return train_loader, val_loader, val_loader
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
