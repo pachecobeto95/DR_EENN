@@ -363,7 +363,7 @@ class Early_Exit_DNN(nn.Module):
 			# Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
 			if (conf.item() >= p_tar):
 				return output_branch, conf, infered_class, i+1
-
+				
 		else:
 			output_list.append(output_branch)
 			conf_list.append(conf.item())

@@ -529,6 +529,8 @@ def run_early_exit_inference(model, test_loader, p_tar, n_branches, device, mode
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
 
+	print(sum(correct_list)/len(correct_list))
+	sys.exit()
 	results = {"p_tar": [p_tar]*len(target_list), "target": target_list, "id": id_list}
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
