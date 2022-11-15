@@ -205,7 +205,7 @@ class B_MobileNet(nn.Module):
       output_branch = exitBlock(x)
       conf, infered_class = torch.max(self.softmax(output_branch), 1)
 
-      output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class)
+      output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class-1)
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
