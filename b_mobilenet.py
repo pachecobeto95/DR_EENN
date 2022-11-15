@@ -197,23 +197,23 @@ class B_MobileNet(nn.Module):
 
 
   def forwardTrain(self, x):
+
     output_list, conf_list, class_list  = [], [], []
+
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
-      output_list.append(output_branch)
       conf, infered_class = torch.max(self.softmax(output_branch), 1)
-      conf_list.append(conf)
-      class_list.append(infered_class)
+
+      output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class)
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
 
     output = self.fully_connected(x)
     infered_conf, infered_class = torch.max(self.softmax(output), 1)
-    output_list.append(output)
-    conf_list.append(infered_conf)
-    class_list.append(infered_class)
+    output_list.append(output), conf_list.append(infered_conf), class_list.append(infered_class)
+    
     return output_list, conf_list, class_list
 
   def forwardEval(self, x, p_tar):
@@ -229,8 +229,6 @@ class B_MobileNet(nn.Module):
         output_list.append(output_branch)
         conf_list.append(conf.item())
         class_list.append(infered_class)
-
-
 
     return x, conf_list, None
 
@@ -269,5 +267,5 @@ class B_MobileNet(nn.Module):
     return x, conf_list, class_list, False
 
 
-  def forward(self, x, p_tar=0.5):
-    return self.forwardEval(x, p_tar)
+  def forward(self, x):
+    return self.forwardTrain(x)
