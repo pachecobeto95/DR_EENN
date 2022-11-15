@@ -90,11 +90,11 @@ def main(args):
 	ee_model.eval()
 
 
-	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
-		device, args.distortion_type_model, distortion_type_data="pristine")
+	#extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	#	device, args.distortion_type_model, distortion_type_data="pristine")
 
-	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
-		device, args.distortion_type_model, distortion_type_data="gaussian_blur")
+	#extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	#	device, args.distortion_type_model, distortion_type_data="gaussian_blur")
 
 	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="gaussian_noise")
