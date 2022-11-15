@@ -44,9 +44,14 @@ class DistortionApplier(object):
 		return blurrer(img)
 
 	def gaussian_noise(self, img, distortion_lvl):
-		image = np.array(img)
 		#noise_img = image + np.random.normal(0, distortion_lvl, (image.shape[0], image.shape[1], image.shape[2]))
-		noise_img = img + (distortion_lvl * torch.randn_like(img))
+		
+		transform = transforms.Compose([transforms.PILToTensor()])
+  
+		img_tensor = transform(img)
+
+
+		noise_img = img_tensor + (distortion_lvl * torch.randn_like(img_tensor))
 		return noise_img
 		#return Image.fromarray(np.uint8(noise_img)) 
 
