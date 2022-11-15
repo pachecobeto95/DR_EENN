@@ -70,18 +70,18 @@ class DistortionApplier(object):
 		raise Exception("This distortion type has not implemented yet.")
 
 
-def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
+def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, distortion_values):
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
 	transformations_train = transforms.Compose([
-		transforms.Resize((args.input_dim, args.input_dim)),
+		transforms.Resize((input_dim, input_dim)),
 		transforms.RandomChoice([
 			transforms.ColorJitter(brightness=(0.80, 1.20)),
 			transforms.RandomGrayscale(p = 0.25)]),
-		transforms.CenterCrop((args.dim, args.dim)),
+		transforms.CenterCrop((dim, dim)),
 		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
 		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
@@ -90,8 +90,8 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 		])
 
 	transformations_test = transforms.Compose([
-		transforms.Resize((args.input_dim, args.input_dim)),
-		transforms.CenterCrop((args.dim, args.dim)),
+		transforms.Resize((input_dim, input_dim)),
+		transforms.CenterCrop((dim, dim)),
 		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
@@ -232,7 +232,7 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 	return result_dict
 
 
-def load_ee_dnn(args, model_path, n_classes, device):
+def load_ee_dnn(args, model_path, n_classes, dim, device):
 	#Load the trained early-exit DNN model.
 
 	if (args.n_branches == 1):
@@ -241,7 +241,7 @@ def load_ee_dnn(args, model_path, n_classes, device):
 			args.distribution)
 
 	elif(args.n_branches == 3):
-		ee_model = b_mobilenet.B_MobileNet(n_classes, args.pretrained, args.n_branches, args.dim, args.exit_type, device)
+		ee_model = b_mobilenet.B_MobileNet(n_classes, args.pretrained, args.n_branches, dim, args.exit_type, device)
 
 	elif(args.n_branches == 5):
 

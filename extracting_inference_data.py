@@ -50,12 +50,13 @@ def save_result(result, save_path):
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
-def extracting_inference_data(model, distortion_lvl_list, inference_data_path, dataset_path, indices_path, distortion_type, device):
+def extracting_inference_data(model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, distortion_type, 
+	device):
 
 	for distortion_lvl in distortion_lvl_list:
 		print("Distortion Level: %s"%(distortion_lvl))
 
-		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, distortion_lvl)
+		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_lvl)
 
 		result = run_inference_data(model, test_loader, args.n_branches, distortion_type, distortion_lvl, device)
 
@@ -79,14 +80,16 @@ def main(args):
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	n_classes = config.nr_class_dict[args.dataset_name]
+	input_dim = config.img_dim_dict[args.n_branches]
+	dim = config.dim_dict[args.n_branches]
 
 	#Load the trained early-exit DNN model.
-	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, device)
+	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
 
 	distortion_lvl_list = config.distortion_level_dict[args.distortion_type]
 
-	extracting_inference_data(ee_model, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(ee_model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
 		args.distortion_type, device)
 
 
@@ -106,8 +109,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--calib_type', type=str, default="no_calib", help='Calibration Type.')
 	parser.add_argument('--batch_size_train', type=int, default=config.batch_size_train, help='Size of train batch.')
 	parser.add_argument('--split_ratio', type=float, default=config.split_ratio, help='Split Ratio')
-	parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
-	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
+	#parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
+	#parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
 	parser.add_argument('--distortion_prob', type=float, default=1)
 
 	args = parser.parse_args()
