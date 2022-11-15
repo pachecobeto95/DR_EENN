@@ -1,13 +1,12 @@
 from torchvision import datasets, transforms
-import torch, os, sys, requests, random, logging, torchvision, config
+import torch, os, sys, requests, random, logging, torchvision, config, ee_nn, b_mobilenet
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 
-def get_indices_caltech256(dataset, split_ratio):
+
+def get_indices(dataset, split_ratio):
 	
 	nr_samples = len(dataset)
-	#print("Nr Samples: %s"%(nr_samples))
 	indices = list(range(nr_samples))
 	np.random.shuffle(indices)
 
@@ -15,103 +14,61 @@ def get_indices_caltech256(dataset, split_ratio):
 
 
 	train_val_idx, test_idx = indices[:train_val_size], indices[train_val_size:]
-	#print("Train Indices: %s"%(train_val_idx))
 
-	#np.random.shuffle(train_val_idx)
+	np.random.shuffle(train_val_idx)
 
-	#train_size = len(train_val_idx) - int(np.floor(split_ratio * len(train_val_idx) ))
-	#print("Train Size: %s"%(train_size))
-	#train_idx, val_idx = train_val_idx[:train_size], train_val_idx[train_size:]
+	train_size = len(train_val_idx) - int(np.floor(split_ratio * len(train_val_idx) ))
 
-	#print("Train Indices: %s"%(train_idx))
-	#sys.exit()
+	train_idx, val_idx = train_val_idx[:train_size], train_val_idx[train_size:]
+
 	return train_val_idx, test_idx, test_idx
 
 
-class DistortionApplier(torchvision.transforms.Lambda):
-	def __init__(self, distortion_function, distortion_values):
-		super().__init__(distortion_function)
-		self.distortion_values = distortion_values
-
-	def __call__(self, img):
-		return self.distortion_function(img, self.distortion_values)
-
-def gaussian_blur(img, distortion_values):
-
-	sigma = random.choice(distortion_values)
-	kernel_size = (4*sigma+1, 4*sigma+1)
-	blurrer = transforms.GaussianBlur(kernel_size=kernel_size, sigma=sigma)
-
-	return blurrer(img)
-
-def gaussian_noise(img, distortion_values):
-	sigma = random.choice(distortion_values) 
-	noise_img = img + sigma * torch.randn_like(img)
-	return noise_img
-
-def pristine(img, distortion_values):
-	return img
-
-
-def motion_blur(self, img, distortion_values):
-
-	img = np.array(img)
-	sigma = random.choice(distortion_values)
-
-	# generating the kernel
-	kernel_motion_blur = np.zeros((sigma, sigma))
-	kernel_motion_blur[int((sigma-1)/2), :] = np.ones(sigma)
-	kernel_motion_blur = kernel_motion_blur / sigma
-
-	# applying the kernel to the input image
-	blurred_img = cv2.filter2D(img, -1, kernel_motion_blur)
-
-	return blurred_img
-
-
-
-
-class DistortionApplier2(object):
+class DistortionApplier(object):
 	def __init__(self, distortion_function, distortion_values):
 
-		self.distortion_values = distortion_values
 		self.distortion_function = getattr(self, distortion_function, self.distortion_not_found)
+		self.distortion_values = distortion_values
+
+		if(isinstance(distortion_values, list)):
+			self.distortion_values = random.choice(distortion_values)
 
 	def __call__(self, img):
+				
 		return self.distortion_function(img, self.distortion_values)
 
-	def gaussian_blur(self, img, distortion_values):
-		image = np.array(img)
-		sigma = random.choice(distortion_values)
-		blurred_img = cv2.GaussianBlur(image, (4*sigma+1, 4*sigma+1), sigma, None, sigma, cv2.BORDER_CONSTANT)
-		return Image.fromarray(blurred_img) 
+	def gaussian_blur(self, img, distortion_lvl):
+		#image = np.array(img)
+		kernel_size = int(4*np.ceil(distortion_lvl/2)+1) if (distortion_lvl < 1) else 	4*distortion_lvl+1
+		blurrer = transforms.GaussianBlur(kernel_size=(kernel_size, kernel_size), sigma=distortion_lvl)
+		return blurrer(img)
 
-	def gaussian_noise(self, img, distortion_values):
+	def gaussian_noise(self, img, distortion_lvl):
 		image = np.array(img)
-		sigma = random.choice(distortion_values)
-		noise_img = image + np.random.normal(0, sigma, (image.shape[0], image.shape[1], image.shape[2]))
-		return Image.fromarray(np.uint8(noise_img)) 
+		#noise_img = image + np.random.normal(0, distortion_lvl, (image.shape[0], image.shape[1], image.shape[2]))
+		noise_img = img + sigma * torch.randn_like(img)
+		return noise_img
+		#return Image.fromarray(np.uint8(noise_img)) 
 
-	def pristine(self, img, distortion_values):
+	def pristine(self, img, distortion_lvl):
 		return img
 
-	def motion_blur(self, img, distortion_values):
+	def motion_blur(self, img, distortion_lvl):
 
 		img = np.array(img)
-		sigma = random.choice(distortion_values)
 
 		# generating the kernel
-		kernel_motion_blur = np.zeros((sigma, sigma))
-		kernel_motion_blur[int((sigma-1)/2), :] = np.ones(sigma)
-		kernel_motion_blur = kernel_motion_blur / sigma
+		kernel_motion_blur = np.zeros((distortion_lvl, distortion_lvl))
+		kernel_motion_blur[int((distortion_lvl-1)/2), :] = np.ones(distortion_lvl)
+		kernel_motion_blur = kernel_motion_blur / distortion_lvl
 
 		# applying the kernel to the input image
 		blurred_img = cv2.filter2D(img, -1, kernel_motion_blur)
-
 		return blurred_img
 
 	def distortion_not_found(self):
 		raise Exception("This distortion type has not implemented yet.")
+
 
 def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
@@ -119,27 +76,23 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
-
 	transformations_train = transforms.Compose([
-		#transforms.Resize((args.input_dim, args.input_dim)),
-		transforms.Resize((224, 224)),
+		transforms.Resize((args.input_dim, args.input_dim)),
 		transforms.RandomChoice([
 			transforms.ColorJitter(brightness=(0.80, 1.20)),
 			transforms.RandomGrayscale(p = 0.25)]),
-		#transforms.CenterCrop((args.dim, args.dim)),
+		transforms.CenterCrop((args.dim, args.dim)),
 		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
-		#transforms.RandomApply([transforms.ColorJitter(brightness=(0.80, 1.20))]),
-		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
+		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
 		])
 
 	transformations_test = transforms.Compose([
-		transforms.Resize((224, 224)),
-		#transforms.CenterCrop((args.dim, args.dim)),
-		#transforms.RandomApply([DistortionApplier2(args.distortion_type, distortion_values)], p=0.5),
-		transforms.Resize(args.dim), 
+		transforms.Resize((args.input_dim, args.input_dim)),
+		transforms.CenterCrop((args.dim, args.dim)),
+		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
 		])
@@ -153,30 +106,32 @@ def load_caltech256(args, dataset_path, save_indices_path, distortion_values):
 
 	train_idx_path = os.path.join(save_indices_path, "training_idx_caltech256_%s.npy"%(args.model_id))
 	val_idx_path = os.path.join(save_indices_path, "validation_idx_caltech256_%s.npy"%(args.model_id))
-	#test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
+	test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
 
 	if( os.path.exists(train_idx_path) ):
 		#Load the indices to always use the same indices for training, validating and testing.
 		train_idx = np.load(train_idx_path)
 		val_idx = np.load(val_idx_path)
-		#test_idx = np.load(test_idx_path)
+		test_idx = np.load(test_idx_path)
 
 	else:
 		# This line get the indices of the samples which belong to the training dataset and test dataset. 
-		train_idx, val_idx, test_idx = get_indices_caltech256(train_set, args.split_ratio)
+		train_val_idx, test_idx = get_indices(train_set, args.split_ratio)
+		train_idx, val_idx = get_indices(train_set, args.split_ratio)
 
 		#Save the training, validation and testing indices.
-		np.save(train_idx_path, train_idx), np.save(val_idx_path, val_idx)#, np.save(test_idx_path, test_idx)
+		np.save(train_idx_path, train_idx), np.save(val_idx_path, val_idx), np.save(test_idx_path, test_idx)
 
 	train_data = torch.utils.data.Subset(train_set, indices=train_idx)
 	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
-	#test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
 	train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size_train, shuffle=True, num_workers=4, pin_memory=True)
 	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
-	#test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
+	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	return train_loader, val_loader, val_loader
+	return train_loader, val_loader, test_loader
+
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
 	model_loss = 0
@@ -206,7 +161,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	for (data, target) in tqdm(train_loader):
 		data, target = data.to(device), target.to(device)
 
-		output_list, conf_list, class_list = model.forwardTrain(data)
+		output_list, conf_list, class_list = model(data)
 		optimizer.zero_grad()
 
 		model_loss, ee_loss, model_acc, ee_acc = compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights)
@@ -276,3 +231,27 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 		print("Epoch: %s, Val Loss EE %s: %s, Val Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
 	return result_dict
 
+
+def load_ee_dnn(args, model_path, n_classes, device):
+	#Load the trained early-exit DNN model.
+
+	if (args.n_branches == 1):
+
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, 
+			args.distribution)
+
+	elif(args.n_branches == 3):
+		ee_model = b_mobilenet.B_MobileNet(n_classes, args.pretrained, args.n_branches, args.dim, args.exit_type, device)
+
+	elif(args.n_branches == 5):
+
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, 
+			args.distribution)
+
+	else:
+		raise Exception("The number of early-exit branches is not available yet.")
+
+
+	ee_model = ee_model.to(device)
+
+	return ee_model

@@ -8,70 +8,7 @@ from pthflops import count_ops
 from torch import Tensor
 import torch.nn.functional as F
 
-"""
-(18): ConvBNActivation(
-      (0): Conv2d(320, 1280, kernel_size=(1, 1), stride=(1, 1), bias=False)
-      (1): BatchNorm2d(1280, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      (2): ReLU6(inplace=True)
-    )
-  )
-  (classifier): Sequential(
-    (0): Dropout(p=0.2, inplace=False)
-    (1): Linear(in_features=1280, out_features=1000, bias=True)
-"""
-"""
-class EarlyExitBlock(nn.Module):
-	def __init__(self, input_shape, last_channel, n_classes, exit_type, device):
-		super(EarlyExitBlock, self).__init__()
-		self.input_shape = input_shape
-		_, channel, width, height = input_shape
-		
-		self.layers = nn.ModuleList()
 
-		if (exit_type == 'bnpool'):
-			self.layers.append(nn.BatchNorm2d(channel))
-			self.layers.append(nn.AdaptiveAvgPool2d(1))
-
-		elif(exit_type == 'conv'):
-			self.layers.append(nn.Conv2d(channel, last_channel, kernel_size=(1,1)))
-			self.layers.append(nn.BatchNorm2d(last_channel))
-			self.layers.append(nn.MaxPool2d(2))
-			self.layers.append(nn.ReLU6(inplace=True))
-
-		elif(exit_type == 'pooling'):
-			self.layers.append(nn.BatchNorm2d(channel))
-			self.layers.append(nn.MaxPool2d(2))
-
-		else:
-			self.layers = nn.ModuleList()
-
-		#This line defines the data shape that fully-connected layer receives.
-		current_channel, current_width, current_height = self.get_current_data_shape()
-		self.classifier = nn.Sequential(nn.Dropout(0.2), 
-			nn.Linear(current_channel*current_width*current_height, n_classes))
-		self.classifier = self.classifier.to(device)
-
-	def get_current_data_shape(self):
-		print("Before")
-		print(self.input_shape)
-		_, channel, width, height = self.input_shape
-		temp_layers = nn.Sequential(*self.layers)
-
-		input_tensor = torch.rand(1, channel, width, height)
-		_, output_channel, output_width, output_height = temp_layers(input_tensor).shape
-		print("After")
-		print(output_channel, output_width, output_height)		
-		return output_channel, output_width, output_height
-
-	def forward(self, x):
-		for layer in self.layers:
-			x = layer(x)
-		#x = x.view(x.size(0), -1)
-		x = torch.flatten(x, 1)
-		output = self.classifier(x)
-
-		return output
-"""
 
 class EarlyExitBlock(nn.Module):
 	def __init__(self, input_shape, pool_size, n_classes, exit_type, device):
@@ -113,8 +50,8 @@ class EarlyExitBlock(nn.Module):
 			x = layer(x)
 		x = x.view(x.size(0), -1)
 		output = self.classifier(x)
-		#confidence = self.softmax_layer()
 		return output
+
 
 
 class Early_Exit_DNN(nn.Module):
@@ -152,12 +89,14 @@ class Early_Exit_DNN(nn.Module):
 		build_early_exit_dnn = self.select_dnn_architecture_model()
 		build_early_exit_dnn()
 
+
 	def select_dnn_architecture_model(self):
 		"""
 		This method selects the backbone to insert the early exits.
 		"""
 
-		architecture_dnn_model_dict = {"mobilenet": self.early_exit_mobilenet}
+		architecture_dnn_model_dict = {"mobilenet": self.early_exit_mobilenet, 
+		"alexnet": self.early_exit_alexnet}
 
 		return architecture_dnn_model_dict.get(self.model_name, self.invalid_model)
 
@@ -170,7 +109,7 @@ class Early_Exit_DNN(nn.Module):
 		"pareto":self.paretto_distribution,
 		"fibonacci":self.fibo_distribution}
 		return distribution_method_dict.get(self.distribution, self.invalid_distribution)
-    
+
 	def linear_distribution(self, i):
 		"""
 		This method defines the Flops to insert an early exits, according to a linear distribution.
@@ -238,6 +177,8 @@ class Early_Exit_DNN(nn.Module):
 			current_flop, _ = count_ops(intermediate_model, x, verbose=False, print_readable=False)
 			return self.stage_id < self.n_branches and current_flop >= self.threshold_flop_list[self.stage_id]
 
+	
+
 	def add_exit_block(self):
 		"""
 		This method adds an early exit in the suitable position.
@@ -252,6 +193,56 @@ class Early_Exit_DNN(nn.Module):
 		self.exits.append(EarlyExitBlock(feature_shape, self.last_channel, self.n_classes, self.exit_type, self.device).to(self.device))
 		self.layers = nn.ModuleList()
 		self.stage_id += 1    
+
+	def early_exit_alexnet(self):
+
+		self.stages = nn.ModuleList()
+		self.exits = nn.ModuleList()
+		self.layers = nn.ModuleList()
+		self.stage_id = 0
+
+		self.last_channel = 1280
+
+
+		# Loads the backbone model. In other words, Mobilenet architecture provided by Pytorch.
+		backbone_model = models.alexnet(self.pretrained).to(self.device)
+
+		#backbone_model = torch.hub.load('pytorch/vision:v0.6.0', 'alexnet', pretrained=self.pretrained)
+
+		# It verifies if the number of early exits provided is greater than a number of layers in the backbone DNN model.
+		self.verifies_nr_exits(backbone_model.features)
+
+		# This obtains the flops total of the backbone model
+		self.total_flops = self.countFlops(backbone_model)
+
+		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
+		#self.threshold_flop_list = self.where_insert_early_exits()
+
+		# This line obtains where inserting an early exit based on the Flops number and accordint to distribution method
+		if(self.distribution != "predefined"):
+			self.threshold_flop_list = self.where_insert_early_exits()
+
+
+		for nr_block, block in enumerate(backbone_model.features.children()):
+			
+			self.layers.append(block)
+			if (self.is_suitable_for_exit(nr_block)):
+				self.add_exit_block()
+
+		self.layers.append(nn.AdaptiveAvgPool2d(output_size=(6,6)))
+		self.stages.append(nn.Sequential(*self.layers))
+
+		self.classifier = backbone_model.classifier
+		
+		self.classifier[4] = nn.Linear(in_features=4096, out_features=1024, bias=True)
+		self.classifier[6] = nn.Linear(in_features=1024, out_features=self.n_classes, bias=True)
+		
+		self.softmax = nn.Softmax(dim=1)
+
+
+
+
+
 
 
 	def early_exit_mobilenet(self):
@@ -297,7 +288,7 @@ class Early_Exit_DNN(nn.Module):
 		self.softmax = nn.Softmax(dim=1)
 
 
-	def forwardTrain(self, x):
+	def forward(self, x):
 		"""
 		This method is used to train the early-exit DNN model
 		"""
@@ -345,51 +336,6 @@ class Early_Exit_DNN(nn.Module):
 		output_list.append(output), infered_class_list.append(infered_class), conf_list.append(conf)
 
 		return output_list, conf_list, infered_class_list
-
-
-
-	def forwardEval(self, x, p_tar):
-		"""
-		This method is used to train the early-exit DNN model
-		"""
-		output_list, conf_list, class_list  = [], [], []
-
-		for i, exitBlock in enumerate(self.exits):
-			x = self.stages[i](x)
-
-			output_branch = exitBlock(x)
-			conf, infered_class = torch.max(self.softmax(output_branch), 1)
-			#print(conf.item())
-			# Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
-			if (conf.item() >= p_tar):
-				return output_branch, conf, infered_class, i+1
-				
-		else:
-			output_list.append(output_branch)
-			conf_list.append(conf.item())
-			class_list.append(infered_class)
-
-		x = self.stages[-1](x)
-
-		x = torch.flatten(x, 1)
-
-		output = self.classifier(x)
-		conf, infered_class = torch.max(self.softmax(output), 1)
-
-		# Note that if confidence value is greater than a p_tar value, we terminate the dnn inference and returns the output
-		# This also happens in the last exit
-		if (conf.item() >= p_tar):
-			return output, conf, infered_class, self.n_branches 
-		else:
-
-			# If any exit can reach the p_tar value, the output is give by the more confidence output.
-			# If evaluation, it returns max(output), max(conf) and the number of the early exit.
-
-			conf_list.append(conf.item())
-			class_list.append(infered_class)
-			output_list.append(output)
-			max_conf = np.argmax(conf_list)
-			return output_list[max_conf], conf_list[max_conf], class_list[max_conf], self.n_branches
 
 	def global_temperature_scaling(self, logits, temp_overall):
 		return torch.div(logits, temp_overall)
