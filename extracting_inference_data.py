@@ -5,7 +5,7 @@ import itertools, argparse, os, sys, random, logging, config, torch, torchvision
 
 
 
-def run_inference_data(model, test_loader, n_branches, distortion_type, distortion_lvl, device):
+def run_inference_data(model, test_loader, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
 	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
@@ -33,9 +33,10 @@ def run_inference_data(model, test_loader, n_branches, distortion_type, distorti
 	correct_list = np.array(correct_list)
 
 	print("Acc: %s"%(sum(correct_list)/len(correct_list)))
-	#results = {"distortion_type": distortion_type, "distortion_lvl": distortion_lvl, "p_tar": [p_tar]*len(target_list), 
-	#"target": target_list, "id": id_list}
-	results = {"distortion_type": [distortion_type]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
+
+
+	results = {"distortion_type_model": [distortion_type_model]*len(target_list),
+	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
 	
 	for i in range(n_exits):
@@ -50,15 +51,17 @@ def save_result(result, save_path):
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
-def extracting_inference_data(model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, distortion_type, 
-	device):
+def extracting_inference_data(model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, device, 
+	distortion_type_model, distortion_type_data):
+
+	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
 
 	for distortion_lvl in distortion_lvl_list:
 		print("Distortion Level: %s"%(distortion_lvl))
 
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_lvl)
 
-		result = run_inference_data(model, test_loader, args.n_branches, distortion_type, distortion_lvl, device)
+		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
 
 		save_result(result, inference_data_path)
 
@@ -66,12 +69,11 @@ def extracting_inference_data(model, input_dim, dim, distortion_lvl_list, infere
 def main(args):
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
-		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type, args.n_branches, args.model_id) )
+		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type_model, args.n_branches, args.model_id) )
 
 
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_data_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
-
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
@@ -87,17 +89,22 @@ def main(args):
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
 
-	distortion_lvl_list = config.distortion_level_dict[args.distortion_type]
 
 	extracting_inference_data(ee_model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
-		args.distortion_type, device)
+		device, args.distortion_type_model, distortion_type_data="pristine")
+
+	extracting_inference_data(ee_model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
+		device, args.distortion_type_model, distortion_type_data="gaussian_blur")
+
+	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+		device, args.distortion_type_model, distortion_type_data="gaussian_noise")
 
 
 if (__name__ == "__main__"):
 
 	parser = argparse.ArgumentParser(description='UCB using MobileNet')
 	parser.add_argument('--model_id', type=int, default=config.model_id, help='Model Id.')
-	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
+	parser.add_argument('--distortion_type_model', type=str, default=config.distortion_type, help='Distortion Type.')
 	parser.add_argument('--n_branches', type=int, default=config.n_branches, help='Number of exit exits.')
 	parser.add_argument('--dataset_name', type=str, default=config.dataset_name, help='Dataset Name.')
 	parser.add_argument('--model_name', type=str, default=config.model_name, help='Model name.')
