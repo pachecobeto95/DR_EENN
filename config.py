@@ -21,7 +21,7 @@ max_patience = 20
 model_id = 1
 distribution = "linear"
 
-nr_class_dict = {"caltech256": 257}
+nr_class_dict = {"caltech256": 258}
 distortion_level_dict = {"pristine": [0], "gaussian_blur": [0.5, 0.8, 0.9, 1, 2, 3], 
 "gaussian_noise": [1, 5, 10, 15, 20, 25]}
 
