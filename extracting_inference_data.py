@@ -19,7 +19,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type, distorti
 			data, target = data.to(device), target.to(device)
 
 			_, conf_branches, infered_class_branches = model(data)
-			print(infered_class_branches, target)
+			#print(infered_class_branches, target)
 
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
@@ -33,7 +33,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type, distorti
 	conf_branches_list = np.array(conf_branches_list)
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
-	
+
 	#results = {"distortion_type": distortion_type, "distortion_lvl": distortion_lvl, "p_tar": [p_tar]*len(target_list), 
 	#"target": target_list, "id": id_list}
 	results = {"distortion_type": [distortion_type]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
