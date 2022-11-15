@@ -51,7 +51,7 @@ def save_result(result, save_path):
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
-def extracting_inference_data(model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, device, 
+def extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
 	distortion_type_model, distortion_type_data):
 
 	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
@@ -90,10 +90,10 @@ def main(args):
 	ee_model.eval()
 
 
-	extracting_inference_data(ee_model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="pristine")
 
-	extracting_inference_data(ee_model, input_dim, dim, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="gaussian_blur")
 
 	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
