@@ -255,5 +255,6 @@ def load_ee_dnn(args, model_path, n_classes, dim, device):
 	ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
 	ee_model = ee_model.to(device)
+	ee_model.eval()
 
 	return ee_model
