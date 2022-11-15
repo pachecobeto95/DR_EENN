@@ -84,7 +84,7 @@ def main(args):
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, device)
 	ee_model.eval()
 
-	distortion_lvl_list = config.distortion_lvl_dict[args.distortion_type]
+	distortion_lvl_list = config.distortion_level_dict[args.distortion_type]
 
 	extracting_inference_data(ee_model, distortion_lvl_list, inference_data_path, dataset_path, indices_path, 
 		args.distortion_type, device)
