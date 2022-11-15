@@ -25,9 +25,9 @@ nr_class_dict = {"caltech256": 257}
 distortion_level_dict = {"pristine": [0], "gaussian_blur": [0.5, 0.8, 0.9, 1, 2, 3], 
 "gaussian_noise": [1, 5, 10, 15, 20, 25]}
 
-img_dim_dict = {1: 256, 3: 330, 5:, 256}
+img_dim_dict = {1: 256, 3: 330, 5: 256}
 
-dim_dict = {1: 224, 3: 300, 5:, 224}
+dim_dict = {1: 224, 3: 300, 5: 224}
 
 
 logFile = os.path.join(DIR_NAME, "logging_training_%s_%s_%s.csv"%(dataset_name, model_name, model_id))
