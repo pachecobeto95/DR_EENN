@@ -70,7 +70,7 @@ class DistortionApplier(object):
 		raise Exception("This distortion type has not implemented yet.")
 
 
-def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, distortion_values):
+def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, distortion_type, distortion_values):
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
 	torch.manual_seed(args.seed)
@@ -84,7 +84,7 @@ def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, disto
 		transforms.CenterCrop((dim, dim)),
 		transforms.RandomHorizontalFlip(p=0.25),
 		transforms.RandomRotation(25),
-		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
+		transforms.RandomApply([DistortionApplier(distortion_type, distortion_values)], p=args.distortion_prob),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
 		])
@@ -92,7 +92,7 @@ def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, disto
 	transformations_test = transforms.Compose([
 		transforms.Resize((input_dim, input_dim)),
 		transforms.CenterCrop((dim, dim)),
-		transforms.RandomApply([DistortionApplier(args.distortion_type, distortion_values)], p=args.distortion_prob),
+		transforms.RandomApply([DistortionApplier(distortion_type, distortion_values)], p=args.distortion_prob),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
 		])
