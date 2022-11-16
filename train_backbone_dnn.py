@@ -5,6 +5,7 @@ import utils, config, ee_nn
 import torch.optim as optim
 import torch.nn as nn
 from tqdm import tqdm
+import torchvision.models as models
 
 
 def main(args):
