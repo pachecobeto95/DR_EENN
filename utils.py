@@ -173,7 +173,7 @@ def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
 		loss_list.append(loss.item()), acc_list.append(acc_batch)
 
-		model_loss.backward()
+		loss.backward()
 		optimizer.step()
 
 		# clear variables
