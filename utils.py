@@ -253,8 +253,6 @@ def evalBackboneDNN(model, val_loader, criterion, epoch, device):
 
 			_, infered_class = torch.max(softmax(output), 1)
 
-			optimizer.zero_grad()
-
 			loss = criterion(output, target)
 
 			acc_batch = 100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0)
