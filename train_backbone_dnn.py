@@ -114,6 +114,9 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
 
+	parser.add_argument('--distortion_prob', type=float, default=1)
+
+
 	args = parser.parse_args()
 
 	main(args)
