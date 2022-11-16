@@ -237,8 +237,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	return result_dict
 
 
-def evalBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
-
+def evalBackboneDNN(model, val_loader, criterion, epoch, device):
 	loss_list, acc_list = [], []
 
 	model.eval()
