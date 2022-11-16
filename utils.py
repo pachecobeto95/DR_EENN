@@ -151,7 +151,7 @@ def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_
 
 def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
-	loss_list, acc_list = []
+	loss_list, acc_list = [], []
 
 	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
 	model.train()
