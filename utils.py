@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 from tqdm import tqdm
+import torch.nn as nn
 
 def get_indices(dataset, split_ratio):
 	
@@ -156,12 +157,13 @@ def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
 	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
 	model.train()
+	softmax = nn.Softmax(dim=1)
 
 	for (data, target) in tqdm(train_loader):
 		data, target = data.to(device), target.to(device)
 
 		output = model(data)
-		_, infered_class = torch.max(self.softmax(output_branch), 1)
+		_, infered_class = torch.max(softmax(output), 1)
 
 		optimizer.zero_grad()
 
@@ -240,6 +242,8 @@ def evalBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 	loss_list, acc_list = [], []
 
 	model.eval()
+	softmax = nn.Softmax(dim=1)
+
 	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
 
 	with torch.no_grad():
@@ -248,7 +252,7 @@ def evalBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
 			output = model(data)
 
-			_, infered_class = torch.max(self.softmax(output_branch), 1)
+			_, infered_class = torch.max(softmax(output), 1)
 
 			optimizer.zero_grad()
 
