@@ -48,8 +48,8 @@ def main(args):
 	while (count < args.max_patience):
 		epoch += 1
 		current_result = {}
-		train_result = utils.trainBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, device)
-		val_result = utils.evalBackboneDNN(model, val_loader, criterion, n_exits, epoch, device)
+		train_result = utils.trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device)
+		val_result = utils.evalBackboneDNN(model, val_loader, criterion, epoch, device)
 		scheduler.step()
 		current_result.update(train_result), current_result.update(val_result)
 		df = df.append(pd.Series(current_result), ignore_index=True)
