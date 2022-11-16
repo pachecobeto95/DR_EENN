@@ -241,10 +241,6 @@ class Early_Exit_DNN(nn.Module):
 
 
 
-
-
-
-
 	def early_exit_mobilenet(self):
 
 		self.stages = nn.ModuleList()

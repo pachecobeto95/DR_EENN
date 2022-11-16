@@ -149,6 +149,46 @@ def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_
 
 	return model_loss, ee_loss, acc_model, acc_branches
 
+def trainBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, device):
+
+	loss_list, acc_list = []
+
+	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
+	model.train()
+
+	for (data, target) in tqdm(train_loader):
+		data, target = data.to(device), target.to(device)
+
+		output = model(data)
+		_, infered_class = torch.max(self.softmax(output_branch), 1)
+
+		optimizer.zero_grad()
+
+		loss = criterion(output, target)
+
+		acc_batch = 100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0)
+
+		loss_list.append(loss.item()), acc_list.append(acc_batch)
+
+		model_loss.backward()
+		optimizer.step()
+
+		# clear variables
+		del data, target, output, infered_class
+		torch.cuda.empty_cache()
+
+
+	avg_loss = round(np.mean(loss_list), 4)
+
+	avg_acc = round(np.mean(acc_list), 2)
+
+	print("Epoch: %s, Train Loss: %s, Train Acc: %s"%(epoch, avg_loss, avg_acc))
+
+	result_dict = {"epoch": epoch, "train_loss": avg_loss, "train_acc": avg_acc}
+
+	return result_dict
+
+
 def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, device, loss_weights):
 
 	model_loss_list, ee_loss_list = [], []
@@ -192,6 +232,46 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 		#logging.debug("Epoch: %s, Train Loss EE %s: %s, Train Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
 		print("Epoch: %s, Train Loss EE %s: %s, Train Acc EE %s: %s"%(epoch, i, avg_ee_loss[i], i, avg_ee_acc[i]))
 	return result_dict
+
+
+def evalBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, device):
+
+	loss_list, acc_list = [], []
+
+	model.eval()
+	#logging.basicConfig(level=logging.DEBUG, filename=config.logFile, filemode="a+")
+
+	with torch.no_grad():
+		for (data, target) in tqdm(val_loader):
+			data, target = data.to(device), target.to(device)
+
+			output = model(data)
+
+			_, infered_class = torch.max(self.softmax(output_branch), 1)
+
+			optimizer.zero_grad()
+
+			loss = criterion(output, target)
+
+			acc_batch = 100*inf_class.eq(target.view_as(inf_class)).sum().item()/target.size(0)
+
+			loss_list.append(loss.item()), acc_list.append(acc_batch)
+
+			# clear variables
+			del data, target, output, infered_class
+			torch.cuda.empty_cache()
+
+	avg_loss = round(np.mean(loss_list), 4)
+
+	avg_acc = round(np.mean(acc_list), 2)
+
+	#logging.debug("Epoch: %s, Val Model Loss: %s, Val Model Acc: %s"%(epoch, avg_loss, avg_acc))
+	print("Epoch: %s, Val Loss: %s, Val Acc: %s"%(epoch, avg_loss, avg_acc))
+
+	result_dict = {"epoch": epoch, "val_loss": avg_loss, "val_acc": avg_acc}
+	
+	return result_dict
+
 
 def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weights):
 	model_loss_list, ee_loss_list = [], []
