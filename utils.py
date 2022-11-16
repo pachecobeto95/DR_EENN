@@ -163,7 +163,7 @@ def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 		data, target = data.to(device), target.to(device)
 
 		output = model(data)
-		_, infered_class = torch.max(softmax(output), 1)
+		_, inf_class = torch.max(softmax(output), 1)
 
 		optimizer.zero_grad()
 
@@ -177,7 +177,7 @@ def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 		optimizer.step()
 
 		# clear variables
-		del data, target, output, infered_class
+		del data, target, output, inf_class
 		torch.cuda.empty_cache()
 
 
