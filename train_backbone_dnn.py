@@ -108,6 +108,8 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--weight_decay', type=float, default=0.0005, help='Epochs.')
 
+	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
+
 	args = parser.parse_args()
 
 	main(args)
