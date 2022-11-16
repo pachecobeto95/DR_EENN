@@ -30,10 +30,9 @@ def main(args):
 	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, args.input_dim, args.dim, 
 		args.distortion_type, distortion_values)
 
-	model = models.mobilenet_v2(pretrained=True).to(device)
-
+	model = models.mobilenet_v2(pretrained=True)
 	model.classifier[1] = nn.Linear(1280, 257)
-
+	model = model.to(device)
 
 	criterion = nn.CrossEntropyLoss()
 
