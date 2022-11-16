@@ -26,9 +26,13 @@ def main(args):
 		os.makedirs(indices_path)
 
 	distortion_values = config.distortion_level_dict[args.distortion_type]	
-	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, args.distortion_type, distortion_values)
+	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, args.input_dim, args.dim, 
+		args.distortion_type, distortion_values)
 
 	model = models.mobilenet_v2(pretrained=True).to(device)
+
+	model.classifier[1] = nn.Linear(1280, 257)
+
 
 	criterion = nn.CrossEntropyLoss()
 
