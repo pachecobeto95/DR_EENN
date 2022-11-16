@@ -37,7 +37,7 @@ def main(args):
 
 	criterion = nn.CrossEntropyLoss()
 
-	optimizer = optim.Adam(model.stages.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+	optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 	scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 10, eta_min=0, last_epoch=-1, verbose=True)
 
