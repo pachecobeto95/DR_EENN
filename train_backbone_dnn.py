@@ -10,7 +10,7 @@ from tqdm import tqdm
 def main(args):
 
 
-	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "256_ObjectCategories")
+	dataset_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "257_ObjectCategories")
 	#indices_path = os.path.join(config.DIR_NAME, "indices")
 	indices_path = os.path.join(config.DIR_NAME, "datasets", config.dataset_name, "indices")
 
