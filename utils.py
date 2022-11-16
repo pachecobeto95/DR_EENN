@@ -3,6 +3,7 @@ import torch, os, sys, requests, random, logging, torchvision, config, ee_nn, b_
 import numpy as np
 import pandas as pd
 from PIL import Image
+from tqdm import tqdm
 
 def get_indices(dataset, split_ratio):
 	
