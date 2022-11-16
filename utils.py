@@ -251,7 +251,7 @@ def evalBackboneDNN(model, val_loader, criterion, epoch, device):
 
 			output = model(data)
 
-			_, infered_class = torch.max(softmax(output), 1)
+			_, inf_class = torch.max(softmax(output), 1)
 
 			loss = criterion(output, target)
 
@@ -260,7 +260,7 @@ def evalBackboneDNN(model, val_loader, criterion, epoch, device):
 			loss_list.append(loss.item()), acc_list.append(acc_batch)
 
 			# clear variables
-			del data, target, output, infered_class
+			del data, target, output, inf_class
 			torch.cuda.empty_cache()
 
 	avg_loss = round(np.mean(loss_list), 4)
