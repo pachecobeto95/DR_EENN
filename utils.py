@@ -149,7 +149,7 @@ def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_
 
 	return model_loss, ee_loss, acc_model, acc_branches
 
-def trainBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, device):
+def trainBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
 	loss_list, acc_list = []
 
@@ -234,7 +234,7 @@ def trainEEDNNs(model, train_loader, optimizer, criterion, n_exits, epoch, devic
 	return result_dict
 
 
-def evalBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, device):
+def evalBackboneDNN(model, train_loader, optimizer, criterion, epoch, device):
 
 	loss_list, acc_list = [], []
 
@@ -269,7 +269,7 @@ def evalBackboneDNN(model, train_loader, optimizer, criterion, n_exits, epoch, d
 	print("Epoch: %s, Val Loss: %s, Val Acc: %s"%(epoch, avg_loss, avg_acc))
 
 	result_dict = {"epoch": epoch, "val_loss": avg_loss, "val_acc": avg_acc}
-	
+
 	return result_dict
 
 
