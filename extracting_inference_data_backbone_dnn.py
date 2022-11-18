@@ -84,8 +84,8 @@ def main(args):
 	model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 	model = model.to(device)
 
-	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
-		device, args.distortion_type, distortion_type_data="pristine")
+	#extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
+	#	device, args.distortion_type, distortion_type_data="pristine")
 
 	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type, distortion_type_data="gaussian_blur")
