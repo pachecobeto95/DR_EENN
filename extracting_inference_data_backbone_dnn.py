@@ -70,22 +70,20 @@ def main(args):
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	n_classes = 257
-	input_dim = config.img_dim_dict[args.n_branches]
-	dim = config.dim_dict[args.n_branches]
-
+	
 	#Load the trained backbone DNN model.
 	model = models.mobilenet_v2(pretrained=True)
 	model.classifier[1] = nn.Linear(1280, n_classes)
 
 	model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 
-	extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, distortion_type_data="pristine")
 
-	extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, distortion_type_data="gaussian_blur")
 
-	extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, distortion_type_data="gaussian_noise")
 
 
@@ -101,7 +99,9 @@ if (__name__ == "__main__"):
 	parser.add_argument('--split_ratio', type=float, default=config.split_ratio, help='Split Ratio')
 	parser.add_argument('--distortion_prob', type=float, default=1)
 	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
-	
+	parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
+	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
+
 
 	args = parser.parse_args()
 	main(args)
