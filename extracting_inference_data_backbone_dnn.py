@@ -72,12 +72,13 @@ def main(args):
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	n_classes = 257
-	
+
 	#Load the trained backbone DNN model.
 	model = models.mobilenet_v2(pretrained=True)
 	model.classifier[1] = nn.Linear(1280, n_classes)
 
 	model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
+	model = model.to(device)
 
 	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, distortion_type_data="pristine")
