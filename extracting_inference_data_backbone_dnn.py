@@ -7,7 +7,7 @@ import torch.nn as nn
 
 
 
-def run_inference_data(model, test_loader, distortion_type_data, distortion_lvl, device):
+def run_inference_data(model, test_loader, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
 	conf_list, infered_class_list, target_list, correct_list = [], [], [], []
 
@@ -32,7 +32,8 @@ def run_inference_data(model, test_loader, distortion_type_data, distortion_lvl,
 
 	print("Acc: %s"%(sum(correct_list)/len(correct_list)))
 
-	results = {"distortion_type_data": [distortion_type_data]*len(target_list), 
+	results = {"distortion_type_model": [distortion_type_model]*len(target_list), 
+	"distortion_type_data": [distortion_type_data]*len(target_list), 
 	"distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list, "conf": conf_list, "infered_class": infered_class_list,
 	"correct": correct_list}
@@ -45,7 +46,7 @@ def save_result(result, save_path):
 
 
 def extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
-	distortion_type_data):
+	distortion_type_model, distortion_type_data):
 
 	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
 
@@ -54,7 +55,7 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
 
-		result = run_inference_data(model, test_loader, distortion_type_data, distortion_lvl, device)
+		result = run_inference_data(model, test_loader, distortion_type_model, distortion_type_data, distortion_lvl, device)
 
 		save_result(result, inference_data_path)
 
@@ -84,13 +85,13 @@ def main(args):
 	model = model.to(device)
 
 	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
-		device, distortion_type_data="pristine")
+		device, args.distortion_type, distortion_type_data="pristine")
 
 	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
-		device, distortion_type_data="gaussian_blur")
+		device, args.distortion_type, distortion_type_data="gaussian_blur")
 
 	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
-		device, distortion_type_data="gaussian_noise")
+		device, args.distortion_type, distortion_type_data="gaussian_noise")
 
 
 if (__name__ == "__main__"):
