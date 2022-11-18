@@ -12,6 +12,7 @@ def run_inference_data(model, test_loader, distortion_type_data, distortion_lvl,
 	conf_list, infered_class_list, target_list, correct_list = [], [], [], []
 
 	model.eval()
+	softmax = nn.Softmax(dim=1)
 
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
