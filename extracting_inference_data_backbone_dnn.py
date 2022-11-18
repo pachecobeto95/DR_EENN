@@ -19,6 +19,8 @@ def run_inference_data(model, test_loader, distortion_type_data, distortion_lvl,
 			data, target = data.to(device), target.to(device)
 
 			output = model(data)
+			conf, inf_class = torch.max(softmax(output), 1)
+
 
 			conf_list.append(conf.item()), infered_class_list.append(inf_class.item())    
 			correct_list.append(inf_class.eq(target.view_as(inf_class)).sum().item())			
