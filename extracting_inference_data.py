@@ -41,8 +41,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
 
-	print(prob_vectors_list[:, 0].shape)
-	sys.exit()
 	
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
@@ -53,7 +51,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	return results
 
 def save_result(result, save_path):
-	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	#df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df = pd.DataFrame(result)
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
