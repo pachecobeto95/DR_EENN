@@ -310,7 +310,7 @@ class Early_Exit_DNN(nn.Module):
 		prob_vector = self.softmax(output)
 
 		infered_conf, infered_class = torch.max(prob_vector, 1)
-		conf_list.append(infered_conf), class_list.append(infered_class), prob_vector_list.append(prob_vector.cpu().numpy())
+		conf_list.append(infered_conf), class_list.append(infered_class), prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
 
 		return prob_vector_list, conf_list, class_list
 
