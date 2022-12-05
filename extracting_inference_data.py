@@ -41,7 +41,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
 
-	print(prob_vectors_list[:, 0, :].shape)
+	print(prob_vectors_list[:, 0].shape)
 	sys.exit()
 	
 	for i in range(n_exits):
