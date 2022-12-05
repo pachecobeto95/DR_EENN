@@ -289,7 +289,7 @@ class Early_Exit_DNN(nn.Module):
 		This method is used to train the early-exit DNN model
 		"""
 
-		output_list, conf_list, class_list  = [], [], []
+		prob_vector_list, conf_list, class_list  = [], [], []
 
 		for i, exitBlock in enumerate(self.exits):
 
@@ -297,20 +297,22 @@ class Early_Exit_DNN(nn.Module):
 			output_branch = exitBlock(x)
 
 			#Confidence is the maximum probability of belongs one of the predefined classes and inference_class is the argmax
-			conf, infered_class = torch.max(self.softmax(output_branch), 1)
-			#print(conf, type(conf))
+			prob_vector = self.softmax(output_branch)
+			conf, infered_class = torch.max(prob_vector, 1)
 			
-			output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class)
+			conf_list.append(conf), class_list.append(infered_class), prob_vector_list.append(prob_vector.numpy())
 
 		x = self.stages[-1](x)
 
 		x = torch.flatten(x, 1)
 
 		output = self.classifier(x)
-		infered_conf, infered_class = torch.max(self.softmax(output), 1)
-		output_list.append(output), conf_list.append(infered_conf), class_list.append(infered_class)
+		prob_vector = self.softmax(output)
 
-		return output_list, conf_list, class_list
+		infered_conf, infered_class = torch.max(prob_vector, 1)
+		conf_list.append(infered_conf), class_list.append(infered_class), prob_vector_list.append(prob_vector.numpy())
+
+		return prob_vector_list, conf_list, class_list
 
 	def forwardInferenceNoCalib(self, x):
 		output_list, conf_list, infered_class_list = [], [], []

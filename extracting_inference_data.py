@@ -10,6 +10,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
 	correct_list, exit_branch_list, id_list = [], [], []
+	prob_vectors_list = []
 
 	model.eval()
 
@@ -18,12 +19,13 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 			data, target = data.to(device), target.to(device)
 
-			_, conf_branches, infered_class_branches = model(data)
+			prob_vectors, conf_branches, infered_class_branches = model(data)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
+			prob_vectors_list.append(prob_vectors)
 
 			del data, target
 			torch.cuda.empty_cache()
@@ -34,7 +36,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 	#print("Acc: %s"%(sum(correct_list)/len(correct_list)))
 
-
 	results = {"distortion_type_model": [distortion_type_model]*len(target_list),
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
@@ -42,7 +43,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
-			"correct_branch_%s"%(i+1): correct_list[:, i]})
+			"correct_branch_%s"%(i+1): correct_list[:, i], 
+			"prob_vector_branch_%s"%(i+1): prob_vectors_list[:, i]})
 
 	return results
 
