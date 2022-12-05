@@ -198,23 +198,27 @@ class B_MobileNet(nn.Module):
 
   def forwardTrain(self, x):
 
-    output_list, conf_list, class_list  = [], [], []
+    prob_vector_list, conf_list, class_list  = [], [], []
 
     for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
-      conf, infered_class = torch.max(self.softmax(output_branch), 1)
 
-      output_list.append(output_branch), conf_list.append(conf), class_list.append(infered_class-1)
+      prob_vector = self.softmax(output_branch)
+      conf, infered_class = torch.max(prob_vector, 1)
+
+      conf_list.append(conf), class_list.append(infered_class-1), prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
 
     output = self.fully_connected(x)
-    infered_conf, infered_class = torch.max(self.softmax(output), 1)
-    output_list.append(output), conf_list.append(infered_conf), class_list.append(infered_class-1)
+    prob_vector = self.softmax(output)
+
+    infered_conf, infered_class = torch.max(prob_vector, 1)
+    conf_list.append(infered_conf), class_list.append(infered_class-1), prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
     
-    return output_list, conf_list, class_list
+    return prob_vector_list, conf_list, class_list
 
   def forwardEval(self, x, p_tar):
     output_list, conf_list, class_list  = [], [], []
