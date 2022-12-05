@@ -46,13 +46,13 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
 			"correct_branch_%s"%(i+1): correct_list[:, i], 
-			"prob_vector_branch_%s"%(i+1): prob_vectors_list[:, i, :]})
+			"prob_vector_branch_%s"%(i+1): list(prob_vectors_list[:, i, :])})
 
 	return results
 
 def save_result(result, save_path):
-	#df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
-	df = pd.DataFrame(result)
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	#df = pd.DataFrame(result)
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
