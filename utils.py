@@ -320,7 +320,7 @@ def load_ee_dnn(args, model_path, n_classes, dim, device):
 
 	if (args.n_branches == 1):
 
-		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, 
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
 			args.distribution)
 
 	elif(args.n_branches == 3):
@@ -328,7 +328,7 @@ def load_ee_dnn(args, model_path, n_classes, dim, device):
 
 	elif(args.n_branches == 5):
 
-		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, args.dim, device, args.exit_type, 
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
 			args.distribution)
 
 	else:

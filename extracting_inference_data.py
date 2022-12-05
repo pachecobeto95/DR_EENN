@@ -115,8 +115,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--calib_type', type=str, default="no_calib", help='Calibration Type.')
 	parser.add_argument('--batch_size_train', type=int, default=config.batch_size_train, help='Size of train batch.')
 	parser.add_argument('--split_ratio', type=float, default=config.split_ratio, help='Split Ratio')
-	#parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
-	#parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
+	parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
+	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
 	parser.add_argument('--distortion_prob', type=float, default=1)
 
 	args = parser.parse_args()
