@@ -301,6 +301,8 @@ class Early_Exit_DNN(nn.Module):
 			conf, infered_class = torch.max(prob_vector, 1)
 			
 			conf_list.append(conf), class_list.append(infered_class), prob_vector_list.append(prob_vector.cpu().numpy())
+			print(prob_vector.cpu().numpy().shape)
+			sys.exit()
 
 		x = self.stages[-1](x)
 
