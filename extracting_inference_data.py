@@ -40,6 +40,9 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	results = {"distortion_type_model": [distortion_type_model]*len(target_list),
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
+
+	print(prob_vectors_list[:, i, :].shape)
+	sys.exit()
 	
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
