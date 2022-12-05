@@ -34,7 +34,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
 	prob_vectors_list = np.array(prob_vectors_list)
-	print(prob_vectors_list.shape)
 
 	#print("Acc: %s"%(sum(correct_list)/len(correct_list)))
 
@@ -46,7 +45,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
 			"correct_branch_%s"%(i+1): correct_list[:, i], 
-			"prob_vector_branch_%s"%(i+1): prob_vectors_list[:, i]})
+			"prob_vector_branch_%s"%(i+1): prob_vectors_list[:, i, :]})
 
 	return results
 
