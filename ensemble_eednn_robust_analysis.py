@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
-import argparse, config, os
-
-#def extract_early_classification(df_ee, n_branch, n_branches_edge, threshold, distortion_levels):
-
+import argparse, config, os, sys
 
 
 def extractData(df, distortion_lvl, distortion_type_data):
@@ -36,7 +33,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 		remaining_data = remaining_data[~early_exit_samples]
 
 	acc_device = sum(correct_list)/sum(numexits)
-	print(acc_device)
+
 	return acc_device
 
 
@@ -48,17 +45,23 @@ def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 	return acc
 
+def compute_acc_ensemble_ee(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
+
+	print(df_ee.columns)
+
+
 def extract_accuracy(df_backbone, df_ee, n_branches_edge, n_branches_total, threshold, distortion_levels, distortion_type_data):
 
 	acc_ee_list, acc_backbone_list = [], []
 
 	for distortion_lvl in distortion_levels:
-		acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data)
-		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
+		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branch, distortion_lvl))
 
+		#acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
+		#acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data)
+		acc_ensemble_ee = compute_acc_ensemble_ee(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data)
+		sys.exit()
 		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone)
-
-	sys.exit()
 
 
 def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
@@ -68,7 +71,6 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
 	for threshold in config.threshold_list:
 
 		for n_branch in range(2, args.n_branches+1):
-			print("Threshold: %s, Nr of branches at the Edge: %s"%(threshold, n_branch))
 
 			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
 			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
