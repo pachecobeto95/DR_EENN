@@ -45,48 +45,19 @@ def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 	return acc
 
-def extract_ensemble_prob_vector(row):
-
-	nr_branches_edge = len(row)
-	nr_classes = len(row[0])
-	ensemble_prob_vector = np.zeros(nr_classes)
-
-	for i in range(1, nr_branches_edge+1):
-
-		#prob_vector = list(map(float, np.array(row['prob_vector_branch_%s'%(i)])[1:][:-1].split(" ")))
-		#print(prob_vector)
-		
-		ensemble_prob_vector = ensemble_prob_vector + np.array(prob_vector)
-
-	ensemble_prob_vector /= nr_branches_edge
-
-	return ensemble_prob_vector
-
-def extract_ensemble_conf(row):
-	infered_conf, infered_class = torch.max(row, 1)
-	return pd.Series([infered_conf, infered_class])
-
 
 def compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
 
-	select_columns = ["prob_vector_branch_%s"%(i) for i in range(1, n_branches_edge + 1)]
 
-	df_selected = df_ee[select_columns]
+	df_edge = df_ee[df_ee["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
-	df_ee["ensemble_prob_vector"] = df_selected.apply(extract_ensemble_prob_vector, axis=1)
+	nr_correct = sum(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
 
-	df_ee[["ensemble_conf", "ensemble_infered_class"]] = df_ee["ensemble_prob_vector"].apply(extract_ensemble_conf, axis=1)
+	nr_samples = len(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
 
+	ensemble_edge_acc = nr_correct/nr_samples
 
-	df_ensemble = df_ee[df_ee["ensemble_conf"] >= threshold]
-
-	nr_samples = len(df_ensemble)
-
-	nr_correct = len(df_ensemble[df_ensemble.ensemble_infered_class == df_ensemble.target])
-
-	acc_ensemble_edge = nr_correct/nr_samples
-
-	return acc_ensemble_edge
+	return ensemble_edge_acc
 
 def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type_data):
 
@@ -109,7 +80,7 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
 	
 	for threshold in config.threshold_list:
 
-		for n_branch in range(2, n_exits+1):
+		for n_branch in range(1, n_exits+1):
 
 			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
 			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch, n_exits, threshold, distortion_levels, 
