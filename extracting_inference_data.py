@@ -8,7 +8,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 	nr_classes = len(prob_vectors[0])
 
 
-	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape)
+	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=torch.device('cuda:0'))
 
 	for i in range(1, nr_branch_edge+1):
 
