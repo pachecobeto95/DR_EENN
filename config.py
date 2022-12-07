@@ -27,6 +27,8 @@ distortion_level_dict = {"pristine": [0], "gaussian_blur": [0.1, 0.2, 0.5, 0.8, 
 
 distortion_type_list = ["pristine", "gaussian_blur", "gaussian_noise"]
 
+threshold_list = [0.7, 0.75, 0.8, 0.85, 0.9]
+
 img_dim_dict = {1: 256, 3: 330, 5: 256}
 
 dim_dict = {1: 224, 3: 300, 5: 224}
