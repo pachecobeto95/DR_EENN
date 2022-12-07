@@ -10,6 +10,9 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 	ensemble_prob_vector = torch.zeros(nr_classes)
 
 	for i in range(1, nr_branch_edge+1):
+
+		print(prob_vectors[0].shape)
+		sys.exit()
 		ensemble_prob_vector += prob_vectors[i-1]
 
 	ensemble_prob_vector /= nr_branch_edge
