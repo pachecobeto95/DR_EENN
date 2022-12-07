@@ -21,6 +21,9 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 	numexits, correct_list = np.zeros(n_branches_edge), np.zeros(n_branches_edge)
 	n_samples = len(df)
 
+	print(n_samples)
+	sys.exit()
+
 	for branch_idx in range(1, n_branches_edge+1):	 
 
 		if (i == n_branches_total):
@@ -57,7 +60,7 @@ def extract_accuracy(df_backbone, df_ee, n_branches_edge, n_branches_total, thre
 		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone)
 
 	sys.exit()
-	
+
 def main(args):
 
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
