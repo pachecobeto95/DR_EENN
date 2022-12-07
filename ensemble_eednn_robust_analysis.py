@@ -20,7 +20,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 
 	numexits, correct_list = np.zeros(n_branches_edge), np.zeros(n_branches_edge)
 	n_samples = len(df)
-
+	print(n_branches_edge)
 	for branch_idx in range(1, n_branches_edge+1):	 
 
 		if (i == n_branches_total):
