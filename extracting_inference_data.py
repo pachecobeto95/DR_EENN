@@ -7,13 +7,10 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	nr_classes = len(prob_vectors[0])
 
-	ensemble_prob_vector = np.zeros(nr_classes)
-
-	print(type(prob_vectors[0]) )
-	sys.exit()
+	ensemble_prob_vector = torch.zeros(nr_classes)
 
 	for i in range(1, nr_branch_edge+1):
-		ensemble_prob_vector += np.array(prob_vectors[i-1])
+		ensemble_prob_vector += prob_vectors[i-1]
 
 	ensemble_prob_vector /= nr_branch_edge
 
@@ -52,10 +49,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			data, target = data.to(device), target.to(device)
 
 			prob_vectors, conf_branches, infered_class_branches = model(data)
-
-			print(prob_vectors[0])
-			print(type(prob_vectors[0]))
-			sys.exit()
 
 			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target)			
 
