@@ -52,8 +52,8 @@ def extract_ensemble_prob_vector(row):
 	ensemble_prob_vector = np.zeros(nr_classes)
 
 	for i in range(1, nr_branches_edge+1):
-		print(type(np.asarray(row['prob_vector_branch_%s'%(i)] , dtype=float)) )
 		print(type(np.array(row['prob_vector_branch_%s'%(i)])))
+		print(np.array(row['prob_vector_branch_%s'%(i)][0]) )
 		sys.exit()
 		ensemble_prob_vector = ensemble_prob_vector + np.array(row['prob_vector_branch_%s'%(i)])
 
