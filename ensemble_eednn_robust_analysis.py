@@ -18,12 +18,12 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 
 	df = extractData(df, distortion_lvl, distortion_type_data) 
 
-	numexits, correct_list = np.zeros(exit_id), np.zeros(exit_id)
+	numexits, correct_list = np.zeros(n_branches_edge), np.zeros(n_branches_edge)
 	n_samples = len(df)
 
 	for branch_idx in range(1, n_branches_edge+1):	 
 
-		if (i == n_branches):
+		if (i == n_branches_total):
 			early_exit_samples = np.ones(current_n_samples, dtype=bool)
 		else:
 			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
@@ -57,6 +57,7 @@ def extract_accuracy(df_backbone, df_ee, n_branches_edge, n_branches_total, thre
 		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone)
 
 	sys.exit()
+	
 def main(args):
 
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
@@ -87,9 +88,9 @@ def main(args):
 			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
 				args.distortion_type_data)
 
-			plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
+			#plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
 
-			plotDistortedEdgeAccuracy(edge_prob_dict, n_branch, args.distortion_type_data)
+			#plotDistortedEdgeAccuracy(edge_prob_dict, n_branch, args.distortion_type_data)
 
 
 
