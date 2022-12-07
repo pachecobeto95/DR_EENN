@@ -72,7 +72,7 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
 
 			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
 			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
-				args.distortion_type_data)
+				distortion_type)
 
 			#plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
 
