@@ -11,7 +11,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	for i in range(1, nr_branch_edge+1):
 
-
+		print(prob_vectors[0].shape)
 		ensemble_prob_vector += prob_vectors[i-1]
 
 	print(ensemble_prob_vector.shape)
