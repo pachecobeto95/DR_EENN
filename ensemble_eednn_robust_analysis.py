@@ -82,7 +82,7 @@ def main(args):
 
 	for threshold in config.threshold_list:
 
-		for n_branch in range(args.n_branches):
+		for n_branch in range(1, args.n_branches+1):
 			print("Threshold: %s, Nr of branches at the Edge: %s"%(threshold, n_branch))
 
 			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
