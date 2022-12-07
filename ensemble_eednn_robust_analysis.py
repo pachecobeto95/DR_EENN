@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import argparse
+import argparse, config
 
 #def extract_early_classification(df_ee, n_branch, n_branches_edge, threshold, distortion_levels):
 
