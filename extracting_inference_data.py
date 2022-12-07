@@ -11,10 +11,9 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	for i in range(1, nr_branch_edge+1):
 
-		print(prob_vectors[0].shape)
-		print(prob_vectors[1].shape)
+		print(prob_vectors[i].shape, ensemble_prob_vector.shape)
 
-		ensemble_prob_vector += prob_vectors[i-1]
+		#ensemble_prob_vector += prob_vectors[i-1]
 
 	print(ensemble_prob_vector.shape)
 	sys.exit()
