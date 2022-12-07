@@ -52,7 +52,7 @@ def extract_ensemble_prob_vector(row):
 	ensemble_prob_vector = np.zeros(nr_classes)
 
 	for i in range(nr_branches_edge):
-		ensemble_prob_vector += np.array(df_ee['prob_vector_branch_%s'%(i)])
+		ensemble_prob_vector += np.array(row['prob_vector_branch_%s'%(i)])
 
 	ensemble_prob_vector /= nr_branches_edge
 
