@@ -9,12 +9,12 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 
 	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape)
-	sys.exit()
+
 	for i in range(1, nr_branch_edge+1):
 
 		print(prob_vectors[i].shape, ensemble_prob_vector.shape)
 
-		#ensemble_prob_vector += prob_vectors[i-1]
+		ensemble_prob_vector += prob_vectors[i-1]
 
 	ensemble_prob_vector /= nr_branch_edge
 
@@ -22,6 +22,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
 
+	sys.exit()
 	return ensemble_conf, ensemble_infered_class, correct
 
 def extract_ensemble_data(prob_vectors, n_exits, target):
