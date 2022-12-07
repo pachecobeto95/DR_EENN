@@ -9,6 +9,9 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	ensemble_prob_vector = np.zeros(nr_classes)
 
+	print(type(prob_vectors[0]) )
+	sys.exit()
+
 	for i in range(1, nr_branch_edge+1):
 		ensemble_prob_vector += np.array(prob_vectors[i-1])
 
