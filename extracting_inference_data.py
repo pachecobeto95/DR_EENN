@@ -54,6 +54,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			prob_vectors, conf_branches, infered_class_branches = model(data)
 
 			print(prob_vectors[0])
+			print(type(prob_vectors[0]))
 			sys.exit()
 
 			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target)			
