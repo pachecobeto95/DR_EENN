@@ -52,6 +52,8 @@ def extract_ensemble_prob_vector(row):
 	ensemble_prob_vector = np.zeros(nr_classes)
 
 	for i in range(1, nr_branches_edge+1):
+		print(type(row['prob_vector_branch_%s'%(i)]), type(np.array(row['prob_vector_branch_%s'%(i)])))
+		sys.exit()
 		ensemble_prob_vector = ensemble_prob_vector + np.array(row['prob_vector_branch_%s'%(i)])
 
 	ensemble_prob_vector /= nr_branches_edge
