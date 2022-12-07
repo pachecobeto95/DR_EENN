@@ -31,13 +31,12 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
 
 		numexits[i-1] = remaining_data[early_exit_samples]["conf_branch_%s"%(i)].count()
-		print(numexits)
 		correct_list[i-1] = remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum()
 
 		remaining_data = remaining_data[~early_exit_samples]
 
 	acc_device = sum(correct_list)/sum(numexits)
-
+	print(acc_device)
 	return acc_device
 
 
