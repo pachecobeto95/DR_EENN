@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import argparse, config, os, sys
+import argparse, config, os, sys, torch
 
 
 def extractData(df, distortion_lvl, distortion_type_data):
@@ -40,40 +40,75 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
-
+	
 	acc = sum(df.correct.values)/len(df.correct.values)
 
 	return acc
 
-def compute_acc_ensemble_ee(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
+def extract_ensemble_prob_vector(row):
 
-	print(df_ee.columns)
+	nr_branches_edge = len(row)
+	nr_classes = len(row[0])
+	ensemble_prob_vector = np.zeros(nr_classes)
+
+	for i in range(nr_branches_edge):
+		ensemble_prob_vector += np.array(df_ee['prob_vector_branch_%s'%(i)])
+
+	ensemble_prob_vector /= nr_branches_edge
+
+	return ensemble_prob_vector
+
+def extract_ensemble_conf(row):
+	infered_conf, infered_class = torch.max(row, 1)
+	return pd.Series([infered_conf, infered_class])
 
 
-def extract_accuracy(df_backbone, df_ee, n_branches_edge, n_branches_total, threshold, distortion_levels, distortion_type_data):
+def compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
 
-	acc_ee_list, acc_backbone_list = [], []
+	select_columns = ["prob_vector_branch_%s"%(i) for i in range(1, n_branches_edge + 1)]
+
+	df_selected = df_ee[select_columns]
+
+	df_ee["ensemble_prob_vector"] = df_selected.apply(extract_ensemble_prob_vector, axis=1)
+
+	df_ee[["ensemble_conf", "ensemble_infered_class"]] = df_ee["ensemble_prob_vector"].apply(extract_ensemble_conf, axis=1)
+
+
+	df_ensemble = df_ee[df_ee["ensemble_conf"] >= threshold]
+
+	nr_samples = len(df_ensemble)
+
+	nr_correct = len(df_ensemble[df_ensemble.ensemble_infered_class == df_ensemble.target])
+
+	acc_ensemble_edge = nr_correct/nr_samples
+
+	return acc_ensemble_edge
+
+def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type_data):
+
+	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list = [], [], []
 
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
 
 		#acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
-		#acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data)
-		acc_ensemble_ee = compute_acc_ensemble_ee(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data)
+		#acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		acc_ensemble_edge = compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 		sys.exit()
-		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone)
+		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(acc_ensemble_edge)
 
 
 def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
 
 	distortion_levels = [0] + config.distortion_level_dict[distortion_type]
-
+	n_exits = args.n_branches + 1
+	
 	for threshold in config.threshold_list:
 
-		for n_branch in range(2, args.n_branches+1):
+		for n_branch in range(2, n_exits+1):
 
 			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
-			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
+			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
 			#plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
