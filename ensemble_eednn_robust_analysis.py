@@ -21,9 +21,6 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 	numexits, correct_list = np.zeros(n_branches_edge), np.zeros(n_branches_edge)
 	n_samples = len(df)
 
-	print(n_samples)
-	sys.exit()
-
 	for branch_idx in range(1, n_branches_edge+1):	 
 
 		if (i == n_branches_total):
@@ -32,6 +29,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
 
 		numexits[i-1] = remaining_data[early_exit_samples]["conf_branch_%s"%(i)].count()
+		print(numexits)
 		correct_list[i-1] = remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum()
 
 		remaining_data = remaining_data[~early_exit_samples]
