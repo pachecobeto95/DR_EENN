@@ -60,6 +60,28 @@ def extract_accuracy(df_backbone, df_ee, n_branches_edge, n_branches_total, thre
 
 	sys.exit()
 
+
+def exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type):
+
+	distortion_levels = [0] + config.distortion_level_dict[distortion_type]
+
+	for threshold in config.threshold_list:
+
+		for n_branch in range(2, args.n_branches+1):
+			print("Threshold: %s, Nr of branches at the Edge: %s"%(threshold, n_branch))
+
+			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
+			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
+				args.distortion_type_data)
+
+			#plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
+
+			#plotDistortedEdgeAccuracy(edge_prob_dict, n_branch, args.distortion_type_data)
+
+
+
+
+
 def main(args):
 
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
@@ -78,22 +100,9 @@ def main(args):
 	df_ee = df_ee[df_ee.distortion_type_model == args.distortion_type_model]
 	df_backbone = df_backbone[df_backbone.distortion_type_model == args.distortion_type_model]
 
-	distortion_levels = [0] + config.distortion_level_dict[args.distortion_type_data]
 
-
-	for threshold in config.threshold_list:
-
-		for n_branch in range(1, args.n_branches+1):
-			print("Threshold: %s, Nr of branches at the Edge: %s"%(threshold, n_branch))
-
-			#edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
-			acc_edge_dict, overall_acc_dict = extract_accuracy(df_backbone, df_ee, n_branch, args.n_branches, threshold, distortion_levels, 
-				args.distortion_type_data)
-
-			#plotDistortedEarlyClassification(edge_prob_dict, n_branch, args.distortion_type_data)
-
-			#plotDistortedEdgeAccuracy(edge_prob_dict, n_branch, args.distortion_type_data)
-
+	exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type="gaussian_blur")
+	exp_ensemble_analysis(args, df_backbone, df_ee, distortion_type="gaussian_noise")
 
 
 
@@ -104,7 +113,6 @@ if (__name__ == "__main__"):
 	parser = argparse.ArgumentParser(description='Plot results of Ensemble in Early-exit DNNs.')
 	parser.add_argument('--model_id', type=int, default=config.model_id, help='Model Id.')
 	parser.add_argument('--distortion_type_model', type=str, default=config.distortion_type, help='Distortion Type of the model.')
-	parser.add_argument('--distortion_type_data', type=str, choices=config.distortion_type_list, help='Distortion Type of the data.')
 	parser.add_argument('--n_branches', type=int, default=config.n_branches, help='Number of exit exits.')
 	parser.add_argument('--dataset_name', type=str, default=config.dataset_name, help='Dataset Name.')
 	parser.add_argument('--model_name', type=str, default=config.model_name, help='Model name.')
