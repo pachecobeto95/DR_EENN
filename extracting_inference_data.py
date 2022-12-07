@@ -3,16 +3,14 @@ import pandas as pd
 from tqdm import tqdm
 import itertools, argparse, os, sys, random, logging, config, torch, torchvision, utils
 
-def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
+def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 
 	nr_classes = len(prob_vectors[0])
 
 
-	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=torch.device('cuda:0'))
+	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=device)
 
 	for i in range(1, nr_branch_edge+1):
-
-		print(prob_vectors[i].shape, ensemble_prob_vector.shape)
 
 		ensemble_prob_vector += prob_vectors[i-1]
 
@@ -22,16 +20,15 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target):
 
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
 
-	sys.exit()
 	return ensemble_conf, ensemble_infered_class, correct
 
-def extract_ensemble_data(prob_vectors, n_exits, target):
+def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 	ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list = [], [], []
 
 	for nr_branch_edge in range(1, n_exits+1):
 
-		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target)
+		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
 
 		ensemble_conf_branch_list.append(ensemble_conf_branch), infered_class_branch_list.append(infered_class_branch)
 		correct_branch_list.append(correct_branch)
@@ -55,7 +52,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 			prob_vectors, conf_branches, infered_class_branches = model(data)
 
-			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target)			
+			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)			
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
