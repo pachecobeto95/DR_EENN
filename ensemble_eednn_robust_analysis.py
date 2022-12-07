@@ -51,11 +51,14 @@ def extract_ensemble_prob_vector(row):
 	nr_classes = len(row[0])
 	ensemble_prob_vector = np.zeros(nr_classes)
 
+	row = row[1:][:-1].split(" ")
+
 	for i in range(1, nr_branches_edge+1):
-		print(type(np.array(row['prob_vector_branch_%s'%(i)])))
-		print(np.array(row['prob_vector_branch_%s'%(i)][0]) )
+
+		prob_vector = list(map(float, row['prob_vector_branch_%s'%(i)][1:][:-1].split(" ")))
+		print(prob_vector)
 		sys.exit()
-		ensemble_prob_vector = ensemble_prob_vector + np.array(row['prob_vector_branch_%s'%(i)])
+		ensemble_prob_vector = ensemble_prob_vector + np.array(prob_vector)
 
 	ensemble_prob_vector /= nr_branches_edge
 
