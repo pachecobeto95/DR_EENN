@@ -21,6 +21,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 	remaining_data = df
 
 	for i in range(1, n_branches_edge+1):	 
+		current_n_samples = len(remaining_data)
 
 		if (i == n_branches_total):
 			early_exit_samples = np.ones(current_n_samples, dtype=bool)
