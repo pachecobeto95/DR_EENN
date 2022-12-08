@@ -105,7 +105,7 @@ def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, th
 	return n_early_exit/n_samples
 
 
-def extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels):
+def extract_early_classification(df_ee, n_branch, n_branches, threshold, distortion_levels):
 
 	early_prob_ee_list, early_prob_ensemble_edge_list = [], []
 
