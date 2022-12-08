@@ -105,7 +105,7 @@ def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, th
 	return n_early_exit/n_samples
 
 
-def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels):
+def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type_data):
 
 	early_prob_ee_list, early_prob_ensemble_edge_list = [], []
 
@@ -129,7 +129,7 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 
 		for n_branch_edge in range(1, n_exits+1):
 
-			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels)
+			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
 			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
