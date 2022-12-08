@@ -139,7 +139,8 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 def save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch, threshold, save_path):
 	results_dict = {}
 	results_dict.update(acc_edge_dict), results_dict.update(edge_prob_dict) 
-	results_dict.update({"distortion_lvl": distortion_levels, "n_branches_edge":, "threshold": threshold})
+	results_dict.update({"distortion_lvl": distortion_levels, 
+		"n_branches_edge": [n_branch]*len(distortion_levels), "threshold": len(distortion_levels)*[threshold]})
 
 	df = pd.DataFrame(results_dict)
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
