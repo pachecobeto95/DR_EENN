@@ -105,16 +105,16 @@ def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, th
 	return n_early_exit/n_samples
 
 
-def extract_early_classification(df_ee, n_branch, n_branches, threshold, distortion_levels):
+def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels):
 
 	early_prob_ee_list, early_prob_ensemble_edge_list = [], []
 
 	for distortion_lvl in distortion_levels:
-		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
+		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branch_edge, distortion_lvl))
 
-		ee_early_prob = compute_early_prob(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		ee_early_prob = compute_early_prob(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type_data)
 
-		ensemble_early_prob = compute_ensemble_early_prob(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		ensemble_early_prob = compute_ensemble_early_prob(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type_data)
 
 		early_prob_ee_list.append(ee_early_prob), early_prob_ensemble_edge_list.append(ee_early_prob)
 
@@ -127,10 +127,10 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 	
 	for threshold in config.threshold_list:
 
-		for n_branch in range(1, n_exits+1):
+		for n_branch_edge in range(1, n_exits+1):
 
-			edge_prob_dict = extract_early_classification(df_ee, n_branch, args.n_branches, threshold, distortion_levels)
-			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch, n_exits, threshold, distortion_levels, 
+			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels)
+			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
 			save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch, threshold, save_path)
