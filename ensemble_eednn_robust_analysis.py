@@ -157,7 +157,7 @@ def main(args):
 
 	save_results_dir = os.path.join(config.DIR_NAME, "ensemble_analysis_results")
 
-	if(os.path.exists(save_results_dir)):
+	if(not os.path.exists(save_results_dir)):
 		os.makedirs(save_results_dir)
 
 	save_results_path = os.path.join(save_results_dir, 
