@@ -4,13 +4,12 @@ import argparse, config, os, sys
 import matplotlib.pyplot as plt
 
 
-def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_levels, distortion_type):
+def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_levels, plot_dict, distortion_type):
 
 	df = df[(df.n_branches_edge == n_branches_edge) & (df.threshold == threshold) & (df.distortion_type_data==distortion_type)]
 
 	print(df.shape)
 	print(len(distortion_levels))
-	sys.exit()
 
 def main(args):
 
@@ -25,9 +24,9 @@ def main(args):
 	for threshold in config.threshold_list:
 		for n_branch_edge in range(1, args.n_branches+1):
 
-			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, blur_levels, distortion_type="gaussian_blur")
+			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, blur_levels, config.plot_dict, distortion_type="gaussian_blur")
 
-			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, noise_levels, distortion_type="gaussian_noise")
+			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, noise_levels, config.plot_dict, distortion_type="gaussian_noise")
 
 if (__name__ == "__main__"):
 
