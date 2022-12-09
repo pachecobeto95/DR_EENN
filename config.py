@@ -46,11 +46,13 @@ x_axis_str_dict = {"gaussian_blur": r"Gaussian Blur ($\sigma_{B}$)", "gaussian_n
 fontsize = 18
 color_list = ["black", "blue", "red"]
 line_style_list = ["dotted", "dashed", "solid"]
-marker_list = [".", "v", "^"]
+marker_list = ["^", "v", "."]
+shouldSave = True
 
 plot_dict = {"fontsize": fontsize, 
-"colors": color_list, 
+"color": color_list, 
 "line_style": line_style_list,
-"markers": marker_list,
-"x_axis": x_axis_str_dict}
+"marker": marker_list,
+"x_axis": x_axis_str_dict, 
+"shouldSave": shouldSave}
 
