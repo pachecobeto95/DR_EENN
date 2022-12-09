@@ -51,6 +51,7 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 
 	df_ee = extractData(df, distortion_lvl, distortion_type_data)
 
+	print("ensemble_conf_branch_%s"%(n_branches_edge))	
 
 	df_edge = df_ee[df_ee["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
