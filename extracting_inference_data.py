@@ -10,11 +10,11 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 
 	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=device)
 
-	for i in range(1, nr_branch_edge+1):
+	for i in range(2, nr_branch_edge+1):
 
 		ensemble_prob_vector += prob_vectors[i-1]
 
-	ensemble_prob_vector /= float(nr_branch_edge)
+	ensemble_prob_vector /= float(nr_branch_edge-1)
 
 	ensemble_conf, ensemble_infered_class = torch.max(ensemble_prob_vector, 1)
 
@@ -27,7 +27,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 	ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list = [], [], []
 
-	for nr_branch_edge in range(1, n_exits+1):
+	for nr_branch_edge in range(2, n_exits+1):
 
 		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
 
