@@ -40,3 +40,11 @@ dataset_path_dict = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech25
 
 indices_path_dict = {"caltech256": os.path.join(DIR_NAME, "indices", "caltech256")}
 
+
+x_axis_str_dict = {"gaussian_blur": r"Gaussian Blur ($\sigma_{B}$)", "gaussian_noise": r"Gaussian Noise ($\sigma_{N}$)"}
+
+plot_dict{"fontsize": fontsize, 
+"colors": color_list, 
+"line_style": line_style_list,
+"x_axis": x_axis_str_dict}
+

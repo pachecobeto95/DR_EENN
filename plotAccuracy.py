@@ -13,7 +13,8 @@ def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_level
 
 def main(args):
 
-	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.n_branches, args.model_name, args.dataset_name))
+	results_path = os.path.join(config.DIR_NAME, "ensemble_analysis_results", 
+		"pristine_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.n_branches, args.model_name, args.dataset_name))
 
 	df = pd.read_csv(results_path)
 	df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
