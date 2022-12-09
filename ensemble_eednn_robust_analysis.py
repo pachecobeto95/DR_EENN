@@ -49,7 +49,7 @@ def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 def compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
 
-	print(df_ee["ensemble_conf_branch_%s"%(n_branches_edge)].count())
+	print(df_ee["ensemble_conf_branch_%s"%(n_branches_edge)].values)
 	df_ee = extractData(df_ee, distortion_lvl, distortion_type_data)
 
 	df_edge = df_ee[df_ee["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
