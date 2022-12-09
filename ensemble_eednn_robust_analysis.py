@@ -33,6 +33,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 
 		remaining_data = remaining_data[~early_exit_samples]
 
+	#print(numexits)
 	acc_device = sum(correct_list)/sum(numexits)
 
 	return acc_device
@@ -53,7 +54,7 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 
 	df_edge = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
-	print(len(df_edge.count()))
+	print(len(df_edge))
 	nr_correct = sum(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
 
 	nr_samples = len(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
