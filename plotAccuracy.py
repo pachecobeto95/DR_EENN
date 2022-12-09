@@ -19,8 +19,8 @@ def main(args):
 	df = pd.read_csv(results_path)
 	df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
-	blur_levels = config.distortion_level_dict["gaussian_blur"]
-	noise_levels = config.distortion_level_dict["gaussian_noise"]
+	blur_levels = [0] + config.distortion_level_dict["gaussian_blur"]
+	noise_levels = [0] + config.distortion_level_dict["gaussian_noise"]
 
 	for threshold in config.threshold_list:
 		for n_branch_edge in range(1, args.n_branches+1):
