@@ -176,6 +176,7 @@ def main(args):
 	df_ee = df_ee[df_ee.distortion_type_model == args.distortion_type_model]
 	df_backbone = df_backbone[df_backbone.distortion_type_model == args.distortion_type_model]
 
+	print(df_ee.columns)
 
 	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_blur")
 	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_noise")
