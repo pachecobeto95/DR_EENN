@@ -44,9 +44,9 @@ indices_path_dict = {"caltech256": os.path.join(DIR_NAME, "indices", "caltech256
 x_axis_str_dict = {"gaussian_blur": r"Gaussian Blur ($\sigma_{B}$)", "gaussian_noise": r"Gaussian Noise ($\sigma_{N}$)"}
 
 fontsize = 18
-color_list = ["black", "blue", "red"]
-line_style_list = ["dotted", "dashed", "solid"]
-marker_list = ["^", "v", "."]
+color_list = ["black", "blue", "red", "magenta"]
+line_style_list = ["dotted", "dashed", "solid", "dashdot"]
+marker_list = ["^", "v", ".", "<"]
 shouldSave = True
 
 plot_dict = {"fontsize": fontsize, 
