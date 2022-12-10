@@ -54,14 +54,29 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 
 	df_edge = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
-	print(len(df_edge))
-	nr_correct = sum(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
+	nr_correct = sum(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
 
-	nr_samples = len(df_edge["ensemble_conf_branch_%s"%(n_branches_edge)].values)
+	nr_samples = len(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
 
 	ensemble_edge_acc = nr_correct/nr_samples
 
 	return ensemble_edge_acc
+
+def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
+
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	df_edge = df[df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
+
+	nr_correct = sum(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
+
+	nr_samples = len(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
+
+	naive_ensemble_edge_acc = nr_correct/float(nr_samples)
+
+	return naive_ensemble_edge_acc
+
+
 
 def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type_data):
 
@@ -73,6 +88,7 @@ def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshol
 		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
 		acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 		acc_ensemble_edge = compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		acc_naive_edge = compute_acc_naive_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 
 		#save_results(acc_backbone, acc_ee, acc_ensemble_edge, distortion_lvl, n_branches_edge)
 		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(acc_ensemble_edge)
