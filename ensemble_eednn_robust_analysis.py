@@ -58,7 +58,7 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 
 	nr_samples = len(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
 
-	ensemble_edge_acc = nr_correct/nr_samples
+	ensemble_edge_acc = nr_correct/nr_samples if(nr_samples>0) else 0
 
 	return ensemble_edge_acc
 
@@ -72,7 +72,7 @@ def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_ex
 
 	nr_samples = len(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
 
-	naive_ensemble_edge_acc = nr_correct/float(nr_samples)
+	naive_ensemble_edge_acc = nr_correct/float(nr_samples) if(nr_samples>0) else 0
 
 	return naive_ensemble_edge_acc
 
