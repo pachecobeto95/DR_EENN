@@ -33,6 +33,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
 
+		print(infered_class_branch, target)
 		ensemble_conf_branch_list.append(ensemble_conf_branch), infered_class_branch_list.append(infered_class_branch)
 		correct_branch_list.append(correct_branch)
 
