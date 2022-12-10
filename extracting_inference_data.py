@@ -38,7 +38,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 def run_inference_data(model, test_loader, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
-	n_exits = n_branches + 1
+	n_exits = n_branches
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
 	correct_list, exit_branch_list = [], []
 	ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
