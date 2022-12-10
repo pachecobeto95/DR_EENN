@@ -200,7 +200,7 @@ class B_MobileNet(nn.Module):
 
     prob_vector_list, conf_list, class_list  = [], [], []
 
-    for i, exitBlock in enumerate(self.exits, 1):
+    for i, exitBlock in enumerate(self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
 
@@ -208,7 +208,8 @@ class B_MobileNet(nn.Module):
       conf, infered_class = torch.max(prob_vector, 1)
 
       conf_list.append(conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
-      prob_vector_list.append(prob_vector)
+      if(i>0):
+        prob_vector_list.append(prob_vector)
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
