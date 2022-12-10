@@ -200,7 +200,7 @@ class B_MobileNet(nn.Module):
 
     prob_vector_list, conf_list, class_list  = [], [], []
 
-    for i, exitBlock in enumerate(self.exits):
+    for i, exitBlock in enumerate(1, self.exits):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
 
