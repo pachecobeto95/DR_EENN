@@ -10,7 +10,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 
 	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=device)
 
-	for i in range(2, nr_branch_edge+1):
+	for i in range(1, nr_branch_edge+1):
 
 		ensemble_prob_vector += prob_vectors[i-1]
 
@@ -26,7 +26,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 	ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list = [], [], []
 
-	for nr_branch_edge in range(2, n_exits+1):
+	for nr_branch_edge in range(1, n_exits+1):
 
 		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
 
@@ -53,7 +53,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			prob_vectors, conf_branches, infered_class_branches = model(data)
 
 			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)			
-			#print(ensemble_conf)
+			print(ensemble_conf)
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
@@ -77,18 +77,15 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
 
-	#print(ensemble_correct_list[0, 0])
+	print(ensemble_correct_list[0, 0])
 
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
-			"correct_branch_%s"%(i+1): correct_list[:, i]})
-
-	for i in range(n_exits-2):
-		results.update({"ensemble_conf_branch_%s"%(i+2): ensemble_conf_list[:, i], 
-			"ensemble_infered_class_branches_%s"%(i+2): ensemble_infered_class_list[:, i], 
-			"ensemble_correct_branch_%s"%(i+2): ensemble_correct_list[:, i]})
-
+			"correct_branch_%s"%(i+1): correct_list[:, i], 
+			"ensemble_conf_branch_%s"%(i+1): ensemble_conf_list[:, i], 
+			"ensemble_infered_class_branches_%s": ensemble_infered_class_list[:, i], 
+			"ensemble_correct_branch_%s"%(i+1): ensemble_correct_list[:, i]})
 
 	return results
 
