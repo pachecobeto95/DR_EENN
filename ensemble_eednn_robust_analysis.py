@@ -55,6 +55,7 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 	df_edge = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
 	nr_correct = sum(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
+	print(nr_correct)
 
 	nr_samples = len(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
 
