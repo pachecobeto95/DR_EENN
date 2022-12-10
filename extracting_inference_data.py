@@ -53,7 +53,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			prob_vectors, conf_branches, infered_class_branches = model(data)
 
 			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)			
-			print(ensemble_conf)
+			#print(ensemble_conf)
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
@@ -77,7 +77,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list}
 
-	print(ensemble_correct_list[0, 0])
+	#print(ensemble_correct_list[0, 0])
 
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
