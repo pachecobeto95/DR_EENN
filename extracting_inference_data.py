@@ -26,7 +26,10 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 
 	ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list = [], [], []
 
+	
+
 	for nr_branch_edge in range(1, n_exits+1):
+		print("entrou")
 
 		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
 
