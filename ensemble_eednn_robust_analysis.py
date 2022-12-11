@@ -34,7 +34,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 		remaining_data = remaining_data[~early_exit_samples]
 
 	#print(numexits)
-	acc_device = sum(correct_list)/sum(numexits)
+	acc_device = sum(correct_list)/sum(numexits) if(nr_samples>0) else 0
 
 	return acc_device
 
@@ -43,7 +43,7 @@ def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
 	
-	acc = sum(df.correct.values)/len(df.correct.values)
+	acc = sum(df.correct.values)/len(df.correct.values) if(nr_samples>0) else 0
 
 	return acc
 
