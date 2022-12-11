@@ -34,7 +34,7 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 		remaining_data = remaining_data[~early_exit_samples]
 
 	#print(numexits)
-	acc_device = sum(correct_list)/sum(numexits) if(nr_samples>0) else 0
+	acc_device = sum(correct_list)/sum(numexits) if(sum(numexits)>0) else 0
 
 	return acc_device
 
