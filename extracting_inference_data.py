@@ -15,7 +15,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 		ensemble_prob_vector += i*prob_vectors[i-1]
 		weights_sum += i
 
-	ensemble_prob_vector /= float(nr_branch_edge)
+	ensemble_prob_vector /= float(weights_sum)
 
 	ensemble_conf, ensemble_infered_class = torch.max(ensemble_prob_vector, 1)
 
