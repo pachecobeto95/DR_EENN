@@ -18,6 +18,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 
 	ensemble_conf, ensemble_infered_class = torch.max(ensemble_prob_vector, 1)
 
+	print(ensemble_infered_class, target)
 	ensemble_infered_class -= 1	
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
 
