@@ -121,7 +121,7 @@ def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, th
 
 	n_early_exit = df_ensemble["ensemble_conf_branch_%s"%(n_branches_edge)].count()
 
-	n_samples = len(df_ensemble["ensemble_conf_branch_%s"%(n_branches_edge)].values)
+	n_samples = len(df["ensemble_conf_branch_%s"%(n_branches_edge)].values)
 
 
 	return n_early_exit/n_samples
