@@ -138,7 +138,7 @@ def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, disto
 
 		ensemble_early_prob = compute_ensemble_early_prob(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type_data)
 
-		early_prob_ee_list.append(ee_early_prob), early_prob_ensemble_edge_list.append(ee_early_prob)
+		early_prob_ee_list.append(ee_early_prob), early_prob_ensemble_edge_list.append(ensemble_early_prob)
 
 	return {"ee_early_prob": early_prob_ee_list, "ensemble_early_prob": early_prob_ensemble_edge_list}
 
