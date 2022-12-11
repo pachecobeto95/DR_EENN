@@ -36,7 +36,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 		ensemble_conf_branch_list.append(ensemble_conf_branch), infered_class_branch_list.append(infered_class_branch)
 		correct_branch_list.append(correct_branch)
 
-	print(ensemble_conf_branch_list)
+	#print(ensemble_conf_branch_list)
 	return ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list
 
 def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, target, device):
@@ -71,7 +71,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
-			print("oi")
+			#print("oi")
 
 			data, target = data.to(device), target.to(device)
 
@@ -83,7 +83,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 				target, device)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
-			print([conf.item() for conf in conf_branches])
+			#print([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
