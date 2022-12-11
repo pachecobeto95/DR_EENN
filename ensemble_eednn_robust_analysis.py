@@ -43,7 +43,7 @@ def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
 	
-	acc = sum(df.correct.values)/len(df.correct.values) if(nr_samples>0) else 0
+	acc = sum(df.correct.values)/len(df.correct.values) if(/len(df.correct.values)>0) else 0
 
 	return acc
 
