@@ -115,6 +115,8 @@ def compute_early_prob(df, distortion_lvl, n_branches_edge, n_exits, threshold, 
 
 def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
 	df_ensemble = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
 
 	n_early_exit = df_ensemble["ensemble_conf_branch_%s"%(n_branches_edge)].count()
