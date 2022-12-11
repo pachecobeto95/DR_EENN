@@ -22,7 +22,6 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 		ensemble_infered_class -= 1	
 	
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
-	print(ensemble_conf.item(), correct)
 	return ensemble_conf.item(), ensemble_infered_class.item(), correct
 
 def extract_ensemble_data(prob_vectors, n_exits, target, device):
@@ -36,6 +35,7 @@ def extract_ensemble_data(prob_vectors, n_exits, target, device):
 		ensemble_conf_branch_list.append(ensemble_conf_branch), infered_class_branch_list.append(infered_class_branch)
 		correct_branch_list.append(correct_branch)
 
+	print(ensemble_conf_branch_list)
 	return ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list
 
 def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, target, device):
@@ -81,6 +81,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 				target, device)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
+			print([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
