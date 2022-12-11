@@ -70,6 +70,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
+			print("oi")
 
 			data, target = data.to(device), target.to(device)
 
@@ -81,7 +82,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 				target, device)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
-			print("oi")
 			print([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
