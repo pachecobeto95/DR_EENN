@@ -22,7 +22,7 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 		ensemble_infered_class -= 1	
 	
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
-	print(ensemble_prob_vector, ensemble_conf.item(), correct)
+	print(ensemble_conf.item(), correct)
 	return ensemble_conf.item(), ensemble_infered_class.item(), correct
 
 def extract_ensemble_data(prob_vectors, n_exits, target, device):
