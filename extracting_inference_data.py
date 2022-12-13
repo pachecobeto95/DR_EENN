@@ -42,8 +42,6 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 
 	conf_list, infered_class_list, correct_list = [], [], []
 
-	print(n_exits)
-
 	for i in range(n_exits):
 		conf_edge = conf_branches[:(i+1)]
 
@@ -116,7 +114,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 			prob_vectors, conf_branches, infered_class_branches = model(data)
 
-			print(len(prob_vectors))
 			#ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)
 
 			#naive_ensemble_conf, naive_ensemble_infered_class, naive_ensemble_correct = extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, 
