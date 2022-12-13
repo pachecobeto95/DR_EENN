@@ -58,7 +58,7 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
 	n_exits = n_branches + 1
-	ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
+	ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list, target_list = [], [], [], []
 
 	model.eval()
 
@@ -73,6 +73,7 @@ def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, di
 			
 			ensemble_conf_list.append(ensemble_conf), ensemble_infered_class_list.append(ensemble_infered_class)
 			ensemble_correct_list.append(ensemble_correct)
+			target_list.append(target.item())
 
 
 			del data, target
