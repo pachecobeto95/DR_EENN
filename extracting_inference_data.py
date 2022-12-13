@@ -89,11 +89,11 @@ def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, di
 	"target": target_list}
 
 	for i in range(n_exits):
-		results.update({"ensemble_conf_branch_%s"%(i+1): ensemble_conf_list[:, i], 
+		ensemble_results.update({"ensemble_conf_branch_%s"%(i+1): ensemble_conf_list[:, i], 
 			"ensemble_infered_class_branches_%s"%(i+1): ensemble_infered_class_list[:, i], 
 			"ensemble_correct_branch_%s"%(i+1): ensemble_correct_list[:, i]})
 
-	return results
+	return ensemble_results
 
 
 def run_inference_data(model, test_loader, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
