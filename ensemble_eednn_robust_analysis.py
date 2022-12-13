@@ -186,15 +186,13 @@ def main(args):
 		"%s_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
 
 	df_ee = pd.read_csv(ee_data_path)
-	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')] 
+	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')]
 
 	df_backbone = pd.read_csv(backbone_data_path)
 	df_backbone = df_backbone.loc[:, ~df_backbone.columns.str.contains('^Unnamed')]
 
 	df_ee = df_ee[df_ee.distortion_type_model == args.distortion_type_model]
 	df_backbone = df_backbone[df_backbone.distortion_type_model == args.distortion_type_model]
-
-	print(df_ee.columns)
 
 	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_blur")
 	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_noise")

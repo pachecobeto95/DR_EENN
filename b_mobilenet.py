@@ -208,8 +208,8 @@ class B_MobileNet(nn.Module):
       conf, infered_class = torch.max(prob_vector, 1)
 
       conf_list.append(conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
-      if(i>0):
-        prob_vector_list.append(prob_vector)
+      #if(i>0):
+      prob_vector_list.append(prob_vector)
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
