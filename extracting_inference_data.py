@@ -134,6 +134,7 @@ def save_result(result, save_path):
 def compute_acc_branches(result, n_branches):
 
 	acc_list = []
+	n_exits = n_branches+1
 
 	for i in range(n_exits):
 
