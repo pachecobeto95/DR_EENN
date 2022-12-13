@@ -193,7 +193,7 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
 		acc_branches = compute_acc_branches(result, args.n_branches)
 
-		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, distortion_type_model, distortion_type_data, 
+		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
 			distortion_lvl, device)
 
 		result.update(ensemble_results)
