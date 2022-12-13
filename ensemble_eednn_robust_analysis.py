@@ -96,7 +96,7 @@ def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshol
 	return {"acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "acc_ensemble": acc_ensemble_edge_list, "acc_naive_ensemble": acc_naive_ensemble_edge_list}
 
 
-def extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type):
+def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type):
 	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list = [], [], []
 
 	for distortion_lvl in distortion_levels:
