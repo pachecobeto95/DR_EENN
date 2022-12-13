@@ -102,7 +102,7 @@ def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, thres
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
 
-		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
+		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type)
 
 		print(acc_backbone)
 		sys.exit()
