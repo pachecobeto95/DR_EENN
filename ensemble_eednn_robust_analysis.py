@@ -96,6 +96,22 @@ def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshol
 	return {"acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "acc_ensemble": acc_ensemble_edge_list, "acc_naive_ensemble": acc_naive_ensemble_edge_list}
 
 
+def extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type):
+	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list = [], [], []
+
+	for distortion_lvl in distortion_levels:
+		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
+
+		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
+		overall_acc_ee = compute_overall_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		overall_acc_ensemble_edge = compute_overall_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+
+		acc_ee_list.append(overall_acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(overall_acc_ensemble_edge)
+
+	return {"overall_acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "overall_acc_ensemble": acc_ensemble_edge_list}
+
+
+
 def compute_early_prob(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
@@ -147,12 +163,18 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 	distortion_levels = [0] + config.distortion_level_dict[distortion_type]
 	n_exits = args.n_branches + 1
 	
+	print(list(range(1, n_exits)))
+
+	sys.exit()
+	
 	for threshold in config.threshold_list:
 
 		for n_branch_edge in range(1, n_exits):
 
-			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
-			acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
+			#edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
+			#acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
+			#	distortion_type)
+			acc_overall_dict = extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
 			save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
