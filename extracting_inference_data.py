@@ -3,19 +3,15 @@ import pandas as pd
 from tqdm import tqdm
 import itertools, argparse, os, sys, random, logging, config, torch, torchvision, utils
 
-def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
+def compute_ensemble_conf(prob_vectors, acc_branches, nr_branch_edge, target, device):
 
 	nr_classes = len(prob_vectors[0])
 
-	weights_sum = 0
 	ensemble_prob_vector = torch.zeros(prob_vectors[0].shape, device=device)
 
-	for i in range(1, nr_branch_edge+1):
+	for i in range(nr_branch_edge):
 
-		ensemble_prob_vector += i*prob_vectors[i-1]
-		weights_sum += i
-
-	ensemble_prob_vector /= float(weights_sum)
+		ensemble_prob_vector += acc_branches[i]*prob_vectors[i]
 
 	ensemble_conf, ensemble_infered_class = torch.max(ensemble_prob_vector, 1)
 
@@ -25,18 +21,17 @@ def compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device):
 	correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
 	return ensemble_conf.item(), ensemble_infered_class.item(), correct
 
-def extract_ensemble_data(prob_vectors, n_exits, target, device):
+def extract_ensemble_data(prob_vectors, acc_branches, n_exits, target, device):
 
 	ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list = [], [], []
 
 	for nr_branch_edge in range(1, n_exits+1):
 
-		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, nr_branch_edge, target, device)
+		ensemble_conf_branch, infered_class_branch, correct_branch = compute_ensemble_conf(prob_vectors, acc_branches, nr_branch_edge, target, device)
 
 		ensemble_conf_branch_list.append(ensemble_conf_branch), infered_class_branch_list.append(infered_class_branch)
 		correct_branch_list.append(correct_branch)
 
-	#print(ensemble_conf_branch_list)
 	return ensemble_conf_branch_list, infered_class_branch_list, correct_branch_list
 
 def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, target, device):
@@ -57,6 +52,48 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 		conf_list.append(conf_edge[max_idx]), infered_class_list.append(infered_class_branches2[max_idx]), correct_list.append(correct)
 
 	return conf_list, infered_class_list, correct_list
+
+
+
+def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
+
+	n_exits = n_branches + 1
+	ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
+
+	model.eval()
+
+	with torch.no_grad():
+		for (data, target) in tqdm(test_loader):
+
+			data, target = data.to(device), target.to(device)
+
+			prob_vectors, conf_branches, infered_class_branches = model(data)
+
+			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, acc_branches, n_exits, target, device)
+			
+			ensemble_conf_list.append(ensemble_conf), ensemble_infered_class_list.append(ensemble_infered_class)
+			ensemble_correct_list.append(ensemble_correct)
+
+
+			del data, target
+			torch.cuda.empty_cache()
+
+
+	ensemble_conf_list = np.array(ensemble_conf_list)
+	ensemble_infered_class_list = np.array(ensemble_infered_class_list)
+	ensemble_correct_list = np.array(ensemble_correct_list)
+
+	ensemble_results = {"distortion_type_model": [distortion_type_model]*len(target_list),
+	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
+	"target": target_list}
+
+	for i in range(n_exits):
+		results.update({"ensemble_conf_branch_%s"%(i+1): ensemble_conf_list[:, i], 
+			"ensemble_infered_class_branches_%s"%(i+1): ensemble_infered_class_list[:, i], 
+			"ensemble_correct_branch_%s"%(i+1): ensemble_correct_list[:, i]})
+
+	return results
+
 
 def run_inference_data(model, test_loader, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
@@ -141,9 +178,7 @@ def compute_acc_branches(result, n_branches):
 		acc_branch = sum(result["correct_branch_%s"%(i+1)])/len(result["correct_branch_%s"%(i+1)])
 		acc_list.append(acc_branch)
 
-	print(acc_list)
-	sys.exit()
-
+	return acc_list
 
 def extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
 	distortion_type_model, distortion_type_data):
@@ -157,6 +192,11 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 
 		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
 		acc_branches = compute_acc_branches(result, args.n_branches)
+
+		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, distortion_type_model, distortion_type_data, 
+			distortion_lvl, device):
+
+		result.update(ensemble_results)
 
 		save_result(result, inference_data_path)
 
