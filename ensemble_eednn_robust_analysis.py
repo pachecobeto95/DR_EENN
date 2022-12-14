@@ -211,7 +211,7 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 	distortion_levels = [0] + config.distortion_level_dict[distortion_type]
 	n_exits = args.n_branches + 1
 
-	print(list(range(1, n_exits)))
+	print(list(range(1, n_exits+1)))
 	sys.exit()
 
 	for threshold in config.threshold_list:
