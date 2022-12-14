@@ -27,14 +27,14 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 		if (i == n_branches_total):
 			early_exit_samples = np.ones(current_n_samples, dtype=bool)
 		else:
-			early_exit_samples = remaining_data["conf_branch_%s"%(i+1)] >= threshold
+			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
 
 		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum()
 
 		remaining_data = remaining_data[~early_exit_samples]
 
 	if (n_branches_edge != n_branches_total):
-		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(3)].sum()
+		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(n_branches_total)].sum()
 
 	overall_acc = float(correct)/n_samples
 	return overall_acc
