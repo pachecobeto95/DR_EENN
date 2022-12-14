@@ -37,7 +37,7 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 	if (n_branches_edge != n_branches_total):
 		print("kkkkk")
 		print(n_branches_total)
-		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(n_branches_total)].sum()
+		correct += remaining_data["correct_branch_%s"%(n_branches_total)].sum()
 
 	overall_acc = float(correct)/n_samples
 	return overall_acc
