@@ -30,6 +30,7 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
 
 		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum()
+		print(remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum(), len(early_exit_samples))
 
 		remaining_data = remaining_data[~early_exit_samples]
 
