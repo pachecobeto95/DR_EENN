@@ -173,7 +173,7 @@ def compute_acc_branches(result, n_branches):
 		acc_branch = sum(result["correct_branch_%s"%(i+1)])/len(result["correct_branch_%s"%(i+1)])
 		acc_list.append(acc_branch)
 
-	print([result["conf_branch_%s"%(i+1)].mean() for i in range(n_exits)])
+	#print([result["conf_branch_%s"%(i+1)].mean() for i in range(n_exits)])
 
 	return acc_list
 
