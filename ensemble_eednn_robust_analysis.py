@@ -215,13 +215,13 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 
 		for n_branch_edge in range(1, n_exits+1):
 
-			#edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
+			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
 			#acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 			#	distortion_type)
 			acc_overall_dict = extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
-			save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
+			save_results(acc_overall_dict, edge_prob_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
 
 
 def save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch, threshold, distortion_type_data, save_path):
