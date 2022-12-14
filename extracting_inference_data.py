@@ -155,12 +155,6 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
 			"correct_branch_%s"%(i+1): correct_list[:, i]}) 
-			#"ensemble_conf_branch_%s"%(i+1): ensemble_conf_list[:, i], 
-			#"ensemble_infered_class_branches_%s"%(i+1): ensemble_infered_class_list[:, i], 
-			#"ensemble_correct_branch_%s"%(i+1): ensemble_correct_list[:, i], 
-			#"naive_ensemble_conf_branch_%s"%(i+1): naive_ensemble_conf_list[:, i], 
-			#"naive_ensemble_infered_class_branches_%s"%(i+1): naive_ensemble_infered_class_list[:, i],
-			#"naive_ensemble_correct_branch_%s"%(i+1): naive_ensemble_correct_list[:, i]})
 
 	return results
 
@@ -178,6 +172,8 @@ def compute_acc_branches(result, n_branches):
 
 		acc_branch = sum(result["correct_branch_%s"%(i+1)])/len(result["correct_branch_%s"%(i+1)])
 		acc_list.append(acc_branch)
+
+	print([result["conf_branch_%s"%(i+1)].mean() for i in range(n_exits)])
 
 	return acc_list
 
