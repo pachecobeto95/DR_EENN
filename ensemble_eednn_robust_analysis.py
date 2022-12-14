@@ -20,6 +20,7 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 
 	remaining_data = df
 	n_samples = len(df)
+	print(n_samples)
 
 	for i in range(1, n_branches_edge+1):	 
 		current_n_samples = len(remaining_data)
