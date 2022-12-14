@@ -151,8 +151,8 @@ def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, thres
 
 		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type)
 
-		overall_acc_ee = compute_overall_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
-		overall_acc_ensemble_edge = compute_overall_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
+		overall_acc_ee = compute_overall_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
+		overall_acc_ensemble_edge = compute_overall_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
 
 		acc_ee_list.append(overall_acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(overall_acc_ensemble_edge)
 
