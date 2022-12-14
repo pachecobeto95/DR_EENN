@@ -23,8 +23,6 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 	for i in range(1, n_branches_edge+1):	 
 		current_n_samples = len(remaining_data)
 
-		current_n_samples = len(remaining_data)
-
 		if (i == n_branches_total):
 			early_exit_samples = np.ones(current_n_samples, dtype=bool)
 		else:
@@ -214,7 +212,7 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 
 	for threshold in config.threshold_list:
 
-		for n_branch_edge in range(1, n_exits+1):
+		for n_branch_edge in range(1, n_exits):
 
 			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
 			#acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
