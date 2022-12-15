@@ -30,14 +30,14 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 			early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
 
 		correct += remaining_data[early_exit_samples]["correct_branch_%s"%(i)].sum()
-		print(remaining_data["conf_branch_%s"%(i)].mean(), sum(early_exit_samples))
+		#print(remaining_data["conf_branch_%s"%(i)].mean(), sum(early_exit_samples))
 
 		remaining_data = remaining_data[~early_exit_samples]
 
-	if (n_branches_edge != n_branches_total):
-		print("kkkkk")
-		print(n_branches_total)
-		correct += remaining_data["correct_branch_%s"%(n_branches_total)].sum()
+	#if (n_branches_edge != n_branches_total):
+	#	print("kkkkk")
+	#	print(n_branches_total)
+	#	correct += remaining_data["correct_branch_%s"%(n_branches_total)].sum()
 
 	overall_acc = float(correct)/n_samples
 	return overall_acc
@@ -89,7 +89,6 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
-
 
 	correct += df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].sum()
 	correct += df_cloud["ensemble_correct_branch_%s"%(n_exits)].sum()
