@@ -21,7 +21,7 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 	remaining_data = df
 	n_samples = len(df)
 
-	for i in range(1, n_branches_edge+1):	 
+	for i in range(1, n_branches_total+1):	 
 		current_n_samples = len(remaining_data)
 
 		if (i == n_branches_total):
@@ -85,13 +85,13 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 
 	correct = 0
 
-	early_exit_samples = df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+	early_exit_samples = df["ensemble_conf_branch_%s"%(n_exits)] >= threshold
 
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
 
-	correct += df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].sum()
-	correct += df_cloud["ensemble_correct_branch_%s"%(n_exits)].sum()
+	correct += df_edge["ensemble_correct_branch_%s"%(n_exits)].sum()
+	#correct += df_cloud["ensemble_correct_branch_%s"%(n_exits)].sum()
 
 	ensemble_overall_acc = float(correct)/n_samples
 	return ensemble_overall_acc
