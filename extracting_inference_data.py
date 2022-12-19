@@ -108,7 +108,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	correct_list, exit_branch_list = [], []
 	#ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
 
-	naive_ensemble_conf_list, naive_ensemble_correct_list = [], [], []
+	naive_ensemble_conf_list, naive_ensemble_correct_list = [], []
 
 	model.eval()
 
