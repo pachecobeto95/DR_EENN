@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import itertools, argparse, os, sys, random, logging, config, torch, torchvision, utils
+from statistics import mode, multimode
 
 def compute_ensemble_conf(prob_vectors, acc_branches, nr_branch_edge, target, device):
 
@@ -38,20 +39,24 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 
 	conf_branches = [conf.item() for conf in conf_branches]
 
-	infered_class_branches2 = [infered_class.item() for infered_class in infered_class_branches]
+	infered_class_branches_list = [infered_class.item() for infered_class in infered_class_branches]
 
 	conf_list, infered_class_list, correct_list = [], [], []
 
+
 	for i in range(n_exits):
+
 		conf_edge = conf_branches[:(i+1)]
 
 		max_idx = np.argmax(conf_edge)
 
-		correct = infered_class_branches[max_idx].eq(target.view_as(infered_class_branches[max_idx])).sum().item()
+		mode_list = multimode(infered_class_branches_list)
 
-		conf_list.append(conf_edge[max_idx]), infered_class_list.append(infered_class_branches2[max_idx]), correct_list.append(correct)
+		correct = int(target.item() in mode_list)
 
-	return conf_list, infered_class_list, correct_list
+		conf_list.append(conf_edge[max_idx]), correct_list.append(correct)
+
+	return conf_list, correct_list
 
 
 
@@ -103,7 +108,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	correct_list, exit_branch_list = [], []
 	#ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
 
-	#naive_ensemble_conf_list, naive_ensemble_infered_class_list, naive_ensemble_correct_list = [], [], []
+	naive_ensemble_conf_list, naive_ensemble_correct_list = [], [], []
 
 	model.eval()
 
@@ -116,8 +121,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 			#ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)
 
-			#naive_ensemble_conf, naive_ensemble_infered_class, naive_ensemble_correct = extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, 
-			#	target, device)
+			naive_ensemble_conf, naive_ensemble_correct = extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, 
+				target, device)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			#print([conf.item() for conf in conf_branches])
@@ -128,8 +133,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			#ensemble_conf_list.append(ensemble_conf), ensemble_infered_class_list.append(ensemble_infered_class)
 			#ensemble_correct_list.append(ensemble_correct)
 
-			#naive_ensemble_conf_list.append(naive_ensemble_conf), naive_ensemble_infered_class_list.append(naive_ensemble_infered_class)
-			#naive_ensemble_correct_list.append(naive_ensemble_correct)
+			naive_ensemble_conf_list.append(naive_ensemble_conf), naive_ensemble_correct_list.append(naive_ensemble_correct)
 
 			del data, target
 			torch.cuda.empty_cache()
@@ -142,9 +146,9 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	#ensemble_infered_class_list = np.array(ensemble_infered_class_list)
 	#ensemble_correct_list = np.array(ensemble_correct_list)
 
-	#naive_ensemble_conf_list = np.array(naive_ensemble_conf_list)
+	naive_ensemble_conf_list = np.array(naive_ensemble_conf_list)
 	#naive_ensemble_infered_class_list = np.array(naive_ensemble_infered_class_list)
-	#naive_ensemble_correct_list = np.array(naive_ensemble_correct_list)
+	naive_ensemble_correct_list = np.array(naive_ensemble_correct_list)
 
 
 	results = {"distortion_type_model": [distortion_type_model]*len(target_list),
@@ -154,7 +158,9 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
-			"correct_branch_%s"%(i+1): correct_list[:, i]}) 
+			"correct_branch_%s"%(i+1): correct_list[:, i],
+			"naive_ensemble_conf_branch_%s"%(i+1): naive_ensemble_conf_list[:, i],
+			"naive_ensemble_correct_branch_%s"%(i+1): naive_ensemble_correct_list[:, i]}) 
 
 	return results
 
@@ -188,10 +194,10 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
 
 		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
-		acc_branches = compute_acc_branches(result, args.n_branches)
+		#acc_branches = compute_acc_branches(result, args.n_branches)
 
-		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
-			distortion_lvl, device)
+		#ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
+		#	distortion_lvl, device)
 
 		result.update(ensemble_results)
 
@@ -202,7 +208,6 @@ def main(args):
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
 		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type_model, args.n_branches, args.model_id) )
-
 
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_data_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
