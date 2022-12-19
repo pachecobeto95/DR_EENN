@@ -227,12 +227,12 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 			acc_overall_dict = extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
-			save_results(acc_overall_dict, edge_prob_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
+			save_results(acc_overall_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
 
 
-def save_results(acc_edge_dict, edge_prob_dict, distortion_levels, n_branch, threshold, distortion_type_data, save_path):
+def save_results(acc_edge_dict, distortion_levels, n_branch, threshold, distortion_type_data, save_path):
 	results_dict = {}
-	results_dict.update(acc_edge_dict), results_dict.update(edge_prob_dict) 
+	results_dict.update(acc_edge_dict)#, results_dict.update(edge_prob_dict) 
 	results_dict.update({"distortion_lvl": distortion_levels, "distortion_type_data": distortion_type_data, 
 		"n_branches_edge": [n_branch]*len(distortion_levels), "threshold": len(distortion_levels)*[threshold]})
 
