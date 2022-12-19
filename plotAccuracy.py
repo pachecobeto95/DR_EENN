@@ -18,15 +18,15 @@ def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_level
 		marker=plot_dict["marker"][0], linestyle=plot_dict["line_style"][0], color=plot_dict["color"][0])
 
 
-	plt.plot(distortion_levels, df.acc_ee.values, label="Early-exit DNN", 
+	plt.plot(distortion_levels, df.overall_acc_ee.values, label="EE-DNN", 
 		marker=plot_dict["marker"][1], linestyle=plot_dict["line_style"][1], color=plot_dict["color"][1])
 
-	plt.plot(distortion_levels, df.acc_ensemble.values, label="Ensemble Early-exit", 
+	plt.plot(distortion_levels, df.overall_acc_ensemble.values, label="Ensemble EE", 
 		marker=plot_dict["marker"][2], linestyle=plot_dict["line_style"][2], color=plot_dict["color"][2])
 
 
 	plt.xlabel(plot_dict["x_axis"][distortion_type], fontsize=plot_dict["fontsize"])
-	plt.ylabel("Edge Accuracy", fontsize=plot_dict["fontsize"])
+	plt.ylabel("Overall Accuracy", fontsize=plot_dict["fontsize"])
 	ax.tick_params(axis='both', which='major', labelsize=plot_dict["fontsize"]-3)
 	ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 	plt.legend(frameon=False, fontsize=plot_dict["fontsize"]-4)
@@ -42,7 +42,11 @@ def main(args):
 	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.n_branches, args.model_name, 
 		args.dataset_name))
 
-	savePath = os.path.join("plots", "accuracy")
+	savePath = os.path.join("plots", "accuracy", "%s_branches"%(args.n_branches))
+
+	if(not os.path.exists(savePath)):
+		os.makedirs(savePath)
+
 
 	df = pd.read_csv(results_path)
 	df = df.loc[:, ~df.columns.str.contains('^Unnamed')]

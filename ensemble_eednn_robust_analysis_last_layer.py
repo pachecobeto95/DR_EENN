@@ -21,7 +21,7 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 	remaining_data = df
 	n_samples = len(df)
 
-	for i in range(1, n_branches_total+1):	 
+	for i in range(1, n_branches_edge+1):	 
 		current_n_samples = len(remaining_data)
 
 		if (i == n_branches_total):
@@ -33,10 +33,8 @@ def compute_overall_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branch
 
 		remaining_data = remaining_data[~early_exit_samples]
 
-	#if (n_branches_edge != n_branches_total):
-	#	print("kkkkk")
-	#	print(n_branches_total)
-	#	correct += remaining_data["correct_branch_%s"%(n_branches_total)].sum()
+	if (n_branches_edge != n_branches_total):
+		correct += remaining_data["correct_branch_%s"%(n_branches_total)].sum()
 
 	overall_acc = float(correct)/n_samples
 	return overall_acc
@@ -68,11 +66,13 @@ def compute_acc_early_exit(df, distortion_lvl, n_branches_edge, n_branches_total
 	return acc_device
 
 
-def compute_acc_backbone(df, distortion_lvl, distortion_type_data):
+def compute_acc_backbone(df, n_branches_total, distortion_lvl, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	data = df["correct_branch_%s"%(n_branches_total)].values
 	
-	acc = sum(df.correct.values)/len(df.correct.values) if(len(df.correct.values)>0) else 0
+	acc = sum(data)/len(data) if(len(data)>0) else 0
 
 	return acc
 
@@ -108,47 +108,14 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 
 	return ensemble_edge_acc
 
-def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
-	df = extractData(df, distortion_lvl, distortion_type_data)
-
-	df_edge = df[df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
-
-	nr_correct = sum(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
-
-	nr_samples = len(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
-
-	naive_ensemble_edge_acc = nr_correct/float(nr_samples) if(nr_samples>0) else 0
-
-	return naive_ensemble_edge_acc
-
-def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type_data):
-
-	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list, acc_naive_ensemble_edge_list = [], [], [], []
-
-	for distortion_lvl in distortion_levels:
-		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
-
-		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type_data)
-		acc_ee = compute_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
-		acc_ensemble_edge = compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
-		acc_naive_ensemble_edge = compute_acc_naive_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
-
-		#save_results(acc_backbone, acc_ee, acc_ensemble_edge, distortion_lvl, n_branches_edge)
-		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(acc_ensemble_edge)
-		acc_naive_ensemble_edge_list.append(acc_naive_ensemble_edge)
-
-
-	return {"acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "acc_ensemble": acc_ensemble_edge_list, "acc_naive_ensemble": acc_naive_ensemble_edge_list}
-
-
-def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type):
+def extract_overall_accuracy(df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type):
 	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list = [], [], []
 
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
 
-		acc_backbone = compute_acc_backbone(df_backbone, distortion_lvl, distortion_type)
+		acc_backbone = compute_acc_backbone(df_ee, distortion_lvl, distortion_type)
 
 		overall_acc_ee = compute_overall_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
 		overall_acc_ensemble_edge = compute_overall_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
@@ -205,7 +172,7 @@ def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, disto
 
 	return {"ee_early_prob": early_prob_ee_list, "ensemble_early_prob": early_prob_ensemble_edge_list}
 
-def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
+def exp_ensemble_analysis(args, df_ee, save_path, distortion_type):
 
 	distortion_levels = [0] + config.distortion_level_dict[distortion_type]
 	n_exits = args.n_branches + 1
@@ -215,9 +182,8 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 		for n_branch_edge in range(1, n_exits+1):
 
 			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
-			#acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
-			#	distortion_type)
-			acc_overall_dict = extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
+
+			acc_overall_dict = extract_overall_accuracy(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
 			save_results(acc_overall_dict, edge_prob_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
@@ -238,29 +204,21 @@ def main(args):
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_data_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
 
-
-	backbone_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_backbone_id_%s.csv"%(args.model_id))
-
 	save_results_dir = os.path.join(config.DIR_NAME, "ensemble_analysis_results")
 
 	if(not os.path.exists(save_results_dir)):
 		os.makedirs(save_results_dir)
 
 	save_results_path = os.path.join(save_results_dir, 
-		"%s_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
+		"%s_model_ensemble_analysis_%s_branches_%s_%s_last_layer.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
 
 	df_ee = pd.read_csv(ee_data_path)
 	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')]
 
-	df_backbone = pd.read_csv(backbone_data_path)
-	df_backbone = df_backbone.loc[:, ~df_backbone.columns.str.contains('^Unnamed')]
-
 	df_ee = df_ee[df_ee.distortion_type_model == args.distortion_type_model]
-	df_backbone = df_backbone[df_backbone.distortion_type_model == args.distortion_type_model]
 
-	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_blur")
-	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_noise")
+	exp_ensemble_analysis(args, df_ee, save_results_path, distortion_type="gaussian_blur")
+	exp_ensemble_analysis(args, df_ee, save_results_path, distortion_type="gaussian_noise")
 
 
 if (__name__ == "__main__"):
