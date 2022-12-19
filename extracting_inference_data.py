@@ -199,7 +199,7 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 		#ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
 		#	distortion_lvl, device)
 
-		result.update(ensemble_results)
+		#result.update(ensemble_results)
 
 		save_result(result, inference_data_path)
 
