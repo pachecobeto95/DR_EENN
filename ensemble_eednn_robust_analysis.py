@@ -82,9 +82,9 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 
 	correct = 0
 
-	#early_exit_samples = df["ensemble_conf_branch_%s"%(n_exits)] >= threshold
+	early_exit_samples = df["ensemble_conf_branch_%s"%(n_exits)] >= threshold
 
-	early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+	#early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
 
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
