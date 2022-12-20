@@ -42,7 +42,7 @@ def main(args):
 	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.n_branches, args.model_name, 
 		args.dataset_name))
 
-	savePath = os.path.join("plots", "accuracy", "%s_branches"%(args.n_branches))
+	savePath = os.path.join("plots", "accuracy", "%s_branches_alt"%(args.n_branches))
 
 	if(not os.path.exists(savePath)):
 		os.makedirs(savePath)

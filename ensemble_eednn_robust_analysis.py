@@ -89,11 +89,11 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
 
-	#correct += df_edge["ensemble_correct_branch_%s"%(n_exits)].sum()
-	#correct += df_cloud["ensemble_correct_branch_%s"%(n_exits)].sum()
-
-	correct += df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].sum()
+	correct += df_edge["ensemble_correct_branch_%s"%(n_exits)].sum()
 	correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
+
+	#correct += df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].sum()
+	#correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
 
 	ensemble_overall_acc = float(correct)/n_samples
 	return ensemble_overall_acc
@@ -253,7 +253,7 @@ def main(args):
 		os.makedirs(save_results_dir)
 
 	save_results_path = os.path.join(save_results_dir, 
-		"%s_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
+		"%s_model_ensemble_analysis_%s_branches_%s_%s_2.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
 
 	df_ee = pd.read_csv(ee_data_path)
 	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')]

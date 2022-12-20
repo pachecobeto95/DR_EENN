@@ -196,10 +196,10 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
 
 		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
-		#acc_branches = compute_acc_branches(result, args.n_branches)
+		acc_branches = compute_acc_branches(result, args.n_branches)
 
-		#ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
-		#	distortion_lvl, device)
+		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
+			distortion_lvl, device)
 
 		#result.update(ensemble_results)
 
@@ -212,7 +212,7 @@ def main(args):
 		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type_model, args.n_branches, args.model_id) )
 
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
+		"inference_data_%s_branches_id_%s_final2.csv"%(args.n_branches, args.model_id))
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
