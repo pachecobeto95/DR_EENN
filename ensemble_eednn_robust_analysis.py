@@ -113,8 +113,6 @@ def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches
 	#return ensemble_edge_acc
 
 
-
-
 def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
