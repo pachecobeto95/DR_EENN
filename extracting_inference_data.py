@@ -52,8 +52,6 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 
 		mode_list = multimode(infered_class_branches_list)
 
-		#print(infered_class_branches_list, mode_list, target.item(), int(target.item() in mode_list))
-
 		correct = int(target.item() in mode_list)
 
 		conf_list.append(conf_edge[max_idx]), correct_list.append(correct)
@@ -74,7 +72,7 @@ def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, di
 
 			data, target = data.to(device), target.to(device)
 
-			prob_vectors, conf_branches, infered_class_branches = model(data)
+			prob_vectors, conf_branches, infered_class_branches, _ = model(data)
 
 			ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, acc_branches, n_exits, target, device)
 			
@@ -108,9 +106,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
 	correct_list, exit_branch_list = [], []
-	#ensemble_conf_list, ensemble_infered_class_list, ensemble_correct_list = [], [], []
-
 	naive_ensemble_conf_list, naive_ensemble_correct_list = [], []
+	inference_time_branches_list = []
 
 	model.eval()
 
@@ -119,7 +116,7 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 
 			data, target = data.to(device), target.to(device)
 
-			prob_vectors, conf_branches, infered_class_branches = model(data)
+			prob_vectors, conf_branches, infered_class_branches, inference_time_branches = model(data)
 
 			#ensemble_conf, ensemble_infered_class, ensemble_correct = extract_ensemble_data(prob_vectors, n_exits, target, device)
 
@@ -127,15 +124,14 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 				target, device)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
-			#print([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
 			
-			#ensemble_conf_list.append(ensemble_conf), ensemble_infered_class_list.append(ensemble_infered_class)
-			#ensemble_correct_list.append(ensemble_correct)
-
 			naive_ensemble_conf_list.append(naive_ensemble_conf), naive_ensemble_correct_list.append(naive_ensemble_correct)
+
+			inference_time_branches_list.append(inference_time_branches)
+
 
 			del data, target
 			torch.cuda.empty_cache()
@@ -144,14 +140,10 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
 
-	#ensemble_conf_list = np.array(ensemble_conf_list)
-	#ensemble_infered_class_list = np.array(ensemble_infered_class_list)
-	#ensemble_correct_list = np.array(ensemble_correct_list)
-
 	naive_ensemble_conf_list = np.array(naive_ensemble_conf_list)
-	#naive_ensemble_infered_class_list = np.array(naive_ensemble_infered_class_list)
 	naive_ensemble_correct_list = np.array(naive_ensemble_correct_list)
 
+	inference_time_branches_list = np.array(inference_time_branches_list)
 
 	results = {"distortion_type_model": [distortion_type_model]*len(target_list),
 	"distortion_type_data": [distortion_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
@@ -162,7 +154,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
 			"correct_branch_%s"%(i+1): correct_list[:, i],
 			"naive_ensemble_conf_branch_%s"%(i+1): naive_ensemble_conf_list[:, i],
-			"naive_ensemble_correct_branch_%s"%(i+1): naive_ensemble_correct_list[:, i]}) 
+			"naive_ensemble_correct_branch_%s"%(i+1): naive_ensemble_correct_list[:, i],
+			"inference_time_branches_%s"%(i+1): inference_time_branches_list[:, i]}) 
 
 	return results
 
@@ -180,8 +173,6 @@ def compute_acc_branches(result, n_branches):
 
 		acc_branch = sum(result["correct_branch_%s"%(i+1)])/len(result["correct_branch_%s"%(i+1)])
 		acc_list.append(acc_branch)
-
-	#print([result["conf_branch_%s"%(i+1)].mean() for i in range(n_exits)])
 
 	return acc_list
 
@@ -212,7 +203,7 @@ def main(args):
 		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type_model, args.n_branches, args.model_id) )
 
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_%s_branches_id_%s_final2.csv"%(args.n_branches, args.model_id))
+		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
@@ -228,6 +219,11 @@ def main(args):
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
 
+	dummy_input = torch.randn(1, 3,224,224, dtype=torch.float).to(device)
+
+	for _ in range(10):
+		_ = model(dummy_input)	
+		
 	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="pristine")
 
