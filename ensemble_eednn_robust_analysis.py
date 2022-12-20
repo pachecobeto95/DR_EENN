@@ -243,7 +243,6 @@ def main(args):
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_data_%s_branches_id_%s_final2.csv"%(args.n_branches, args.model_id))
 
-
 	backbone_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_data_backbone_id_%s.csv"%(args.model_id))
 
@@ -257,6 +256,7 @@ def main(args):
 
 	df_ee = pd.read_csv(ee_data_path)
 	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')]
+	print(df_ee.columns)
 
 	df_backbone = pd.read_csv(backbone_data_path)
 	df_backbone = df_backbone.loc[:, ~df_backbone.columns.str.contains('^Unnamed')]
