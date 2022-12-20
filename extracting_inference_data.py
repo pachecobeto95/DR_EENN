@@ -50,9 +50,9 @@ def extract_naive_ensemble(conf_branches, infered_class_branches, n_exits, targe
 
 		max_idx = np.argmax(conf_edge)
 
-		mode_list = multimode(infered_class_branches_list[:(i+1)])
+		mode_list = multimode(infered_class_branches_list)
 
-		#print(mode_list, target.item(), int(target.item() in mode_list))
+		print(mode_list, target.item(), int(target.item() in mode_list))
 
 		correct = int(target.item() in mode_list)
 
