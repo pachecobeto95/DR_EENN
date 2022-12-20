@@ -89,13 +89,11 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
 
-	print(n_samples, len(df_edge)+ len(df_cloud))
-
 	#correct += df_edge["ensemble_correct_branch_%s"%(n_exits)].sum()
 	#correct += df_cloud["ensemble_correct_branch_%s"%(n_exits)].sum()
 
 	correct += df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].sum()
-	correct += df_cloud["naive_ensemble_correct_branch_%s"%(n_exits)].sum()
+	correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
 
 	ensemble_overall_acc = float(correct)/n_samples
 	return ensemble_overall_acc
