@@ -222,7 +222,7 @@ def main(args):
 	dummy_input = torch.randn(1, 3,224,224, dtype=torch.float).to(device)
 
 	for _ in range(10):
-		_ = model(dummy_input)	
+		_ = ee_model(dummy_input)	
 		
 	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="pristine")
