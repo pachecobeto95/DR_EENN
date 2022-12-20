@@ -241,7 +241,7 @@ def save_results(acc_edge_dict, distortion_levels, n_branch, threshold, distorti
 def main(args):
 
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
+		"inference_data_%s_branches_id_%s_final2.csv"%(args.n_branches, args.model_id))
 
 
 	backbone_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
