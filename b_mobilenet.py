@@ -201,6 +201,8 @@ class B_MobileNet(nn.Module):
     prob_vector_list, conf_list, class_list  = [], [], []
     inference_time_list = []
 
+    cumulative_inference_time = 0.0
+
     starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
     for i, exitBlock in enumerate(self.exits):
