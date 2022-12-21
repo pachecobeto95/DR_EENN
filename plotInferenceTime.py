@@ -8,7 +8,7 @@ from matplotlib import ticker
 
 def plotInfTimeDistortionLevel(df, threshold, n_branches_edge, distortion_levels, plot_dict, savePath, distortion_type):
 
-	n_samples = 3060
+	n_samples = 10000
 
 	fig, ax = plt.subplots()
 
