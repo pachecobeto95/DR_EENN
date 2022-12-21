@@ -31,9 +31,9 @@ def run_inference(args, model, input_data, device):
 
 			torch.cuda.empty_cache()
 
-	results = {"inference_time": inference_time_list}
+	result = {"inference_time": inference_time_list}
 
-	return results
+	return result
 
 
 def save_result(result, save_path):
