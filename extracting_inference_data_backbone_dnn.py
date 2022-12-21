@@ -4,24 +4,36 @@ from tqdm import tqdm
 import itertools, argparse, os, sys, random, logging, config, torch, torchvision, utils
 import torchvision.models as models
 import torch.nn as nn
+from pthflops import count_ops
 
 
 
-def run_inference_data(model, test_loader, distortion_type_model, distortion_type_data, distortion_lvl, device):
+def run_inference_data(model, test_loader, flops, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
 	conf_list, infered_class_list, target_list, correct_list = [], [], [], []
 
 	model.eval()
 	softmax = nn.Softmax(dim=1)
 
+	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+
+
+
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
 
 			data, target = data.to(device), target.to(device)
 
+			starter.record()
+
 			output = model(data)
 			conf, inf_class = torch.max(softmax(output), 1)
 
+			ender.record()
+			torch.cuda.synchronize()
+			curr_time = starter.elapsed_time(ender)
+
+			inference_time_list.append(curr_time)
 
 			conf_list.append(conf.item()), infered_class_list.append(inf_class.item())    
 			correct_list.append(inf_class.eq(target.view_as(inf_class)).sum().item())			
@@ -36,7 +48,9 @@ def run_inference_data(model, test_loader, distortion_type_model, distortion_typ
 	"distortion_type_data": [distortion_type_data]*len(target_list), 
 	"distortion_lvl": [distortion_lvl]*len(target_list), 
 	"target": target_list, "conf": conf_list, "infered_class": infered_class_list,
-	"correct": correct_list}
+	"correct": correct_list, 
+	"inference_time": inference_time_list, 
+	"flops": [flops]*len(target_list)}
 
 	return results
 
@@ -45,7 +59,7 @@ def save_result(result, save_path):
 	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
 
 
-def extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
+def extracting_inference_data(model, flops, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
 	distortion_type_model, distortion_type_data):
 
 	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
@@ -55,9 +69,15 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
 
-		result = run_inference_data(model, test_loader, distortion_type_model, distortion_type_data, distortion_lvl, device)
+		result = run_inference_data(model, test_loader, flops, distortion_type_model, distortion_type_data, distortion_lvl, device)
 
 		save_result(result, inference_data_path)
+
+
+def extract_flops(model, dim, device):
+	input_data = torch.rand(1, 3, dim, dim).to(device)
+	flops, _ = count_ops(model, input_data, print_readable=False, verbose=False)
+	return flops
 
 
 def main(args):
@@ -67,7 +87,7 @@ def main(args):
 
 
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_backbone_id_%s.csv"%(args.model_id))
+		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
@@ -84,14 +104,15 @@ def main(args):
 	model.load_state_dict(torch.load(model_save_path, map_location=device)["model_state_dict"])
 	model = model.to(device)
 
+	flops = extract_flops(model, args.dim, device)
 
-	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, flops, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type, distortion_type_data="pristine")
 
-	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, flops, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type, distortion_type_data="gaussian_blur")
 
-	extracting_inference_data(model, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(model, flops, args.input_dim, args.dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type, distortion_type_data="gaussian_noise")
 
 

@@ -82,50 +82,37 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 
 	correct = 0
 
-	early_exit_samples = df["ensemble_conf_branch_%s"%(n_exits)] >= threshold
-
-	#early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+	early_exit_samples = df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
 
 	df_edge = df[early_exit_samples]
 	df_cloud = df[~early_exit_samples]
 
-	correct += df_edge["ensemble_correct_branch_%s"%(n_exits)].sum()
+	correct += df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].sum()
 	correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
 
-	#correct += df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].sum()
-	#correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
 
 	ensemble_overall_acc = float(correct)/n_samples
 	return ensemble_overall_acc
 
-def compute_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_branches_total, threshold, distortion_type_data):
-
-	df = extractData(df, distortion_lvl, distortion_type_data)
-
-	#df_edge = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
-
-	#nr_correct = sum(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
-
-	#nr_samples = len(df_edge["ensemble_correct_branch_%s"%(n_branches_edge)].values)
-
-	#ensemble_edge_acc = nr_correct/nr_samples if(nr_samples>0) else 0
-
-	#return ensemble_edge_acc
 
 
 def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
 
-	df_edge = df[df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
+	n_samples = len(df)
+	correct = 0.0
+	early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
 
-	nr_correct = sum(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
+	df_edge = df[early_exit_samples]
+	df_cloud = df[~early_exit_samples]
 
-	nr_samples = len(df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].values)
+	correct += df_edge["naive_ensemble_correct_branch_%s"%(n_branches_edge)].sum()
+	correct += df_cloud["correct_branch_%s"%(n_exits)].sum()
 
-	naive_ensemble_edge_acc = nr_correct/float(nr_samples) if(nr_samples>0) else 0
-
+	naive_ensemble_edge_acc = float(correct)/n_samples
 	return naive_ensemble_edge_acc
+
 
 def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type_data):
 
@@ -139,7 +126,6 @@ def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshol
 		acc_ensemble_edge = compute_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 		acc_naive_ensemble_edge = compute_acc_naive_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 
-		#save_results(acc_backbone, acc_ee, acc_ensemble_edge, distortion_lvl, n_branches_edge)
 		acc_ee_list.append(acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(acc_ensemble_edge)
 		acc_naive_ensemble_edge_list.append(acc_naive_ensemble_edge)
 
@@ -185,19 +171,35 @@ def compute_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, th
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
 
-	df_ensemble = df[df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold]
+	n_samples = len(df)
 
-	n_early_exit = df_ensemble["ensemble_conf_branch_%s"%(n_branches_edge)].count()
+	early_exit_samples = df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
 
-	n_samples = len(df["ensemble_conf_branch_%s"%(n_branches_edge)].values)
+	df_edge = df[early_exit_samples]
 
+	n_early_exit = len(df_edge)
+
+	return n_early_exit/n_samples
+
+
+def compute_naive_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
+
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	n_samples = len(df)
+
+	early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+
+	df_edge = df[early_exit_samples]
+
+	n_early_exit = len(df_edge)
 
 	return n_early_exit/n_samples
 
 
 def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type_data):
 
-	early_prob_ee_list, early_prob_ensemble_edge_list = [], []
+	early_prob_ee_list, early_prob_ensemble_edge_list, early_prob_naive_ensemble_edge_list = [], [], []
 
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branch_edge, distortion_lvl))
@@ -206,9 +208,119 @@ def extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, disto
 
 		ensemble_early_prob = compute_ensemble_early_prob(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type_data)
 
-		early_prob_ee_list.append(ee_early_prob), early_prob_ensemble_edge_list.append(ensemble_early_prob)
+		naive_ensemble_early_prob = compute_naive_ensemble_early_prob(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data)
 
-	return {"ee_early_prob": early_prob_ee_list, "ensemble_early_prob": early_prob_ensemble_edge_list}
+		early_prob_ee_list.append(ee_early_prob), early_prob_ensemble_edge_list.append(ensemble_early_prob)
+		early_prob_naive_ensemble_edge_list.append(naive_ensemble_early_prob)
+
+	return {"ee_early_prob": early_prob_ee_list, "ensemble_early_prob": early_prob_ensemble_edge_list, "naive_ensemble_early_prob": early_prob_naive_ensemble_edge_list}
+
+def extract_inf_time(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type):
+	inf_time_backbone_list, inf_time_ee_list, inf_time_ensemble_list, inf_time_naive_ensemble_list  = [], [], [], []
+
+	flops_backbone_list, flops_ee_list, flops_ensemble_list, flops_naive_ensemble_list = [], [], [], []	
+
+	for distortion_lvl in distortion_levels:
+		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branch_edge, distortion_lvl))
+
+		inf_time_backbone, flops_backbone = compute_inf_time_backbone(df_backbone, distortion_lvl, distortion_type)
+
+		inf_time_ee, flops_ee = compute_inf_time_ee(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
+		inf_time_ensemble, flops_ensemble = compute_inf_time_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
+		inf_time_naive_ensemble, flops_naive_ensemble = compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
+
+		inf_time_ee_list.append(inf_time_ee), inf_time_backbone_list.append(inf_time_backbone)
+		inf_time_ensemble_list.append(inf_time_ensemble), inf_time_naive_ensemble_list.append(inf_time_naive_ensemble)
+
+		flops_backbone_list.append(flops_backbone), flops_ee_list.append(flops_ee), flops_ensemble_list.append(flops_ensemble)
+		flops_naive_ensemble_list.append(flops_naive_ensemble)
+
+	return {"inf_time_ee": inf_time_ee_list, "inf_time_backbone": inf_time_backbone_list, "inf_time_ensemble": inf_time_ensemble_list, 
+	"inf_time_naive_ensemble": inf_time_naive_ensemble_list, 
+	"flops_backbone": flops_backbone_list, "flops_ee": flops_ee_list, "flops_ensemble": flops_ensemble_list, 
+	"flops_naive_ensemble": flops_naive_ensemble_list}
+
+def compute_inf_time_backbone(df, distortion_lvl, distortion_type):
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	inf_time_backbone = df.inference_time.mean()
+	flops_backbone = df.flops.mean()
+
+	return inf_time_backbone, flops_backbone
+
+def compute_inf_time_ee(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
+
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	numexits = np.zeros(n_branches_edge)
+	n_samples = len(df)
+	remaining_data = df
+	inference_time, flops = 0.0, 0.0
+
+	for i in range(1, n_branches_edge+1):
+		current_n_samples = len(remaining_data)
+		early_exit_samples = remaining_data["conf_branch_%s"%(i)] >= threshold
+		numexits[i-1] = remaining_data[early_exit_samples]["conf_branch_%s"%(i)].count()
+		remaining_data = remaining_data[~early_exit_samples]
+
+		inference_time += numexits[i-1]*df["inference_time_branches_%s"%(i)].mean()
+		flops += numexits[i-1]*df["flops_branches_%s"%(i)].mean()
+
+	n_samples_cloud = remaining_data["conf_branch_%s"%(n_exits)].count()
+	inference_time += n_samples_cloud*df["inference_time_branches_%s"%(n_exits)].mean()
+	flops += n_samples_cloud*df["flops_branches_%s"%(n_exits)].mean()
+
+	avg_inf_time = inference_time/n_samples
+	avg_flops = flops/n_samples
+
+	return avg_inf_time, avg_flops
+
+def compute_inf_time_ensemble(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
+
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	n_samples = len(df)
+
+	early_exit_samples = df["ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+
+	df_edge = df[early_exit_samples]
+
+	n_early_exit = len(df_edge)
+
+	inference_time = n_early_exit*df["inference_time_branches_%s"%(n_branches_edge)].mean()
+	flops = n_early_exit*df["flops_branches_%s"%(n_branches_edge)].mean()
+	
+	inference_time += (n_samples-n_early_exit)*df["inference_time_branches_%s"%(n_exits)].mean()
+	flops += (n_samples-n_early_exit)*df["flops_branches_%s"%(n_exits)].mean()
+
+	avg_inf_time = inference_time/n_samples
+	avg_flops = flops/n_samples
+
+	return avg_inf_time, avg_flops
+
+def compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
+
+	df = extractData(df, distortion_lvl, distortion_type_data)
+
+	n_samples = len(df)
+
+	early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
+
+	df_edge = df[early_exit_samples]
+
+	n_early_exit = len(df_edge)
+
+	inference_time = n_early_exit*df["inference_time_branches_%s"%(n_branches_edge)].mean()
+	flops = n_early_exit*df["flops_branches_%s"%(n_branches_edge)].mean()
+
+	inference_time += (n_samples-n_early_exit)*df["inference_time_branches_%s"%(n_exits)].mean()
+	flops += (n_samples-n_early_exit)*df["flops_branches_%s"%(n_exits)].mean()
+
+	avg_inf_time = inference_time/n_samples
+	avg_flops = flops/n_samples
+
+	return avg_inf_time, avg_flops
+
 
 def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 
@@ -219,18 +331,22 @@ def exp_ensemble_analysis(args, df_backbone, df_ee, save_path, distortion_type):
 
 		for n_branch_edge in range(1, n_exits+1):
 
-			#edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
+			edge_prob_dict = extract_early_classification(df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
 			#acc_edge_dict = extract_accuracy_edge(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 			#	distortion_type)
 			acc_overall_dict = extract_overall_accuracy(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, 
 				distortion_type)
 
-			save_results(acc_overall_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
+			inference_time_dict = extract_inf_time(df_backbone, df_ee, n_branch_edge, n_exits, threshold, distortion_levels, distortion_type)
 
 
-def save_results(acc_edge_dict, distortion_levels, n_branch, threshold, distortion_type_data, save_path):
+			save_results(acc_overall_dict, edge_prob_dict, inference_time_dict, flops_dict, distortion_levels, n_branch_edge, threshold, distortion_type, save_path)
+
+def save_results(acc_edge_dict, edge_prob_dict, inference_time_dict, flops_dict, distortion_levels, n_branch, threshold, distortion_type_data, save_path):
 	results_dict = {}
-	results_dict.update(acc_edge_dict)#, results_dict.update(edge_prob_dict) 
+	results_dict.update(acc_edge_dict), results_dict.update(edge_prob_dict), results_dict.update(inference_time_dict)
+	results_dict.update(flops_dict)
+
 	results_dict.update({"distortion_lvl": distortion_levels, "distortion_type_data": distortion_type_data, 
 		"n_branches_edge": [n_branch]*len(distortion_levels), "threshold": len(distortion_levels)*[threshold]})
 
@@ -241,10 +357,10 @@ def save_results(acc_edge_dict, distortion_levels, n_branch, threshold, distorti
 def main(args):
 
 	ee_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_%s_branches_id_%s_final2.csv"%(args.n_branches, args.model_id))
+		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
 	backbone_data_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_backbone_id_%s.csv"%(args.model_id))
+		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	save_results_dir = os.path.join(config.DIR_NAME, "ensemble_analysis_results")
 
@@ -252,11 +368,10 @@ def main(args):
 		os.makedirs(save_results_dir)
 
 	save_results_path = os.path.join(save_results_dir, 
-		"%s_model_ensemble_analysis_%s_branches_%s_%s_2.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
+		"%s_model_ensemble_analysis_%s_branches_%s_%s_final_final.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
 
 	df_ee = pd.read_csv(ee_data_path)
 	df_ee = df_ee.loc[:, ~df_ee.columns.str.contains('^Unnamed')]
-	print(df_ee.columns)
 
 	df_backbone = pd.read_csv(backbone_data_path)
 	df_backbone = df_backbone.loc[:, ~df_backbone.columns.str.contains('^Unnamed')]
@@ -265,7 +380,7 @@ def main(args):
 	df_backbone = df_backbone[df_backbone.distortion_type_model == args.distortion_type_model]
 
 	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_blur")
-	exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_noise")
+	#exp_ensemble_analysis(args, df_backbone, df_ee, save_results_path, distortion_type="gaussian_noise")
 
 
 if (__name__ == "__main__"):

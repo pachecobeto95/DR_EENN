@@ -101,7 +101,7 @@ def run_ensemble_inference_data(model, test_loader, acc_branches, n_branches, di
 	return ensemble_results
 
 
-def run_inference_data(model, test_loader, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
+def run_inference_data(model, test_loader, flops_dict, n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device):
 
 	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list = [], [], []
@@ -155,7 +155,8 @@ def run_inference_data(model, test_loader, n_branches, distortion_type_model, di
 			"correct_branch_%s"%(i+1): correct_list[:, i],
 			"naive_ensemble_conf_branch_%s"%(i+1): naive_ensemble_conf_list[:, i],
 			"naive_ensemble_correct_branch_%s"%(i+1): naive_ensemble_correct_list[:, i],
-			"inference_time_branches_%s"%(i+1): inference_time_branches_list[:, i]}) 
+			"inference_time_branches_%s"%(i+1): inference_time_branches_list[:, i], 
+			"flops_branches_%s"%(i+1): [flops_dict["flops_branches_%s"%(i+1)]]*len(target_list)}) 
 
 	return results
 
@@ -176,7 +177,7 @@ def compute_acc_branches(result, n_branches):
 
 	return acc_list
 
-def extracting_inference_data(model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
+def extracting_inference_data(model, flops_dict, input_dim, dim, inference_data_path, dataset_path, indices_path, device, 
 	distortion_type_model, distortion_type_data):
 
 	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
@@ -186,7 +187,7 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 
 		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
 
-		result = run_inference_data(model, test_loader, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
+		result = run_inference_data(model, test_loader, flops_dict, args.n_branches, distortion_type_model, distortion_type_data, distortion_lvl, device)
 		acc_branches = compute_acc_branches(result, args.n_branches)
 
 		ensemble_results = run_ensemble_inference_data(model, test_loader, acc_branches, args.n_branches, distortion_type_model, distortion_type_data, 
@@ -195,6 +196,46 @@ def extracting_inference_data(model, input_dim, dim, inference_data_path, datase
 		result.update(ensemble_results)
 
 		save_result(result, inference_data_path)
+
+
+def extract_flops(model, n_branches, dim, device):
+
+	x = torch.rand(1, 3, dim, dim).to(device)
+
+	flops_dict = {}
+	cumulative_flops = 0
+
+	for i, exitBlock in enumerate(model.exits):
+
+		flops_backbone, _ = count_ops(model.stages[i], x, print_readable=False, verbose=False)
+		x = model.stages[i](x)
+
+		flops_branch, _ = count_ops(exitBlock, x, print_readable=False, verbose=False)
+		
+		cumulative_flops += (flops_backbone+flops_branch)
+
+		flops_dict["flops_branches_%s"%(i+1)] = cumulative_flops
+
+	flops_backbone, _ = count_ops(model.stages[-1], x, print_readable=False, verbose=False)
+
+	x = self.stages[-1](x)
+	x = x.mean(3).mean(2)
+
+	flops_exit, _ = count_ops(model.fully_connected, x, print_readable=False, verbose=False)
+
+	cumulative_flops+= (flops_backbone+flops_exit)
+	flops_dict["flops_branches_%s"%(n_branches+1)] = cumulative_flops
+
+	return flops_dict
+
+
+
+
+
+def extract_flops(model, dim, device):
+	input_data = torch.rand(1, 3, dim, dim).to(device)
+	flops, _ = count_ops(model, input_data, print_readable=False, verbose=False)
+	return flops
 
 
 def main(args):
@@ -223,14 +264,17 @@ def main(args):
 
 	for _ in range(10):
 		_ = ee_model(dummy_input)	
-		
-	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+
+	flops_dict = extract_flops(ee_model, args.n_branches, args.dim, device)
+
+
+	extracting_inference_data(ee_model, flops_dict, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="pristine")
 
-	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(ee_model, flops_dict, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="gaussian_blur")
 
-	extracting_inference_data(ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
+	extracting_inference_data(ee_model, flops_dict, input_dim, dim, inference_data_path, dataset_path, indices_path, 
 		device, args.distortion_type_model, distortion_type_data="gaussian_noise")
 
 
