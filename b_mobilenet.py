@@ -221,6 +221,8 @@ class B_MobileNet(nn.Module):
 
       cumulative_inference_time += curr_time
 
+      print(cumulative_inference_time)
+
       inference_time_list.append(cumulative_inference_time)
 
       conf_list.append(conf), class_list.append(infered_class-1), prob_vector_list.append(prob_vector)
@@ -238,6 +240,7 @@ class B_MobileNet(nn.Module):
     curr_time = starter.elapsed_time(ender)
 
     cumulative_inference_time += curr_time
+    print(cumulative_inference_time)
 
     inference_time_list.append(cumulative_inference_time)
 
@@ -245,7 +248,7 @@ class B_MobileNet(nn.Module):
     
     conf_list.append(infered_conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
     prob_vector_list.append(prob_vector)
-
+    sys.exit()
     return prob_vector_list, conf_list, class_list, inference_time_list
 
   def forwardEval(self, x, p_tar):
