@@ -31,6 +31,11 @@ def run_inference(args, model, input_data, n_branches, device):
 	return results
 
 
+def save_result(result, save_path):
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
+
+
 def extracting_inference_time(args, model, input_data, input_dim, dim, save_path, device):
 
 	result = run_inference(args, model, input_data, args.n_branches, device)
