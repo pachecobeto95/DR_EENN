@@ -328,7 +328,7 @@ def compute_inf_time_ensemble(df, df_ee_inf_time, distortion_lvl, n_branches_edg
 
 	n_early_exit = len(df_edge)
 
-	print(n_branches_edge, n_early_exit)
+	#print(n_branches_edge, n_early_exit)
 
 	inference_time = n_early_exit*df_ee_inf_time["inference_time_branches_%s"%(n_branches_edge)].mean()
 	flops = n_early_exit*df["flops_branches_%s"%(n_branches_edge)].mean()
@@ -355,12 +355,13 @@ def compute_inf_time_naive_ensemble(df, df_ee_inf_time, distortion_lvl, n_branch
 
 	early_exit_samples = df["naive_ensemble_conf_branch_%s"%(n_branches_edge)] >= threshold
 
-	print(n_branches_edge, n_early_exit)
-
-
 	df_edge = df[early_exit_samples]
 
 	n_early_exit = len(df_edge)
+
+
+	print(n_branches_edge, n_early_exit)
+
 
 	inference_time = n_early_exit*df_ee_inf_time["inference_time_branches_%s"%(n_branches_edge)].mean()
 	flops = n_early_exit*df["flops_branches_%s"%(n_branches_edge)].mean()
