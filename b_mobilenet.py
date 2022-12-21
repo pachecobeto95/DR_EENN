@@ -5,6 +5,7 @@ from pthflops import count_ops
 import torchvision.models as models
 import numpy as np
 #import config
+import time
 
 class ConvBasic(nn.Module):
     def __init__(self, nIn, nOut, kernel=3, stride=1,
