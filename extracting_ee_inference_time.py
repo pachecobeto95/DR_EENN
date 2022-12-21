@@ -15,7 +15,7 @@ def run_inference(args, model, input_data, n_branches, device):
 	model.eval()
 
 	with torch.no_grad():
-		for i in range(args.n_rounds):
+		for i in tqdm(range(args.n_rounds)):
 
 			_, _, _, inference_time_branches = model(data)
 
@@ -33,9 +33,9 @@ def run_inference(args, model, input_data, n_branches, device):
 	return results
 
 
-def extracting_inference_time(model, input_data, input_dim, dim, save_path, device):
+def extracting_inference_time(args, model, input_data, input_dim, dim, save_path, device):
 
-	result = run_inference(model, input_data, args.n_branches, device)
+	result = run_inference(args, model, input_data, args.n_branches, device)
 
 	save_result(result, save_path)
 
