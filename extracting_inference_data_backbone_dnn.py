@@ -17,7 +17,7 @@ def run_inference_data(model, test_loader, flops, distortion_type_model, distort
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
-
+	inference_time_list = []
 
 	with torch.no_grad():
 		for (data, target) in tqdm(test_loader):
