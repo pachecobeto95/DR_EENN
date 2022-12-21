@@ -225,9 +225,9 @@ def extract_inf_time(df_backbone, df_ee, n_branch_edge, n_exits, threshold, dist
 
 		inf_time_backbone, flops_backbone = compute_inf_time_backbone(df_backbone, distortion_lvl, distortion_type)
 
-		inf_time_ee, flops_ee = compute_inf_time_ee(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
-		inf_time_ensemble, flops_ensemble = compute_inf_time_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
-		inf_time_naive_ensemble, flops_naive_ensemble = compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
+		inf_time_ee, flops_ee = compute_inf_time_ee(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type)
+		inf_time_ensemble, flops_ensemble = compute_inf_time_ensemble(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type)
+		inf_time_naive_ensemble, flops_naive_ensemble = compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branch_edge, n_exits, threshold, distortion_type)
 
 		inf_time_ee_list.append(inf_time_ee), inf_time_backbone_list.append(inf_time_backbone)
 		inf_time_ensemble_list.append(inf_time_ensemble), inf_time_naive_ensemble_list.append(inf_time_naive_ensemble)
