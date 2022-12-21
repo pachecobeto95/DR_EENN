@@ -417,7 +417,7 @@ def main(args):
 		"inference_time_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
 	backbone_inf_time_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
-		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
+		"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	save_results_dir = os.path.join(config.DIR_NAME, "ensemble_analysis_results")
 
