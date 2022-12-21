@@ -245,7 +245,6 @@ def extract_inf_time(df_backbone, df_ee, df_ee_inf_time, df_backbone_inf_time, n
 		std_inf_time_backbone_list.append(std_inf_time_backbone), std_inf_time_ee_list.append(std_inf_time_ee), std_inf_time_ensemble_list.append(std_inf_time_ensemble)
 		std_inf_time_naive_ensemble_list.append(std_inf_time_naive_ensemble)
 
-	sys.exit()
 	return {"inf_time_ee": inf_time_ee_list, "inf_time_backbone": inf_time_backbone_list, "inf_time_ensemble": inf_time_ensemble_list, 
 	"inf_time_naive_ensemble": inf_time_naive_ensemble_list, 
 	"flops_backbone": flops_backbone_list, "flops_ee": flops_ee_list, "flops_ensemble": flops_ensemble_list, 
@@ -260,9 +259,9 @@ def compute_inf_time_backbone(df, df_backbone_inf_time, distortion_lvl, distorti
 
 	inf_time_backbone = df_backbone_inf_time.inference_time.mean()
 
-	print(df_backbone_inf_time.inference_time.values)
+	#print(df_backbone_inf_time.inference_time.values)
 
-	print("Backbone: %s"%(inf_time_backbone))
+	#print("Backbone: %s"%(inf_time_backbone))
 
 	flops_backbone = df.flops.mean()
 
@@ -294,13 +293,13 @@ def compute_inf_time_ee(df, df_ee_inf_time, distortion_lvl, n_branches_edge, n_e
 		numexits[i-1] = remaining_data[early_exit_samples]["conf_branch_%s"%(i)].count()
 		remaining_data = remaining_data[~early_exit_samples]
 
-		print("EE: %s"%(df_ee_inf_time["inference_time_branches_%s"%(i)].mean()))
+		#print("EE: %s"%(df_ee_inf_time["inference_time_branches_%s"%(i)].mean()))
 		inference_time += numexits[i-1]*df_ee_inf_time["inference_time_branches_%s"%(i)].mean()
 		flops += numexits[i-1]*df["flops_branches_%s"%(i)].mean()
 
 		std_inf_time_list.append(df_ee_inf_time["inference_time_branches_%s"%(i)].std())
 
-	print("EE: %s"%(df_ee_inf_time["inference_time_branches_%s"%(n_exits)].mean()))
+	#print("EE: %s"%(df_ee_inf_time["inference_time_branches_%s"%(n_exits)].mean()))
 	n_samples_cloud = remaining_data["conf_branch_%s"%(n_exits)].count()
 	inference_time += n_samples_cloud*df_ee_inf_time["inference_time_branches_%s"%(n_exits)].mean()
 	flops += n_samples_cloud*df["flops_branches_%s"%(n_exits)].mean()
