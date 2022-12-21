@@ -27,6 +27,8 @@ def run_inference(args, model, input_data, device):
 			torch.cuda.synchronize()
 			curr_time = starter.elapsed_time(ender)
 
+			print(curr_time)
+
 			inference_time_list.append(curr_time)
 
 			torch.cuda.empty_cache()
