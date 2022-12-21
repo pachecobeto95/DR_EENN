@@ -3,6 +3,8 @@ import pandas as pd
 from tqdm import tqdm
 import itertools, argparse, os, sys, random, logging, config, torch, torchvision, utils
 from statistics import mode, multimode
+from pthflops import count_ops
+
 
 def compute_ensemble_conf(prob_vectors, acc_branches, nr_branch_edge, target, device):
 
