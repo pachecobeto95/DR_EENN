@@ -96,7 +96,7 @@ def compute_overall_acc_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_
 
 
 
-def compute_acc_naive_ensemble_ee_edge(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
+def compute_overall_acc_naive_ensemble(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type_data):
 
 	df = extractData(df, distortion_lvl, distortion_type_data)
 
@@ -134,7 +134,7 @@ def extract_accuracy_edge(df_backbone, df_ee, n_branches_edge, n_exits, threshol
 
 
 def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, threshold, distortion_levels, distortion_type):
-	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list = [], [], []
+	acc_ee_list, acc_backbone_list, acc_ensemble_edge_list, overall_acc_naive_ensemble_edge_list = [], [], [], []
 
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branches_edge, distortion_lvl))
@@ -144,9 +144,14 @@ def extract_overall_accuracy(df_backbone, df_ee, n_branches_edge, n_exits, thres
 		overall_acc_ee = compute_overall_acc_early_exit(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
 		overall_acc_ensemble_edge = compute_overall_acc_ensemble_ee_edge(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
 
-		acc_ee_list.append(overall_acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(overall_acc_ensemble_edge)
+		overall_acc_naive_ensemble = compute_overall_acc_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type)
 
-	return {"overall_acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "overall_acc_ensemble": acc_ensemble_edge_list}
+
+		acc_ee_list.append(overall_acc_ee), acc_backbone_list.append(acc_backbone), acc_ensemble_edge_list.append(overall_acc_ensemble_edge)
+		overall_acc_naive_ensemble_edge_list.append(overall_acc_naive_ensemble)
+
+	return {"overall_acc_ee": acc_ee_list, "acc_backbone": acc_backbone_list, "overall_acc_ensemble": acc_ensemble_edge_list,
+	"overall_acc_naive_ensemble": overall_acc_naive_ensemble_edge_list}
 
 
 
