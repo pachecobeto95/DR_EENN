@@ -258,6 +258,7 @@ def compute_inf_time_backbone(df, df_backbone_inf_time, distortion_lvl, distorti
 	df = extractData(df, distortion_lvl, distortion_type)
 
 	inf_time_backbone = df_backbone_inf_time.inference_time.mean()
+	print(inf_time_backbone)
 	flops_backbone = df.flops.mean()
 
 	inf_time_backbone_std = df_backbone_inf_time.inference_time.std()
