@@ -14,19 +14,33 @@ def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_level
 
 	saveFile = os.path.join(savePath, "%s_edge_accuracy_%s_branches_threshold_%s"%(distortion_type, n_branches_edge, threshold))
 
-	plt.plot(distortion_levels, df.acc_backbone.values, label="Backbone DNN", 
+	#plt.plot(distortion_levels, df.acc_backbone.values, label="Backbone DNN", 
+	#	marker=plot_dict["marker"][0], linestyle=plot_dict["line_style"][0], color=plot_dict["color"][0])
+
+	plt.plot(distortion_levels, df.acc_backbone.values, label="DNN Convencional", 
 		marker=plot_dict["marker"][0], linestyle=plot_dict["line_style"][0], color=plot_dict["color"][0])
 
+
+	#plt.plot(distortion_levels, df.overall_acc_ee.values, label="EE-DNN", 
+	#	marker=plot_dict["marker"][1], linestyle=plot_dict["line_style"][1], color=plot_dict["color"][1])
 
 	plt.plot(distortion_levels, df.overall_acc_ee.values, label="EE-DNN", 
 		marker=plot_dict["marker"][1], linestyle=plot_dict["line_style"][1], color=plot_dict["color"][1])
 
-	plt.plot(distortion_levels, df.overall_acc_ensemble.values, label="Ensemble EE", 
+
+	#plt.plot(distortion_levels, df.overall_acc_ensemble.values, label="Ensemble EE", 
+	#	marker=plot_dict["marker"][2], linestyle=plot_dict["line_style"][2], color=plot_dict["color"][2])
+
+	plt.plot(distortion_levels, df.overall_acc_ensemble.values, label="Comitê EE-DNN", 
 		marker=plot_dict["marker"][2], linestyle=plot_dict["line_style"][2], color=plot_dict["color"][2])
+
+	#plt.plot(distortion_levels, df.overall_acc_naive_ensemble.values, label="Comitê EE-DNN 2", 
+	#	marker=plot_dict["marker"][3], linestyle=plot_dict["line_style"][3], color=plot_dict["color"][3])
 
 
 	plt.xlabel(plot_dict["x_axis"][distortion_type], fontsize=plot_dict["fontsize"])
-	plt.ylabel("Overall Accuracy", fontsize=plot_dict["fontsize"])
+	#plt.ylabel("Overall Accuracy", fontsize=plot_dict["fontsize"])
+	plt.ylabel("Acurácia Total", fontsize=plot_dict["fontsize"])
 	ax.tick_params(axis='both', which='major', labelsize=plot_dict["fontsize"]-3)
 	ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 	plt.legend(frameon=False, fontsize=plot_dict["fontsize"]-4)
@@ -39,10 +53,10 @@ def plotAccuracyDistortionLevel(df, threshold, n_branches_edge, distortion_level
 
 def main(args):
 
-	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s.csv"%(args.n_branches, args.model_name, 
+	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s_final_final.csv"%(args.n_branches, args.model_name, 
 		args.dataset_name))
 
-	savePath = os.path.join("plots", "accuracy", "%s_branches_alt"%(args.n_branches))
+	savePath = os.path.join("plots", "accuracy", "%s_branches_final_final"%(args.n_branches))
 
 	if(not os.path.exists(savePath)):
 		os.makedirs(savePath)
@@ -59,7 +73,7 @@ def main(args):
 
 			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, blur_levels, config.plot_dict, savePath, distortion_type="gaussian_blur")
 
-			plotAccuracyDistortionLevel(df, threshold, n_branch_edge, noise_levels, config.plot_dict, savePath, distortion_type="gaussian_noise")
+			#plotAccuracyDistortionLevel(df, threshold, n_branch_edge, noise_levels, config.plot_dict, savePath, distortion_type="gaussian_noise")
 
 if (__name__ == "__main__"):
 

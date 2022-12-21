@@ -53,7 +53,6 @@ def main(args):
 	model_save_path = os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"%s_backbone_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
 
-
 	inference_time_path = os.path.join(config.DIR_NAME, "inference_data", args.dataset_name, args.model_name, 
 		"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
 
