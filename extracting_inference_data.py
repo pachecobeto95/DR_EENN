@@ -212,9 +212,9 @@ def extract_flops(model, n_branches, dim, device):
 		flops_backbone, _ = count_ops(model.stages[i], x, print_readable=False, verbose=False)
 		x = model.stages[i](x)
 
-		flops_branch, _ = count_ops(exitBlock, x, print_readable=False, verbose=False)
+		#flops_branch, _ = count_ops(exitBlock, x, print_readable=False, verbose=False)
 		
-		cumulative_flops += (flops_backbone+flops_branch)
+		cumulative_flops += (flops_backbone)
 
 		flops_dict["flops_branches_%s"%(i+1)] = cumulative_flops
 
