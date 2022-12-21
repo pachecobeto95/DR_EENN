@@ -241,7 +241,7 @@ def extract_inf_time(df_backbone, df_ee, n_branch_edge, n_exits, threshold, dist
 	"flops_naive_ensemble": flops_naive_ensemble_list}
 
 def compute_inf_time_backbone(df, distortion_lvl, distortion_type):
-	df = extractData(df, distortion_lvl, distortion_type_data)
+	df = extractData(df, distortion_lvl, distortion_type)
 
 	inf_time_backbone = df.inference_time.mean()
 	flops_backbone = df.flops.mean()
@@ -250,7 +250,7 @@ def compute_inf_time_backbone(df, distortion_lvl, distortion_type):
 
 def compute_inf_time_ee(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
 
-	df = extractData(df, distortion_lvl, distortion_type_data)
+	df = extractData(df, distortion_lvl, distortion_type)
 
 	numexits = np.zeros(n_branches_edge)
 	n_samples = len(df)
@@ -277,7 +277,7 @@ def compute_inf_time_ee(df, distortion_lvl, n_branches_edge, n_exits, threshold,
 
 def compute_inf_time_ensemble(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
 
-	df = extractData(df, distortion_lvl, distortion_type_data)
+	df = extractData(df, distortion_lvl, distortion_type)
 
 	n_samples = len(df)
 
@@ -300,7 +300,7 @@ def compute_inf_time_ensemble(df, distortion_lvl, n_branches_edge, n_exits, thre
 
 def compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
 
-	df = extractData(df, distortion_lvl, distortion_type_data)
+	df = extractData(df, distortion_lvl, distortion_type)
 
 	n_samples = len(df)
 
