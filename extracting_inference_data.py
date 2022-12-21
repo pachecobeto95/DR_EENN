@@ -245,6 +245,9 @@ def main(args):
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
+	print(device)
+	sys.exit()
+
 	n_classes = config.nr_class_dict[args.dataset_name]
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
