@@ -114,7 +114,7 @@ def run_inference_data(model, test_loader, flops_dict, n_branches, distortion_ty
 	model.eval()
 
 	with torch.no_grad():
-		for (data, target) in tqdm(test_loader):
+		for data, target in test_loader:
 
 			data, target = data.to(device), target.to(device)
 
@@ -253,7 +253,7 @@ def main(args):
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
 
-	dummy_input = torch.randn(1, 3,224,224, dtype=torch.float).to(device)
+	dummy_input = torch.randn(1, 3, 224,224, dtype=torch.float).to(device)
 
 	for _ in range(10):
 		_ = ee_model(dummy_input)	
