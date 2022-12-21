@@ -90,6 +90,7 @@ if (__name__ == "__main__"):
 	parser.add_argument('--distortion_type', type=str, default=config.distortion_type, help='Distortion Type.')
 	parser.add_argument('--input_dim', type=int, default=config.input_dim, help='Input Dim. Default: %s'%config.input_dim)
 	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
+	parser.add_argument('--n_rounds', type=float, default=10000)
 
 
 	args = parser.parse_args()
