@@ -298,7 +298,7 @@ def compute_inf_time_ensemble(df, distortion_lvl, n_branches_edge, n_exits, thre
 
 	return avg_inf_time, avg_flops
 
-def compute_inf_time_naive_ensemble(df_ee, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
+def compute_inf_time_naive_ensemble(df, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
 
 	df = extractData(df, distortion_lvl, distortion_type)
 
