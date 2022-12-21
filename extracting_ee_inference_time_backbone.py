@@ -43,7 +43,7 @@ def save_result(result, save_path):
 
 def extracting_inference_time_backbone(args, model, input_data, input_dim, dim, save_path, device):
 
-	result = run_inference_data(args, model, input_data, device)
+	result = run_inference(args, model, input_data, device)
 
 	save_result(result, save_path)
 
