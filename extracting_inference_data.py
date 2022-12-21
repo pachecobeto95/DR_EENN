@@ -220,7 +220,7 @@ def extract_flops(model, n_branches, dim, device):
 
 	flops_backbone, _ = count_ops(model.stages[-1], x, print_readable=False, verbose=False)
 
-	x = self.stages[-1](x)
+	x = model.stages[-1](x)
 	x = x.mean(3).mean(2)
 
 	flops_exit, _ = count_ops(model.fully_connected, x, print_readable=False, verbose=False)
