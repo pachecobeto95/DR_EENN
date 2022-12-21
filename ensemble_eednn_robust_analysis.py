@@ -257,9 +257,6 @@ def extract_inf_time(df_backbone, df_ee, n_branch_edge, n_exits, threshold, dist
 def compute_inf_time_backbone(df, distortion_lvl, distortion_type):
 	df = extractData(df, distortion_lvl, distortion_type)
 
-	print(len(df))
-	sys.exit()
-
 	inf_time_backbone = df.inference_time.mean()
 	flops_backbone = df.flops.mean()
 
