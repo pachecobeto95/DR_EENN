@@ -229,15 +229,6 @@ def extract_flops(model, n_branches, dim, device):
 	return flops_dict
 
 
-
-
-
-def extract_flops(model, dim, device):
-	input_data = torch.rand(1, 3, dim, dim).to(device)
-	flops, _ = count_ops(model, input_data, print_readable=False, verbose=False)
-	return flops
-
-
 def main(args):
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
