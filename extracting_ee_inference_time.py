@@ -17,12 +17,10 @@ def run_inference(args, model, input_data, n_branches, device):
 	with torch.no_grad():
 		for i in tqdm(range(args.n_rounds)):
 
-			_, _, _, inference_time_branches = model(data)
+			_, _, _, inference_time_branches = model(input_data)
 
 			inference_time_branches_list.append(inference_time_branches)
 
-
-			del data, target
 			torch.cuda.empty_cache()
 
 	inference_time_branches_list = np.array(inference_time_branches_list)
