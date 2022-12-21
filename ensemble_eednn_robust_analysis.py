@@ -260,6 +260,8 @@ def compute_inf_time_backbone(df, df_backbone_inf_time, distortion_lvl, distorti
 
 	inf_time_backbone = df_backbone_inf_time.inference_time.mean()
 
+	print(df_backbone_inf_time.inference_time.values)
+
 	print("Backbone: %s"%(inf_time_backbone))
 
 	flops_backbone = df.flops.mean()
