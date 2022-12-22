@@ -74,6 +74,9 @@ if (__name__ == "__main__"):
 
 	#parser.add_argument('--location', type=str, choices=["ohio", "sp"], help='Location of Cloud Server')
 
+	parser.add_argument('--seed', type=int, default=config.seed, help='Seed.')
+
+
 	args = parser.parse_args()
 
 
