@@ -13,6 +13,8 @@ import logging, torch
 
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
+	print("ok")
+
 	for imgPath, target, distortion_lvl in zip(dataset_path_list, target_list, distortion_lvl_list):
 		print(imgPath)
 		sys.exit()
