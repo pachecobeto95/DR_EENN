@@ -56,7 +56,7 @@ def main(args):
 	nr_branch_edge_list = np.arange(2, args.n_branches+1)
 
 	#device = 'cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu'
-	
+	print("oi")
 	inferenceTimeExp(config.distorted_dataset_path, p_tar_list, nr_branch_edge_list)
 
 
