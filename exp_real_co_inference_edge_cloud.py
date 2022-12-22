@@ -25,7 +25,7 @@ def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
 
 	file_path_list, distortion_lvl_list, target_list = utils.getImageFilePath(distorted_datasetPath)	
 
-	print(file_path_list)
+	print(p_tar_list)
 	sys.exit()
 	for p_tar in p_tar_list:
 
