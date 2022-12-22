@@ -71,6 +71,8 @@ def createDistortedDataset(dataset_path, indices_path, distorted_dataset_path, i
 
 	for distortion_lvl in distortion_levels:
 
+		print("Distortion Level: %s"%(distortion_lvl))
+
 		distortion_lvl_dataset_path = os.path.join(distorted_dataset_path, str(distortion_lvl))
 
 		create_dir(distortion_lvl_dataset_path)
