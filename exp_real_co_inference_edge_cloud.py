@@ -89,6 +89,9 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--batch_size_train', type=int, default=config.batch_size_train, help='Size of train batch.')
 
+	parser.add_argument('--exit_type', type=str, default=config.exit_type, help='Exit type.')
+	parser.add_argument('--distribution', type=str, default=config.distribution, help='Distribution of early exits.')
+	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Pretrained ?')
 
 	args = parser.parse_args()
 
