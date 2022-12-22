@@ -25,6 +25,8 @@ def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
 
 	file_path_list, distortion_lvl_list, target_list = utils.getImageFilePath(distorted_datasetPath)	
 
+	print(file_path_list)
+	sys.exit()
 	for p_tar in p_tar_list:
 
 		for nr_branch_edge in nr_branch_edge_list:
@@ -56,7 +58,6 @@ def main(args):
 	nr_branch_edge_list = np.arange(2, args.n_branches+1)
 
 	#device = 'cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu'
-	print("oi")
 	inferenceTimeExp(config.distorted_dataset_path, p_tar_list, nr_branch_edge_list)
 
 
