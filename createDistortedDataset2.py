@@ -79,7 +79,7 @@ def createDistortedDataset(dataset_path, indices_path, distorted_dataset_path, i
 
 		for i, (data, target) in enumerate(test_loader, 1):
 
-			class_dir = os.path.join(distortion_lvl_dataset_path, target.item())
+			class_dir = os.path.join(distortion_lvl_dataset_path, str(target.item()))
 			create_dir(class_dir)
 
 			data, target = data.to(device), target.to(device)
