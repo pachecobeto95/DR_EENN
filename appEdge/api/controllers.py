@@ -20,7 +20,7 @@ def edgeEmulator():
 	params = json.load(request.files['data'])
 
 	#result = edgeProcessing.dnnInferenceEmulation(fileImg, params)
-
+	result = {}
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
