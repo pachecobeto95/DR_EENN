@@ -76,6 +76,8 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--seed', type=int, default=config.seed, help='Seed.')
 
+	parser.add_argument('--distortion_prob', type=float, default=1)
+
 
 	args = parser.parse_args()
 
