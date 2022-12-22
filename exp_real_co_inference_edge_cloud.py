@@ -30,6 +30,11 @@ def main(args):
 
 	device = torch.device('cuda' if (torch.cuda.is_available()) else 'cpu')
 
+	n_classes = config.nr_class_dict[args.dataset_name]
+	input_dim = config.img_dim_dict[args.n_branches]
+	dim = config.dim_dict[args.n_branches]
+	
+
 	#print("Sending Confs")
 	#logging.debug("Sending Confs")
 
