@@ -5,7 +5,7 @@ import numpy as np
 #import pandas as pd
 import argparse
 #from utils import LoadDataset
-#from requests.exceptions import HTTPError, ConnectTimeout
+from requests.exceptions import HTTPError, ConnectTimeout
 #from glob import glob
 #from load_dataset import load_test_caltech_256
 #from torchvision.utils import save_image
