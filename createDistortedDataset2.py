@@ -82,7 +82,7 @@ def createDistortedDataset(dataset_path, indices_path, distorted_dataset_path, i
 			class_dir = os.path.join(distortion_lvl_dataset_path, str(target.item()))
 			create_dir(class_dir)
 
-			data, target = data.to(device), target.to(device)
+			#data, target = data.to(device), target.to(device)
 
 			img_pil = transform(data)
 
