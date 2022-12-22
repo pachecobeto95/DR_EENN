@@ -102,7 +102,7 @@ def main(args):
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
 
-	distortion_levels = config.distortion_level_dict[distortion_type_data]
+	distortion_levels = config.distortion_level_dict[args.distortion_type]
 
 	createDistortedDataset(undistorted_dataset_path, distorted_dataset_path, input_dim, dim, distortion_levels, args.distortion_type)
 
