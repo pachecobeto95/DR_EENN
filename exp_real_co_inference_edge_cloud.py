@@ -39,7 +39,7 @@ def main(args):
 	#print("Finish Confs")
 	#logging.debug("Finish Confs")
 
-	distortion_lvl_list = config.distortion_level_dict[distortion_type_data]
+	distortion_lvl_list = config.distortion_level_dict["gaussian_blur"]
 
 	for distortion_lvl in distortion_lvl_list:
 		print("Distortion Level: %s"%(distortion_lvl))
