@@ -43,7 +43,7 @@ def main(args):
 
 	p_tar_list = [0.8, 0.82, 0.83, 0.85, 0.9]
 
-	indices_path = os.path.join(config.DIR_NAME, "indices")
+	indices_path = os.path.join(DIR_NAME, "indices")
 	
 	dataset_path = config.dataset_path_dict[args.dataset_name]
 
@@ -55,10 +55,8 @@ def main(args):
 	nr_branch_edge_list = np.arange(2, args.n_branches+1)
 
 	#device = 'cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu'
-
-	distorted_datasetPath = config.distorted_dataset_path
 	
-	inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list)
+	inferenceTimeExp(distorted_dataset_path, p_tar_list, nr_branch_edge_list)
 
 
 
