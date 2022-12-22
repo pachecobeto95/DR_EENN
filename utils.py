@@ -361,7 +361,7 @@ def getImageFilePath(datasetPath):
 			for file_name in file_name_list:
 				file_path = os.path.join(class_dir_path, file_name)
 
-				filePath_list.append(file_path), target_list.append(int(class_dir)), distortion_lvl_list.append(int(distortion_lvl)) 
+				filePath_list.append(file_path), target_list.append(int(class_dir)), distortion_lvl_list.append(float(distortion_lvl)) 
 
 	return filePath_list, distortion_lvl_list, target_list
 
