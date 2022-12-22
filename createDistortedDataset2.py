@@ -120,6 +120,11 @@ if (__name__ == "__main__"):
 	parser.add_argument('--dim', type=int, default=config.dim, help='Dim. Default: %s'%(config.dim))
 	parser.add_argument('--n_branches', type=int, default=3, help='Number of exit exits.')
 
+	parser.add_argument('--batch_size_train', type=int, default=config.batch_size_train, help='Size of train batch.')
+	parser.add_argument('--split_ratio', type=float, default=config.split_ratio, help='Split Ratio')
+	parser.add_argument('--distortion_prob', type=float, default=1)
+
+
 
 	args = parser.parse_args()
 	main(args)
