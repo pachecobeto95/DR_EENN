@@ -7,10 +7,9 @@ import argparse
 #from utils import LoadDataset
 #from requests.exceptions import HTTPError, ConnectTimeout
 #from glob import glob
-#import torch
 #from load_dataset import load_test_caltech_256
 #from torchvision.utils import save_image
-import logging
+import logging, torch
 
 def main(args):
 	#Number of side branches that exists in the early-exit DNNs
