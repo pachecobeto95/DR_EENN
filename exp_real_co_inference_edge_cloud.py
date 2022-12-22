@@ -18,7 +18,7 @@ def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p
 		sys.exit()
 
 
-def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list)
+def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
 
 
 	file_path_list, distortion_lvl_list, target_list = utils.getImageFilePath(distorted_datasetPath)	
