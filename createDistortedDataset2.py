@@ -98,13 +98,17 @@ def main(args):
 
 	distorted_dataset_path = os.path.join(config.DIR_NAME, "distorted_datasets", "Caltech256")
 
+	create_dir(distorted_dataset_path)
+
+	indices_path = os.path.join(config.DIR_NAME, "indices")
+
 	n_classes = config.nr_class_dict[args.dataset_name]
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
 
 	distortion_levels = config.distortion_level_dict[args.distortion_type]
 
-	createDistortedDataset(undistorted_dataset_path, distorted_dataset_path, input_dim, dim, distortion_levels, args.distortion_type)
+	createDistortedDataset(undistorted_dataset_path, indices_path, distorted_dataset_path, input_dim, dim, distortion_levels, args.distortion_type)
 
 if (__name__ == "__main__"):
 
