@@ -79,14 +79,13 @@ def createDistortedDataset(dataset_path, indices_path, distorted_dataset_path, i
 
 		for i, (data, target) in enumerate(test_loader, 1):
 
-			distorted_dataset_path = os.path.join()
+			class_dir = os.path.join(distortion_lvl_dataset_path, target.item())
+			create_dir(class_dir)
 
 			data, target = data.to(device), target.to(device)
 
 			img_pil = transform(data)
 
-			class_dir = os.path.join(distortion_lvl_dataset_path, target.item())
-			create_dir(class_dir)
 
 			save_path = os.path.join(class_dir, "%s.jpg"%(i) )
 			img_pil.save(save_path)
