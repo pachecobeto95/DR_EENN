@@ -1,4 +1,4 @@
-import os, sys, torchvision
+import os, sys, torchvision, config
 from PIL import Image
 from torchvision import datasets, transforms
 import argparse
