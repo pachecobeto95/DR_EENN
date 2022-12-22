@@ -28,7 +28,7 @@ def main(args):
 	#This line defines the number of side branches processed at the edge
 	nr_branch_edge = np.arange(2, args.n_branches+1)
 
-	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
+	device = torch.device('cuda' if (torch.cuda.is_available()) else 'cpu')
 
 	#print("Sending Confs")
 	#logging.debug("Sending Confs")
