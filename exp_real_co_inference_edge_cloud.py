@@ -16,7 +16,7 @@ import logging, torch
 def sendImage(filePath, target, nr_branch_edge, p_tar, distortion_lvl):
 	url = config.URL_EDGE + "/api/edge/edge_ee_inferece"
 	
-	data_dict = {"p_tar": p_tar, "target": target, "nr_branch_edge": nr_branch_edge, "distortion_lvl": distortion_lvl}
+	data_dict = {"p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), "distortion_lvl": str(distortion_lvl)}
 
 	files = [
 	('img', (filePath, open(filePath, 'rb'), 'application/octet')),
