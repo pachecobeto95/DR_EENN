@@ -43,6 +43,11 @@ logFile = os.path.join(DIR_NAME, "logging_training_%s_%s_%s.csv"%(dataset_name, 
 
 dataset_path_dict = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "257_ObjectCategories")}
 
+distorted_dataset_path = os.path.join(config.DIR_NAME, "distorted_datasets", "Caltech256", "gaussian_blur")
+
+
+
+
 indices_path_dict = {"caltech256": os.path.join(DIR_NAME, "indices", "caltech256")}
 
 
@@ -62,4 +67,10 @@ plot_dict = {"fontsize": fontsize,
 "marker": marker_list,
 "x_axis": x_axis_str_dict, 
 "shouldSave": shouldSave}
+
+
+# Edge URL Configuration 
+HOST_EDGE = "146.164.69.165"
+PORT_EDGE = 5001
+URL_EDGE = "http://%s:%s"%(HOST_EDGE, PORT_EDGE)
 

@@ -342,3 +342,28 @@ def load_ee_dnn(args, model_path, n_classes, dim, device):
 	ee_model.eval()
 
 	return ee_model
+
+def getImageFilePath(datasetPath):
+
+	filePath_list, target_list, distortion_lvl_list = [], [], []
+
+	distortion_levels = os.listdir(datasetPath)
+
+	for distortion_lvl in distortion_levels:
+
+		dir_path = os.path.join(datasetPath, distortion_lvl)
+		class_dir_list = os.listdir(dir_path)
+
+		for class_dir in class_dir_list:
+			class_dir_path = os.path.join(dir_path, class_dir)
+			file_name_list = os.listdir(class_dir_path)
+
+			for file_name in file_name_list:
+				file_path = os.path.join(class_dir_path, file_name)
+
+				filePath_list.append(file_path), target_list.append(int(class_dir)), distortion_lvl_list.append(int(distortion_lvl)) 
+
+	return filePath_list, distortion_lvl_list, target_list
+
+
+

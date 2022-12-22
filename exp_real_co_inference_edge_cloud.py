@@ -11,6 +11,27 @@ import argparse
 #from torchvision.utils import save_image
 import logging, torch
 
+def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
+
+	for imgPath, target, distortion_lvl in zip(dataset_path_list, target_list, distortion_lvl_list):
+		print(imgPath)
+		sys.exit()
+
+
+def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list)
+
+
+	file_path_list, distortion_lvl_list, target_list = utils.getImageFilePath(distorted_datasetPath)	
+
+	for p_tar in p_tar_list:
+
+		for nr_branch_edge in nr_branch_edge_list:
+
+			print("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge) )
+
+			sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge)
+
+
 def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
@@ -30,39 +51,13 @@ def main(args):
 	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 	
 	#This line defines the number of side branches processed at the edge
-	nr_branch_edge = np.arange(2, args.n_branches+1)
+	nr_branch_edge_list = np.arange(2, args.n_branches+1)
 
-	device = torch.device('cuda' if (torch.cuda.is_available()) else 'cpu')
+	#device = 'cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu'
 
-	n_classes = config.nr_class_dict[args.dataset_name]
-	input_dim = config.img_dim_dict[args.n_branches]
-	dim = config.dim_dict[args.n_branches]
-
-	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
-	ee_model.eval()
-
-
-	#print("Sending Confs")
-	#logging.debug("Sending Confs")
-
-	#sendModelConf(config.urlConfModelEdge, config.nr_branch_model, args.dataset_name, args.model_name, args.location)
-	#sendModelConf(config.urlConfModelCloud, config.nr_branch_model, args.dataset_name, args.model_name, args.location)
+	distorted_datasetPath = config.distorted_dataset_path
 	
-	#print("Finish Confs")
-	#logging.debug("Finish Confs")
-
-	distortion_lvl_list = config.distortion_level_dict["gaussian_blur"]
-
-	for distortion_lvl in distortion_lvl_list:
-		print("Distortion Level: %s"%(distortion_lvl))
-
-		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, "gaussian_blur", distortion_lvl)
-
-		for i, (data, target) in enumerate(test_loader, 1):
-
-			data, target = data.to(device), target.to(device)
-
-			sys.exit()
+	inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list)
 
 
 
@@ -92,6 +87,8 @@ if (__name__ == "__main__"):
 	parser.add_argument('--exit_type', type=str, default=config.exit_type, help='Exit type.')
 	parser.add_argument('--distribution', type=str, default=config.distribution, help='Distribution of early exits.')
 	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Pretrained ?')
+
+	parser.add_argument('--cuda', type=bool, default=True, help='Cuda ?')
 
 	args = parser.parse_args()
 
