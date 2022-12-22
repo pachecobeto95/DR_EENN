@@ -15,6 +15,10 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
+	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
+		"%s_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.distortion_type_model, args.n_branches, args.model_id) )
+
+
 	p_tar_list = [0.8, 0.82, 0.83, 0.85, 0.9]
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
@@ -33,6 +37,9 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
+
+	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
+	ee_model.eval()
 
 
 	#print("Sending Confs")
