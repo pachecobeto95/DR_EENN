@@ -16,7 +16,7 @@ def main(args):
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
-		"pristine_ee_model_mobilenet_%s_branches_id_%s.pth"%(pristine, args.n_branches, args.model_id) )
+		"pristine_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.n_branches, args.model_id) )
 
 
 	p_tar_list = [0.8, 0.82, 0.83, 0.85, 0.9]
