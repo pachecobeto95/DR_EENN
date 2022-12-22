@@ -1,6 +1,7 @@
 import os, sys, torchvision
 from PIL import Image
 from torchvision import datasets, transforms
+import argparse
 
 class DistortionApplier(object):
 	def __init__(self, distortion_function, distortion_values):
