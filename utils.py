@@ -134,7 +134,7 @@ def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, disto
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
 	#return train_loader, val_loader, test_loader
-	return _, _, test_loader
+	return 0, 0, test_loader
 
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
