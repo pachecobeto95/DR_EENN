@@ -73,7 +73,7 @@ if (__name__ == "__main__"):
 	parser.add_argument('--model_name', type=str, default=config.model_name, 
 		choices=["mobilenet"], help='DNN model name (default: MobileNet)')
 
-	parser.add_argument('--n_branches', type=int, default=config.n_branches, help='Number of exit exits.')
+	parser.add_argument('--n_branches', type=int, default=3, help='Number of exit exits.')
 
 	#parser.add_argument('--location', type=str, choices=["ohio", "sp"], help='Location of Cloud Server')
 
