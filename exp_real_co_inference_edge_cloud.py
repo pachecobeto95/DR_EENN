@@ -32,7 +32,7 @@ def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
 
 			print("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge) )
 
-			sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge)
+			sendDistortedImageSet(file_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge)
 
 
 def main(args):
