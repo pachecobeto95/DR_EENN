@@ -84,7 +84,7 @@ def createDistortedDataset(dataset_path, indices_path, distorted_dataset_path, i
 
 			#data, target = data.to(device), target.to(device)
 
-			img_pil = transform(data)
+			img_pil = transform(data[0])
 
 
 			save_path = os.path.join(class_dir, "%s.jpg"%(i) )
