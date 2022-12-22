@@ -11,13 +11,34 @@ import argparse
 #from torchvision.utils import save_image
 import logging, torch
 
+
+
+def sendImage(filePath, target, nr_branch_edge, p_tar, distortion_lvl):
+	url = config.URL_EDGE + "/api/edge/edge_ee_inferece"
+	
+	data_dict = {"p_tar": p_tar, "target": target, "nr_branch_edge": nr_branch_edge, "distortion_lvl": distortion_lvl}
+
+	files = [
+	('img', (filePath, open(filePath, 'rb'), 'application/octet')),
+	('data', ('data', json.dumps(data_dict), 'application/json')),]
+
+	try:
+		r = requests.post(url, files=files, timeout=config.timeout)
+		r.raise_for_status()
+	
+	except HTTPError as http_err:
+		raise SystemExit(http_err)
+
+	except requests.Timeout:
+		logging.warning("Timeout")
+		pass
+
+
+
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
-	print("ok")
-
 	for imgPath, target, distortion_lvl in zip(dataset_path_list, target_list, distortion_lvl_list):
-		print(imgPath)
-		sys.exit()
+		sendImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
 
 
 def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
