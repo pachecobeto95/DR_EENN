@@ -80,6 +80,8 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--model_id', type=int, default=config.model_id, help='Model Id.')
 
+	parser.add_argument('--batch_size_train', type=int, default=config.batch_size_train, help='Size of train batch.')
+
 
 	args = parser.parse_args()
 
