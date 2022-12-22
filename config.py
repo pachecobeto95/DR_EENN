@@ -1,6 +1,8 @@
 import os
 
 DIR_NAME = os.path.dirname(__file__)
+DEBUG = True
+
 
 dataset_name = "caltech256"
 model_name = "mobilenet"
