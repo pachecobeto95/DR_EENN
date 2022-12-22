@@ -10,6 +10,7 @@ import argparse
 #from load_dataset import load_test_caltech_256
 #from torchvision.utils import save_image
 import logging, torch
+import config
 
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
