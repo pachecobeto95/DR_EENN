@@ -33,7 +33,7 @@ def main(args):
 	n_classes = config.nr_class_dict[args.dataset_name]
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
-	
+
 
 	#print("Sending Confs")
 	#logging.debug("Sending Confs")
@@ -49,7 +49,7 @@ def main(args):
 	for distortion_lvl in distortion_lvl_list:
 		print("Distortion Level: %s"%(distortion_lvl))
 
-		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
+		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, "gaussian_blur", distortion_lvl)
 
 		for i, (data, target) in enumerate(test_loader, 1):
 
