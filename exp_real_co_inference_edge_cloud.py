@@ -78,6 +78,8 @@ if (__name__ == "__main__"):
 
 	parser.add_argument('--distortion_prob', type=float, default=1)
 
+	parser.add_argument('--model_id', type=int, default=config.model_id, help='Model Id.')
+
 
 	args = parser.parse_args()
 
