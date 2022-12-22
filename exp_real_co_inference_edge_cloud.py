@@ -10,7 +10,6 @@ import argparse
 #from load_dataset import load_test_caltech_256
 #from torchvision.utils import save_image
 import logging, torch
-from .config import *
 
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
@@ -37,13 +36,13 @@ def main(args):
 	#Number of side branches that exists in the early-exit DNNs
 	#nr_branches_model_list = np.arange(config.nr_min_branches, config.nr_max_branches+1)
 
-	distorted_model_path =  os.path.join(DIR_NAME, "models", args.dataset_name, args.model_name, 
+	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
 		"pristine_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.n_branches, args.model_id) )
 
 
 	p_tar_list = [0.8, 0.82, 0.83, 0.85, 0.9]
 
-	indices_path = os.path.join(DIR_NAME, "indices")
+	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
 	dataset_path = config.dataset_path_dict[args.dataset_name]
 
@@ -56,7 +55,7 @@ def main(args):
 
 	#device = 'cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu'
 	
-	inferenceTimeExp(distorted_dataset_path, p_tar_list, nr_branch_edge_list)
+	inferenceTimeExp(config.distorted_dataset_path, p_tar_list, nr_branch_edge_list)
 
 
 

@@ -43,7 +43,7 @@ logFile = os.path.join(DIR_NAME, "logging_training_%s_%s_%s.csv"%(dataset_name, 
 
 dataset_path_dict = {"caltech256": os.path.join(DIR_NAME, "datasets", "caltech256", "257_ObjectCategories")}
 
-distorted_dataset_path = os.path.join(config.DIR_NAME, "distorted_datasets", "Caltech256", "gaussian_blur")
+distorted_dataset_path = os.path.join(DIR_NAME, "distorted_datasets", "Caltech256", "gaussian_blur")
 
 
 
