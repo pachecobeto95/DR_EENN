@@ -384,7 +384,7 @@ def init_ee_dnn(device):
 
 	n_branches = 3
 	pretrained = True
-	dim = 224
+	dim = 300
 	exit_type = "bnpool"
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
