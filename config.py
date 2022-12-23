@@ -91,7 +91,6 @@ url_ensemble = "%s/api/edge/edge_ensemble_inference"%(URL_EDGE)
 url_cloud = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
 
 
-
 ee_model_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
 backbone_dnn_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_backbone_model_mobilenet_1.pth")
 

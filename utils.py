@@ -368,8 +368,8 @@ def getImageFilePath(datasetPath):
 
 
 def transform_image(image_bytes):
-	my_transforms = transforms.Compose([transforms.Resize(330),
-		transforms.CenterCrop(300),
+	my_transforms = transforms.Compose([transforms.Resize(256),
+		transforms.CenterCrop(224),
 		transforms.ToTensor(),
 		transforms.Normalize([0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154])])
 
@@ -394,6 +394,7 @@ def init_ee_dnn(device):
 	ee_model.eval()
 
 	return ee_model
+
 
 
 def init_backbone_dnn(device):
