@@ -410,7 +410,7 @@ def init_ee_dnn(device):
 
 
 	params = torch.load(distorted_model_path, map_location='cpu')
-	ee_model.load_state_dict(params['state_dict'])
+	ee_model.load_state_dict(params['model_state_dict'])
 	ee_model = ee_model.to(device)
 
 	#ee_model.eval()
