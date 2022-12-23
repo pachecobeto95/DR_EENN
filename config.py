@@ -88,6 +88,7 @@ URL_CLOUD = "http://%s:%s"%(HOST_CLOUD, PORT_CLOUD)
 
 url_ee = "%s/api/edge/edge_ee_inference"%(URL_EDGE)
 url_ensemble = "%s/api/edge/edge_ensemble_inference"%(URL_EDGE)
+url_naive_ensemble = "%s/api/edge/edge_naive_ensemble_inference"%(URL_EDGE)
 url_cloud = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
 
 
