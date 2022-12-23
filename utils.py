@@ -366,7 +366,7 @@ def getImageFilePath(datasetPath):
 	return filePath_list, distortion_lvl_list, target_list
 
 
-def transform_image(image):
+def transform_image(image_bytes):
 	my_transforms = transforms.Compose([transforms.Resize(330),
 		transforms.CenterCrop(300),
 		transforms.ToTensor(),
