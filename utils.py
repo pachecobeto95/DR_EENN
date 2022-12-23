@@ -413,6 +413,9 @@ def init_ee_dnn(device):
 	ee_model.load_state_dict(params['model_state_dict'])
 	ee_model = ee_model.to(device)
 
+	del params
+
+
 	#ee_model.eval()
 
 	return ee_model
