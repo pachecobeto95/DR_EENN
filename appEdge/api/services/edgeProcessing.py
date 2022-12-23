@@ -17,7 +17,7 @@ def eeDnnInference(fileImg, params):
 
 	image_bytes = fileImg.read()
 
-	tensor = transform_image(image_bytes).to(device)
+	tensor = utils.transform_image(image_bytes).to(device)
 
 
 	print(type(image_bytes))
