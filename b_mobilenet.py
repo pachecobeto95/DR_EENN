@@ -5,7 +5,7 @@ from pthflops import count_ops
 import torchvision.models as models
 import numpy as np
 import config
-from statistics import mode#, multimode
+from statistics import mode, multimode
 
 
 class ConvBasic(nn.Module):
