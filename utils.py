@@ -387,6 +387,9 @@ def init_ee_dnn(device):
 	dim = 224
 	exit_type = "bnpool"
 
+	distorted_model_path =  os.path.join(config.DIR_NAME, "models", args.dataset_name, args.model_name, 
+		"pristine_ee_model_mobilenet_3_branches_id_1.pth")
+
 	print("kk")
 
 	if (n_branches == 1):
@@ -406,7 +409,7 @@ def init_ee_dnn(device):
 		raise Exception("The number of early-exit branches is not available yet.")
 
 
-	ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
+	ee_model.load_state_dict(torch.load(distorted_model_path, map_location=device)["model_state_dict"])
 
 	ee_model = ee_model.to(device)
 	ee_model.eval()
