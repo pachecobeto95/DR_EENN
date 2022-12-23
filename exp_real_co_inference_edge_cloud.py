@@ -14,9 +14,10 @@ from PIL import Image
 
 
 
-def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_lvl):
+def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl):
 	
-	data_dict = {"p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), "distortion_lvl": str(distortion_lvl)}
+	data_dict = {"p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), "distortion_type": distortion_type,
+	"distortion_lvl": str(distortion_lvl)}
 
 	files = [
 	('img', (filePath, open(filePath, 'rb'), 'application/octet')),
@@ -34,13 +35,19 @@ def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_lvl):
 		pass
 
 
+		
+
+def sendDistortedImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl, distortion_type):
+	sendImage(config.url_ee, imgPath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
+	sys.exit()
+	sendImage(config.url_ensemble, imgPath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
+	#sendImage(config.url_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+
 
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
 	for imgPath, target, distortion_lvl in zip(dataset_path_list, target_list, distortion_lvl_list):
-		sendImage(config.url_ee, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
-		sendImage(config.url_ensemble, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
-		#sendImage(config.url_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+		sendDistortedImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl, distortion_type="gaussian_blur")
 
 
 def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):

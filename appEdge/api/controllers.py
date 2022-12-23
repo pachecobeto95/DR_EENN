@@ -9,7 +9,7 @@ import torch, requests
 api = Blueprint("api", __name__, url_prefix="/api")
 
 
-@api.route('/edge/edge_ee_inferece', methods=["POST"])
+@api.route('/edge/edge_ee_inference', methods=["POST"])
 def edge_ee_inferece():
 	"""
 	This function receives an image from user or client with smartphone or even a insurance camera 
@@ -28,7 +28,7 @@ def edge_ee_inferece():
 		return jsonify(result), 500
 
 
-@api.route('/edge/edge_ensemble_inferece', methods=["POST"])
+@api.route('/edge/edge_ensemble_inference', methods=["POST"])
 def edge_ensemble_inferece():
 	"""
 	This function receives an image from user or client with smartphone or even a insurance camera 
@@ -39,6 +39,26 @@ def edge_ensemble_inferece():
 	params = json.load(request.files['data'])
 
 	result = edgeProcessing.ensembleDnnInference(fileImg, params)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+
+	else:
+		return jsonify(result), 500
+
+
+
+@api.route('/edge/edge_naive_ensemble_inference', methods=["POST"])
+def edge_naive_ensemble_inferece():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
+
+	fileImg = request.files['img']
+	params = json.load(request.files['data'])
+
+	result = edgeProcessing.naiveEnsembleDnnInference(fileImg, params)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200

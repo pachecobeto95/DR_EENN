@@ -72,14 +72,29 @@ plot_dict = {"fontsize": fontsize,
 "shouldSave": shouldSave}
 
 
+save_inf_time_path = os.path.join(DIR_NAME, "inference_time.csv")
+save_backbone_inf_time_path = os.path.join(DIR_NAME, "backbone_inference_time.csv")
+
 # Edge URL Configuration 
 HOST_EDGE = "146.164.69.165"
 PORT_EDGE = 5001
 URL_EDGE = "http://%s:%s"%(HOST_EDGE, PORT_EDGE)
 
+# Cloud URL Configuration 
+HOST_CLOUD = "146.164.69.144"
+PORT_CLOUD = 3001
+URL_CLOUD = "http://%s:%s"%(HOST_CLOUD, PORT_CLOUD)
 
 
-url_ee = "%s/api/edge/edge_ee_inferece"%(URL_EDGE)
-url_ensemble = "%s/api/edge/edge_ensemble_inferece"%(URL_EDGE)
-#url_cloud = "%s/api/cloud/cloud_backbone_inferece"%(URL_CLOUD)
+url_ee = "%s/api/edge/edge_ee_inference"%(URL_EDGE)
+url_ensemble = "%s/api/edge/edge_ensemble_inference"%(URL_EDGE)
+url_cloud = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
+
+
+
+ee_model_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
+backbone_dnn_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_backbone_model_mobilenet_1.pth")
+
+
+ee_inference_data_path = os.path.join(DIR_NAME, "inference_data", "caltech256", "mobilenet", "inference_data_3_branches_id_1_final_final.csv")
 

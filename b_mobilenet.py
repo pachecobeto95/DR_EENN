@@ -221,8 +221,6 @@ class B_MobileNet(nn.Module):
 
       cumulative_inference_time += curr_time
 
-      print(cumulative_inference_time)
-
       inference_time_list.append(cumulative_inference_time)
 
       conf_list.append(conf), class_list.append(infered_class-1), prob_vector_list.append(prob_vector)
@@ -240,7 +238,6 @@ class B_MobileNet(nn.Module):
     curr_time = starter.elapsed_time(ender)
 
     cumulative_inference_time += curr_time
-    print(cumulative_inference_time)
 
     inference_time_list.append(cumulative_inference_time)
 
@@ -248,7 +245,7 @@ class B_MobileNet(nn.Module):
     
     conf_list.append(infered_conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
     prob_vector_list.append(prob_vector)
-    sys.exit()
+
     return prob_vector_list, conf_list, class_list, inference_time_list
 
   def forwardEval(self, x, p_tar):
@@ -301,6 +298,106 @@ class B_MobileNet(nn.Module):
 
     return x, conf_list, class_list, False
 
+
+  def forwardEeInference(self, x, nr_branch_edge, p_tar):
+
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
+      x = self.stages[i](x)
+
+      output_branch = exitBlock(x)
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      if (conf_branch.item() >= p_tar):
+        return output_branch, conf_branch.item(), infered_class_branch.item(), True
+
+      else:
+        conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+      
+    return x, conf_list, class_list, False
+
+  def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar):
+
+    nr_classes = config.nr_class_dict["caltech256"]
+
+    ensemble_prob_vector = torch.zeros(nr_classes, device=device)
+
+    conf_list, class_list = [], []
+    n_exits = self.n_branches + 1
+
+    for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
+
+      x = self.stages[i](x)
+
+      output_branch = exitBlock(x)
+
+      prob_vector = self.softmax(output_branch)
+
+      ensemble_prob_vector += acc_branches[i]*prob_vector
+
+    ensemble_conf, ensemble_infered_class = torch.max(ensemble_prob_vector, 1)
+
+    ensemble_infered_class -= 1 
+  
+    #correct = ensemble_infered_class.eq(target.view_as(ensemble_infered_class)).sum().item()
+
+    wasClassified = True if(ensemble_conf.item() >= p_tar) else False
+
+    return x, ensemble_conf.item(), ensemble_infered_class.item(), wasClassified
+
+
+  def forwardNaiveEnsembleInference(self, x, nr_branch_edge, p_tar):
+
+    conf_list, class_list = [], []
+
+    for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
+
+      x = self.stages[i](x)
+
+      output_branch = exitBlock(x)
+      conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+
+      conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
+
+
+    max_conf_idx = np.argmax(conf_list)
+    mode_list = multimode(class_list)
+
+    ensemble_conf = conf_list[max_conf_idx]
+
+    wasClassified = True if(ensemble_conf >= p_tar) else False
+      
+    return x, conf_list, mode_list, wasClassified
+
+
+  def forwardCoEeInferenceCloud(self, x, conf_list, p_tar, n_branch_edge):
+
+    output_list, class_list  = [], []
+
+    for i, exitBlock in enumerate(self.exits[n_branch_edge:]): #[:config.n_branch_edge] it acts to select until branches will be processed. 
+      x = self.stages[i](x)
+
+
+    x = self.stages[-1](x)
+    x = x.mean(3).mean(2)
+
+    output = self.fully_connected(x)
+    conf, infered_class = torch.max(self.softmax(output), 1)
+    
+    conf_list.append(conf.item())
+    class_list.append(infered_class)
+    
+    if (conf.item() >= p_tar):
+      return conf, infered_class
+    
+    else:
+      max_conf = np.argmax(conf_list)
+      return conf_list[max_conf], class_list[max_conf]
+
+
+  #def forwardCoEnsembleInference(self, x, nr_branch_edge, p_tar):
 
   def forward(self, x):
     return self.forwardTrain(x)

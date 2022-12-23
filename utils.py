@@ -316,6 +316,7 @@ def evalEEDNNs(model, val_loader, criterion, n_exits, epoch, device, loss_weight
 	return result_dict
 
 
+
 def load_ee_dnn(args, model_path, n_classes, dim, device):
 	#Load the trained early-exit DNN model.
 
@@ -376,5 +377,36 @@ def transform_image(image_bytes):
 	return my_transforms(image).unsqueeze(0)
 
 
+def init_ee_dnn(device):
+	#Load the trained early-exit DNN model.
+
+	n_classes = 258
+	n_branches = 3	
+	pretrained = True
+	dim = 300
+	exit_type = "bnpool"
+
+	ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
+
+	ee_model.load_state_dict(torch.load(config.ee_model_path, map_location=device)["model_state_dict"])
+
+	ee_model = ee_model.to(device)
+	ee_model.eval()
+
+	return ee_model
 
 
+def init_backbone_dnn(device):
+
+	n_classes = 257
+
+	#Load the trained backbone DNN model.
+	model = models.mobilenet_v2(pretrained=True)
+	model.classifier[1] = nn.Linear(1280, n_classes)
+
+	model.load_state_dict(torch.load(config.backbone_dnn_path, map_location=device)["model_state_dict"])
+	model = model.to(device)
+
+	model.eval()
+
+	return model
