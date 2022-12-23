@@ -55,7 +55,7 @@ def eeDnnInference(fileImg, params):
 	starter.record()
 
 
-	output, conf_list, infer_class, wasClassified = run_ee_dnn_inference(img_tensor, params["distortion_type"], params["nr_branch_edge"], params["p_tar"], device)
+	output, conf_list, infer_class, wasClassified = run_ee_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
 
 	return {"status": "ok"}
 
