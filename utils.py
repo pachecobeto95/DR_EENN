@@ -411,7 +411,7 @@ def init_ee_dnn(device):
 
 	ee_model = ee_model.cpu()
 	ee_model.load_state_dict(torch.load(distorted_model_path))         # Load state_dict
- 	ee_model = ee_model.cuda()
+	ee_model = ee_model.cuda()
 
 	ee_model.eval()
 
