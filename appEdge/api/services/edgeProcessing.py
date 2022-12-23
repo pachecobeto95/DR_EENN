@@ -144,7 +144,7 @@ def run_ee_dnn_inference(img_tensor, distortion_type, nr_branch_edge, p_tar, dev
 def run_ensemble_dnn_inference(img_tensor, params, acc_branches, device):
 
 
-	p_tar, n_branch_edge =  float(params["p_tar"]), int(params["n_branch_edge"])
+	p_tar, n_branch_edge =  float(params["p_tar"]), int(params["nr_branch_edge"])
 
 
 	ee_model.eval()
