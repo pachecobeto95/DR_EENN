@@ -383,7 +383,7 @@ def init_ee_dnn(device):
 	#Load the trained early-exit DNN model.
 
 	n_branches = 3
-	pretrained = True
+	pretrained = False
 	dim = 300
 	exit_type = "bnpool"
 
