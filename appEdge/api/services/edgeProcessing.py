@@ -9,7 +9,7 @@ from .b_mobilenet import B_MobileNet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-ee_model = '1'
+ee_model = utils.init_ee_dnn(device)
 
 
 df_ee = pd.read_csv(config.ee_inference_data_path)
