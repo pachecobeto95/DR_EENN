@@ -39,8 +39,8 @@ def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_type, dis
 
 def sendDistortedImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl, distortion_type):
 	sendImage(config.url_ee, imgPath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
-	sys.exit()
 	sendImage(config.url_ensemble, imgPath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
+	sys.exit()	
 	#sendImage(config.url_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
 
 
