@@ -21,6 +21,7 @@ def extractData(df, distortion_lvl, distortion_type_data):
 
 	df = df[df.distortion_type_data=="pristine"] if (distortion_lvl==0) else df[df.distortion_type_data==distortion_type_data]
 
+	print(distortion_lvl, type(distortion_lvl))
 	df = df[df.distortion_lvl == distortion_lvl]
 
 	return df
@@ -81,7 +82,7 @@ def ensembleDnnInference(fileImg, params):
 	img_tensor = utils.transform_image(image_bytes).to(device)
 
 
-	acc_branches = compute_acc_branches(df_ee, int(params["distortion_lvl"]), params["distortion_type"])
+	acc_branches = compute_acc_branches(df_ee, float(params["distortion_lvl"]), params["distortion_type"])
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
