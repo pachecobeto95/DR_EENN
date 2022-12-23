@@ -380,6 +380,8 @@ def transform_image(image_bytes):
 def init_ee_dnn(device):
 	#Load the trained early-exit DNN model.
 
+	print("oi")
+
 	n_classes = 258
 	n_branches = 3	
 	pretrained = True
