@@ -380,23 +380,34 @@ def transform_image(image_bytes):
 def init_ee_dnn(device):
 	#Load the trained early-exit DNN model.
 
-	print("oi")
+	#Load the trained early-exit DNN model.
 
-	n_classes = 258
-	n_branches = 3	
+	n_branches = 3
 	pretrained = True
 	dim = 224
 	exit_type = "bnpool"
 
-	model_path =  os.path.join(config.DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
+	if (n_branches == 1):
 
-	ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
-	ee_model.eval()
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
+			args.distribution)
+
+	elif(n_branches == 3):
+		ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
+
+	elif(n_branches == 5):
+
+		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
+			args.distribution)
+
+	else:
+		raise Exception("The number of early-exit branches is not available yet.")
 
 
 	ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
 
-
+	ee_model = ee_model.to(device)
+	ee_model.eval()
 
 	return ee_model
 
