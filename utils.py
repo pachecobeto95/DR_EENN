@@ -392,30 +392,13 @@ def init_ee_dnn(device):
 
 	print("kk")
 
-	if (n_branches == 1):
+	ee_model = b_mobilenet.B_MobileNet(258, pretrained, n_branches, dim, exit_type, device)
 
-		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
-			args.distribution)
-
-	elif(n_branches == 3):
-		ee_model = b_mobilenet.B_MobileNet(258, pretrained, n_branches, dim, exit_type, device)
-
-	elif(n_branches == 5):
-
-		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
-			args.distribution)
-
-	else:
-		raise Exception("The number of early-exit branches is not available yet.")
 
 	print(device)
-	params = torch.load(distorted_model_path, map_location=device)
-	ee_model.load_state_dict(params['model_state_dict'])
-	ee_model = ee_model.to(device)
 
-	ee_model.eval()
-
-	return ee_model
+	ee_model.load_state_dict(torch.load(distorted_model_path, map_location=device)["model_state_dict"])	
+	return ee_model.to(device)
 
 
 
