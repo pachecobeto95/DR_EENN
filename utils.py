@@ -385,7 +385,7 @@ def init_ee_dnn(device):
 	n_branches = 3
 	pretrained = False
 	dim = 300
-	exit_type = "bnpool"
+	exit_type = None
 
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"pristine_ee_model_mobilenet_3_branches_id_1.pth")
