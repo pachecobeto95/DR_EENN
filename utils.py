@@ -387,13 +387,15 @@ def init_ee_dnn(device):
 	dim = 224
 	exit_type = "bnpool"
 
+	print("kk")
+
 	if (n_branches == 1):
 
 		ee_model = ee_nn.Early_Exit_DNN(args.model_name, n_classes, args.pretrained, args.n_branches, dim, device, args.exit_type, 
 			args.distribution)
 
 	elif(n_branches == 3):
-		ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
+		ee_model = b_mobilenet.B_MobileNet(258, pretrained, n_branches, dim, exit_type, device)
 
 	elif(n_branches == 5):
 
