@@ -15,8 +15,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def eeDnnInference(fileImg, params):
 
-
-	tensor = utils.transform_image(fileImg).to(device)
+	image_bytes = fileImg.read()
+	print(type(image_bytes))
+	#tensor = utils.transform_image(fileImg).to(device)
 
 	return {"status": "ok"}
 	"""
