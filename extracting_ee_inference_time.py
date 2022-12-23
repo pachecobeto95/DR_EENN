@@ -57,9 +57,6 @@ def main(args):
 	input_dim = config.img_dim_dict[args.n_branches]
 	dim = config.dim_dict[args.n_branches]
 
-	print(n_classes, args.pretrained, args.n_branches, dim, args.exit_type)
-	sys.exit()
-
 	#Load the trained early-exit DNN model.
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
