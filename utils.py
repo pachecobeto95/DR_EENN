@@ -372,7 +372,7 @@ def transform_image(image):
 		transforms.ToTensor(),
 		transforms.Normalize([0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154])])
 
-	#image = Image.open(io.BytesIO(image_bytes))
+	image = Image.open(io.BytesIO(image_bytes))
 	return my_transforms(image).unsqueeze(0)
 
 
