@@ -322,7 +322,7 @@ class B_MobileNet(nn.Module):
 
     nr_classes = config.nr_class_dict["caltech256"]
 
-    ensemble_prob_vector = torch.zeros(nr_classes, device=device)
+    ensemble_prob_vector = torch.zeros((1, nr_classes), device=device)
 
     conf_list, class_list = [], []
     n_exits = self.n_branches + 1
