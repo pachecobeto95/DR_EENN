@@ -10,17 +10,22 @@ from requests.exceptions import HTTPError, ConnectTimeout
 #from load_dataset import load_test_caltech_256
 #from torchvision.utils import save_image
 import logging, torch
+from PIL import Image
 
 
 
-def sendImage(filePath, target, nr_branch_edge, p_tar, distortion_lvl):
-	url = config.URL_EDGE + "/api/edge/edge_ee_inferece"
+def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_lvl):
 	
 	data_dict = {"p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), "distortion_lvl": str(distortion_lvl)}
 
+	#files = [
+	#('img', (filePath, open(filePath, 'rb'), 'application/octet')),
+	#('data', ('data', json.dumps(data_dict), 'application/json')),]
+
 	files = [
-	('img', (filePath, open(filePath, 'rb'), 'application/octet')),
+	('img', (filePath, Image.open(filePath), 'application/octet')),
 	('data', ('data', json.dumps(data_dict), 'application/json')),]
+
 
 	try:
 		r = requests.post(url, files=files, timeout=config.timeout)
@@ -38,7 +43,9 @@ def sendImage(filePath, target, nr_branch_edge, p_tar, distortion_lvl):
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
 
 	for imgPath, target, distortion_lvl in zip(dataset_path_list, target_list, distortion_lvl_list):
-		sendImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+		sendImage(config.url_ee, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+		sendImage(config.url_ensemble, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+		#sendImage(config.url_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
 
 
 def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):

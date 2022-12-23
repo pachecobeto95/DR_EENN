@@ -16,16 +16,17 @@ def plotInfTimeDistortionLevel(df, threshold, n_branches_edge, distortion_levels
 
 	saveFile = os.path.join(savePath, "%s_inference_time_%s_branches_threshold_%s"%(distortion_type, n_branches_edge, threshold))
 
-	inf_time_backbone, std_inf_time_backbone = sorted(df.inf_time_backbone.values[:-1]), df.std_inf_time_backbone.values[:-1]
-	inf_time_ee, std_inf_time_ee = sorted(df.inf_time_ee.values[:-1]), df.std_inf_time_ee.values[:-1]
-	inf_time_ensemble, std_inf_time_ensemble = sorted(df.inf_time_ensemble.values[:-1]), df.std_inf_time_ensemble.values[:-1]
+	inf_time_backbone, std_inf_time_backbone = df.inf_time_backbone.values[:-1], df.std_inf_time_backbone.values[:-1]
+	inf_time_ee, std_inf_time_ee = df.inf_time_ee.values[:-1], df.std_inf_time_ee.values[:-1]
+	inf_time_ensemble, std_inf_time_ensemble = df.inf_time_ensemble.values[:-1], df.std_inf_time_ensemble.values[:-1]
 
-	distortion_levels = np.delete(distortion_levels[:-1], [1])
-	inf_time_backbone, std_inf_time_backbone = np.delete(inf_time_backbone, [1]), np.delete(std_inf_time_backbone, [1])
-	inf_time_ee, std_inf_time_ee = np.delete(inf_time_ee, [1]), np.delete(std_inf_time_ee, [1])
+	#distortion_levels = np.delete(distortion_levels[:-1], [1])
+	distortion_levels = distortion_levels[:-1]
+	#inf_time_backbone, std_inf_time_backbone = np.delete(inf_time_backbone, [1]), np.delete(std_inf_time_backbone, [1])
+	#inf_time_ee, std_inf_time_ee = np.delete(inf_time_ee, [1]), np.delete(std_inf_time_ee, [1])
 	
 	#print(inf_time_ensemble, std_inf_time_ensemble)
-	inf_time_ensemble, std_inf_time_ensemble = np.delete(inf_time_ensemble, [1]), np.delete(std_inf_time_ensemble, [1])
+	#inf_time_ensemble, std_inf_time_ensemble = np.delete(inf_time_ensemble, [1]), np.delete(std_inf_time_ensemble, [1])
 
 
 	ci_backbone = 1.96 * std_inf_time_backbone/np.sqrt(n_samples)
@@ -111,7 +112,7 @@ def plotFlopDistortionLevel(df, threshold, n_branches_edge, distortion_levels, p
 
 def main(args):
 
-	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s_final_final.csv"%(args.n_branches, args.model_name, 
+	results_path = os.path.join("pristine_model_ensemble_analysis_%s_branches_%s_%s_final_final_final.csv"%(args.n_branches, args.model_name, 
 		args.dataset_name))
 
 	inf_time_savePath = os.path.join("plots", "inference_time", "%s_branches_final_final"%(args.n_branches))
@@ -137,7 +138,7 @@ def main(args):
 
 			plotInfTimeDistortionLevel(df, threshold, n_branch_edge, blur_levels, config.plot_dict, inf_time_savePath, distortion_type="gaussian_blur")
 
-			plotFlopDistortionLevel(df, threshold, n_branch_edge, blur_levels, config.plot_dict, flops_savePath, distortion_type="gaussian_blur")
+			#plotFlopDistortionLevel(df, threshold, n_branch_edge, blur_levels, config.plot_dict, flops_savePath, distortion_type="gaussian_blur")
 
 if (__name__ == "__main__"):
 

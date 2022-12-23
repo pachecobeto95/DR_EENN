@@ -77,3 +77,9 @@ HOST_EDGE = "146.164.69.165"
 PORT_EDGE = 5001
 URL_EDGE = "http://%s:%s"%(HOST_EDGE, PORT_EDGE)
 
+
+
+url_ee = "%s/api/edge/edge_ee_inferece"%(URL_EDGE)
+url_ensemble = "%s/api/edge/edge_ensemble_inferece"%(URL_EDGE)
+url_cloud = "%s/api/cloud/cloud_backbone_inferece"%(URL_CLOUD)
+
