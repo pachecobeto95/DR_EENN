@@ -61,6 +61,9 @@ def main(args):
 	ee_model = utils.load_ee_dnn(args, distorted_model_path, n_classes, dim, device)
 	ee_model.eval()
 
+	print(distorted_model_path)
+	sys.exit()
+
 	dummy_input = torch.randn(1, 3, 224,224, dtype=torch.float).to(device)
 
 	for _ in range(10):
