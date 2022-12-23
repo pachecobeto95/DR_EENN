@@ -149,7 +149,7 @@ def run_ensemble_dnn_inference(img_tensor, params, acc_branches, device):
 
 	ee_model.eval()
 	with torch.no_grad():
-		output, conf_list, infer_class, wasClassified = ee_model.forwardEnsembleInference(img_tensor.float(), acc_branches, n_branch_edge, p_tar)
+		output, conf_list, infer_class, wasClassified = ee_model.forwardEnsembleInference(img_tensor.float(), acc_branches, n_branch_edge, p_tar, device)
 	
 	return output, conf_list, infer_class, wasClassified
 
