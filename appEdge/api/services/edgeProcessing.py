@@ -81,7 +81,7 @@ def ensembleDnnInference(fileImg, params):
 	img_tensor = utils.transform_image(image_bytes).to(device)
 
 
-	acc_branches = compute_acc_branches(df_ee, params["distortion_lvl"], params["distortion_type"])
+	acc_branches = compute_acc_branches(df_ee, int(params["distortion_lvl"]), params["distortion_type"])
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
