@@ -89,6 +89,9 @@ def ensembleDnnInference(fileImg, params):
 
 	output, conf_list, infer_class, wasClassified = run_ensemble_dnn_inference(img_tensor, params, acc_branches, device)
 
+
+	return {"status": "ok"}
+
 	if (not wasClassified):
 		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, params)
 
@@ -113,7 +116,7 @@ def naiveEnsembleDnnInference(fileImg, params):
 
 	starter.record()
 
-	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, params["distortion_type"], params["nr_branch_edge"], params["p_tar"], device)
+	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
 
 	if (not wasClassified):
 		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, params)
@@ -140,7 +143,7 @@ def run_ee_dnn_inference(img_tensor, distortion_type, nr_branch_edge, p_tar, dev
 def run_ensemble_dnn_inference(img_tensor, params, acc_branches, device):
 
 
-	p_tar, n_branch_edge =  params["p_tar"], params["n_branch_edge"] 	
+	p_tar, n_branch_edge =  float(params["p_tar"]), int(params["n_branch_edge"])
 
 
 	ee_model.eval()
