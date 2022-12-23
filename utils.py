@@ -383,7 +383,7 @@ def init_ee_dnn(device):
 	n_classes = 258
 	n_branches = 3	
 	pretrained = True
-	dim = 300
+	dim = 224
 	exit_type = "bnpool"
 
 	ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
