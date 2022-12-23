@@ -6,9 +6,9 @@ import pandas as pd
 import torchvision.transforms as transforms
 from PIL import Image
 
-ee_model = utils.init_ee_dnn(device)
+#ee_model = utils.init_ee_dnn(device)
 
-backbone_model = utils.init_backbone_dnn(device)
+#backbone_model = utils.init_backbone_dnn(device)
 
 
 def eeDnnInference(data_edge):
