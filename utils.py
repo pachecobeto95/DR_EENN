@@ -367,8 +367,7 @@ def getImageFilePath(datasetPath):
 
 
 def transform_image(image):
-	my_transforms = transforms.Compose([transforms.PILToTensor(),
-		transforms.Resize(330),
+	my_transforms = transforms.Compose([transforms.Resize(330),
 		transforms.CenterCrop(300),
 		transforms.ToTensor(),
 		transforms.Normalize([0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154])])

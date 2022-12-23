@@ -19,7 +19,7 @@ def sendImage(url, filePath, target, nr_branch_edge, p_tar, distortion_lvl):
 	data_dict = {"p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), "distortion_lvl": str(distortion_lvl)}
 
 	files = [
-	('img', (filePath, open(filePath, 'r'), 'application/octet')),
+	('img', (filePath, open(filePath, 'rb'), 'application/octet')),
 	('data', ('data', json.dumps(data_dict), 'application/json')),]
 
 	try:
