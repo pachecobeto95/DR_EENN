@@ -1,5 +1,5 @@
 from torchvision import datasets, transforms
-import torch, os, sys, requests, random, logging, torchvision, config, ee_nn, b_mobilenet
+import torch, os, sys, requests, random, logging, torchvision, config, ee_nn, b_mobilenet, io
 import numpy as np
 import pandas as pd
 from PIL import Image
