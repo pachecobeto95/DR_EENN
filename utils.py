@@ -409,9 +409,10 @@ def init_ee_dnn(device):
 		raise Exception("The number of early-exit branches is not available yet.")
 
 
-	ee_model.load_state_dict(torch.load(distorted_model_path, map_location=device)["model_state_dict"])
+	ee_model = ee_model.cpu()
+	ee_model.load_state_dict(torch.load(distorted_model_path))         # Load state_dict
+ 	ee_model = ee_model.cuda()
 
-	ee_model = ee_model.to(device)
 	ee_model.eval()
 
 	return ee_model
