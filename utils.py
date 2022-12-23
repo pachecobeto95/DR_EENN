@@ -386,12 +386,15 @@ def init_ee_dnn(device):
 	dim = 224
 	exit_type = "bnpool"
 
+	model_path =  os.path.join(config.DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
+
 	ee_model = b_mobilenet.B_MobileNet(n_classes, pretrained, n_branches, dim, exit_type, device)
-
-	ee_model.load_state_dict(torch.load(config.ee_model_path, map_location=device)["model_state_dict"])
-
-	ee_model = ee_model.to(device)
 	ee_model.eval()
+
+
+	ee_model.load_state_dict(torch.load(model_path, map_location=device)["model_state_dict"])
+
+
 
 	return ee_model
 
