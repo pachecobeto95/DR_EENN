@@ -318,7 +318,7 @@ class B_MobileNet(nn.Module):
       
     return x, conf_list, class_list, False
 
-  def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar):
+  def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar, device):
 
     nr_classes = config.nr_class_dict["caltech256"]
 
