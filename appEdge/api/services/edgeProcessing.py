@@ -164,7 +164,7 @@ def run_naive_ensemble_dnn_inference(img_tensor, distortion_type, nr_branch_edge
 
 def saveInferenceTime(inf_time, params, device):
 
-	result = {"inference_time": inference_time}
+	result = {"inference_time": inf_time}
 	result.update(params)
 
 	df = pd.DataFrame(result)
