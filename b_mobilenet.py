@@ -306,14 +306,8 @@ class B_MobileNet(nn.Module):
     conf_list, class_list = [], []
     n_exits = self.n_branches + 1
 
-    print(len(self.exits) )
-
     for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
       x = self.stages[i](x)
-
-      print(x.shape)
-
-
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
@@ -324,7 +318,6 @@ class B_MobileNet(nn.Module):
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
-    #sys.exit()
     return x, conf_list, class_list, False
 
   def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar, device):
@@ -389,7 +382,6 @@ class B_MobileNet(nn.Module):
       
       x = self.stages[i](x)
 
-
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
 
@@ -404,8 +396,7 @@ class B_MobileNet(nn.Module):
     
     else:
       max_conf = np.argmax(conf_list)
-      print(max_conf, conf_list, class_list)
-
+      
       return conf_list[max_conf], class_list[max_conf]
 
 
