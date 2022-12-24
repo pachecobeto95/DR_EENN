@@ -39,7 +39,7 @@ def eeDnnInference(data_edge):
 def ensembleDnnInference(data_edge):
 
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
 	ee_model.eval()
 
@@ -52,7 +52,7 @@ def ensembleDnnInference(data_edge):
 def naiveEnsembleDnnInference(data_edge):
 
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
 	ee_model.eval()
 
