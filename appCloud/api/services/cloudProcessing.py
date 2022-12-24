@@ -64,7 +64,7 @@ def backboneDnnInference(fileImg, params):
 
 	starter.record()
 
-	output = backbone_model(data)
+	output = backbone_model(img_tensor)
 	conf, inf_class = torch.max(softmax(output), 1)
 
 	ender.record()
