@@ -90,7 +90,7 @@ URL_CLOUD = "http://%s:%s"%(HOST_CLOUD, PORT_CLOUD)
 url_ee = "%s/api/edge/edge_ee_inference"%(URL_EDGE)
 url_ensemble = "%s/api/edge/edge_ensemble_inference"%(URL_EDGE)
 url_naive_ensemble = "%s/api/edge/edge_naive_ensemble_inference"%(URL_EDGE)
-url_cloud = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
+url_cloud_backbone = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
 
 
 ee_model_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
