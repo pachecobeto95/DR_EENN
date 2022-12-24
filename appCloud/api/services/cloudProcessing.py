@@ -8,7 +8,10 @@ from PIL import Image
 
 #ee_model = utils.init_ee_dnn(device)
 
-#backbone_model = utils.init_backbone_dnn(device)
+backbone_model = utils.init_backbone_dnn(device)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 
 def eeDnnInference(data_edge):
