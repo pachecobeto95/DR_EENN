@@ -366,12 +366,19 @@ def getImageFilePath(datasetPath):
 
 				filePath_list.append(file_path), target_list.append(int(class_dir)), distortion_lvl_list.append(float(distortion_lvl)) 
 
+
+	temp = list(zip(filePath_list, target_list, distortion_lvl_list))
+	random.shuffle(temp)
+	filePath_list, target_list, distortion_lvl_list  = zip(*temp)
+
+	filePath_list, target_list, distortion_lvl_list = list(filePath_list), list(target_list), list(distortion_lvl_list)
+
 	return filePath_list, distortion_lvl_list, target_list
 
 
 def transform_image(image_bytes):
-	my_transforms = transforms.Compose([transforms.Resize(256),
-		transforms.CenterCrop(224),
+	my_transforms = transforms.Compose([transforms.Resize(330),
+		transforms.CenterCrop(300),
 		transforms.ToTensor(),
 		transforms.Normalize([0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154])])
 
