@@ -24,7 +24,7 @@ backbone_model = utils.init_backbone_dnn(device)
 def eeDnnInference(data_edge):
 	#try:
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], data_edge["p_tar"], data_edge["nr_branch_edge"] 
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
 	output, conf_list, inf_class = eeDnnInferenceCloud(tensor, conf_list, p_tar, n_branch_edge)
 
@@ -34,7 +34,7 @@ def eeDnnInference(data_edge):
 def ensembleDnnInference(data_edge):
 
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], data_edge["p_tar"], data_edge["nr_branch_edge"] 
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
 	ee_model.eval()
 
@@ -47,7 +47,7 @@ def ensembleDnnInference(data_edge):
 def naiveEnsembleDnnInference(data_edge):
 
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], data_edge["p_tar"], data_edge["nr_branch_edge"] 
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
 	ee_model.eval()
 
