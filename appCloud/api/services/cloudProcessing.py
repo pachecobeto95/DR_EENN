@@ -6,6 +6,7 @@ import pandas as pd
 import torchvision.transforms as transforms
 from PIL import Image
 import torchvision.models as models
+import torch.nn as nn
 
 
 #ee_model = utils.init_ee_dnn(device)
@@ -56,6 +57,8 @@ def naiveEnsembleDnnInference(data_edge):
 
 def backboneDnnInference(fileImg, params):
 
+	softmax = nn.Softmax(dim=1)
+	
 	image_bytes = fileImg.read()
 
 	img_tensor = utils.transform_image(image_bytes).to(device)
