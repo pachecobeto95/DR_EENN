@@ -25,12 +25,13 @@ def eeDnnInference(data_edge):
 	#try:
 
 	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	infered_class_list =  data_edge["infer_classes"]
 
 
 	ee_model.eval()
 
 	with torch.no_grad():
-		conf_list, infer_class = ee_model.forwardCoEeInferenceCloud(tensor.float(), conf_list, p_tar, n_branch_edge)
+		conf_list, infer_class = ee_model.forwardCoEeInferenceCloud(tensor.float(), conf_list, infered_class_list, p_tar, n_branch_edge)
 
 
 	return {"status": "ok"}

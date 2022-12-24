@@ -55,11 +55,11 @@ def eeDnnInference(fileImg, params):
 	starter.record()
 
 
-	output, conf_list, infer_class, wasClassified = run_ee_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
+	output, conf_list, infer_class_list, wasClassified = run_ee_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, params)
+		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, infer_class_list, params)
 
 	ender.record()
 	torch.cuda.synchronize()
@@ -171,7 +171,7 @@ def saveInferenceTime(inf_time, params, device):
 	df.to_csv(config.save_inf_time_path, mode='a', header=not os.path.exists(config.save_inf_time_path) )
 
 
-def sendToCloud(url, feature_map, conf_list, params):
+def sendToCloud(url, feature_map, conf_list, infer_class_list, params):
 	"""
 	This functions sends output data from a partitioning layer from edge device to cloud server.
 	This function also sends the info of partitioning layer to the cloud.
@@ -181,7 +181,7 @@ def sendToCloud(url, feature_map, conf_list, params):
 	partitioning_layer (int): partitioning layer decided by the optimization method. 
 	"""
 
-	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list}
+	data = {'feature': feature_map.detach().cpu().numpy().tolist(), "conf": conf_list, "infer_classes": infer_class_list}
 	data.update(params)
 
 	try:

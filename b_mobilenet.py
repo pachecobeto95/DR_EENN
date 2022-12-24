@@ -382,7 +382,7 @@ class B_MobileNet(nn.Module):
     return x, [conf_list], [mode_list], wasClassified
 
 
-  def forwardCoEeInferenceCloud(self, x, conf_list, p_tar, n_branch_edge):
+  def forwardCoEeInferenceCloud(self, x, conf_list, class_list, p_tar, n_branch_edge):
 
     output_list, class_list  = [], []
 
