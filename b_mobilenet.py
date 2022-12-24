@@ -325,7 +325,7 @@ class B_MobileNet(nn.Module):
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
-    sys.exit()
+    #sys.exit()
     return x, conf_list, class_list, False
 
   def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar, device):
