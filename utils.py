@@ -5,6 +5,8 @@ import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 import torch.nn as nn
+import torchvision.models as models
+
 
 def get_indices(dataset, split_ratio):
 	
