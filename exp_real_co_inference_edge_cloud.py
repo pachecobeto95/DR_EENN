@@ -43,7 +43,7 @@ def sendDistortedImage(imgPath, target, nr_branch_edge, p_tar, distortion_lvl, d
 	#sendImage(config.url_naive_ensemble, imgPath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 
 	#sys.exit()	
-	sendImage(config.url_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
+	sendImage(config.url_cloud_backbone, imgPath, target, nr_branch_edge, p_tar, distortion_lvl)
 
 
 def sendDistortedImageSet(dataset_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge):
