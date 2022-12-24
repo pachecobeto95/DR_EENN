@@ -405,6 +405,8 @@ class B_MobileNet(nn.Module):
     
     else:
       max_conf = np.argmax(conf_list)
+      print(max_conf, conf_list, class_list)
+
       return conf_list[max_conf], class_list[max_conf]
 
 
