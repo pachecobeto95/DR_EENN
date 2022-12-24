@@ -354,7 +354,7 @@ class B_MobileNet(nn.Module):
 
     wasClassified = True if(ensemble_conf.item() >= p_tar) else False
 
-    return x, ensemble_conf.item(), [ensemble_infered_class.item()], wasClassified
+    return x, [ensemble_conf.item()], [ensemble_infered_class.item()], wasClassified
 
 
   def forwardNaiveEnsembleInference(self, x, nr_branch_edge, p_tar):
