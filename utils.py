@@ -392,8 +392,6 @@ def init_ee_dnn(device):
 	distorted_model_path =  os.path.join(config.DIR_NAME, "models", config.dataset_name, config.model_name, 
 		"pristine_ee_model_mobilenet_3_branches_id_1.pth")
 
-	print("kk")
-
 	ee_model = b_mobilenet.B_MobileNet(258, pretrained, n_branches, dim, exit_type, device)
 
 
