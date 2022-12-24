@@ -311,6 +311,10 @@ class B_MobileNet(nn.Module):
     for i, exitBlock in enumerate(self.exits[:nr_branch_edge-1]):
       x = self.stages[i](x)
 
+      print(x.shape)
+
+
+
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
 
@@ -320,6 +324,7 @@ class B_MobileNet(nn.Module):
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
+    sys.exit()
     return x, conf_list, class_list, False
 
   def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar, device):
