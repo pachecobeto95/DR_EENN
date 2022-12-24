@@ -91,7 +91,9 @@ url_ee = "%s/api/edge/edge_ee_inference"%(URL_EDGE)
 url_ensemble = "%s/api/edge/edge_ensemble_inference"%(URL_EDGE)
 url_naive_ensemble = "%s/api/edge/edge_naive_ensemble_inference"%(URL_EDGE)
 url_cloud_backbone = "%s/api/cloud/cloud_backbone_inference"%(URL_CLOUD)
-
+url_cloud_ee = "%s/api/cloud/cloud_ee_inference"%(URL_CLOUD)
+url_cloud_ensemble = "%s/api/cloud/cloud_ensemble_inference"%(URL_CLOUD)
+url_cloud_naive_ensemble = "%s/api/cloud/cloud_naive_ensemble_inference"%(URL_CLOUD)
 
 ee_model_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_ee_model_mobilenet_3_branches_id_1.pth")
 backbone_dnn_path = os.path.join(DIR_NAME, "models", "caltech256", "mobilenet", "pristine_backbone_model_mobilenet_1.pth")
