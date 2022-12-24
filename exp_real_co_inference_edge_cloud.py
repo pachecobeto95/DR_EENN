@@ -64,7 +64,7 @@ def inferenceTimeExp(distorted_datasetPath, p_tar_list, nr_branch_edge_list):
 
 		for nr_branch_edge in nr_branch_edge_list:
 
-			print("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge) )
+			logging.debug("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge))
 
 			sendDistortedImageSet(file_path_list, target_list, distortion_lvl_list, p_tar, nr_branch_edge)
 
@@ -83,7 +83,7 @@ def main(args):
 	
 	dataset_path = config.dataset_path_dict[args.dataset_name]
 
-	logPath = "./logTest_%s_%s.log"%(args.model_name, args.dataset_name)
+	logPath = "./log_inference_time_exp_%s_%s.log"%(args.model_name, args.dataset_name)
 
 	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 	
