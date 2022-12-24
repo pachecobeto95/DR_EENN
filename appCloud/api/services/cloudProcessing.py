@@ -82,7 +82,7 @@ def backboneDnnInference(fileImg, params):
 
 def saveInferenceTime(inf_time, params, device):
 
-	result = {"inference_time": inference_time}
+	result = {"inference_time": inf_time}
 	result.update(params)
 
 	df = pd.DataFrame(result)
