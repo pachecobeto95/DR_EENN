@@ -161,7 +161,7 @@ def run_naive_ensemble_dnn_inference(img_tensor, distortion_type, nr_branch_edge
 
 def saveInferenceTime(inf_time, params, device):
 
-	save_inf_time_path = os.path.join(config.DIR_NAME, "inference_time_%s.csv"%(params["mode"]) )
+	save_inf_time_path = os.path.join(config.DIR_NAME, "inference_time%s.csv"%(params["mode"]) )
 
 
 	result = {"inference_time": [inf_time]}

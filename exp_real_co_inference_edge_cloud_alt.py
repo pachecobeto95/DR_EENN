@@ -9,7 +9,7 @@ def sendImage(url, img, filePath, target, nr_branch_edge, p_tar, distortion_type
 	
 	data_dict = {"img": feature_map.detach().cpu().numpy().tolist(), "p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), 
 	"distortion_type": distortion_type,
-	"distortion_lvl": str(distortion_lvl), "mode": "alt"}
+	"distortion_lvl": str(distortion_lvl), "mode": "_alt"}
 
 	try:
 		r = requests.post(url, json=data, timeout=config.timeout)
