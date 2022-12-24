@@ -24,9 +24,14 @@ backbone_model = utils.init_backbone_dnn(device)
 def eeDnnInference(data_edge):
 	#try:
 
-	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
 
-	output, conf_list, inf_class = eeDnnInferenceCloud(tensor, conf_list, p_tar, n_branch_edge)
+
+	ee_model.eval()
+
+	with torch.no_grad():
+		conf_list, infer_class = ee_model.forwardCoEeInferenceCloud(tensor.float(), conf_list, p_tar, n_branch_edge)
+
 
 	return {"status": "ok"}
 
@@ -89,15 +94,3 @@ def saveInferenceTime(inf_time, params, device):
 
 	df = pd.DataFrame(result)
 	df.to_csv(config.save_backbone_inf_time_path, mode='a', header=not os.path.exists(config.save_backbone_inf_time_path) )
-
-
-def eeDnnInferenceCloud(tensor, conf_list, p_tar, n_branch_edge):
-
-	ee_model.eval()
-
-	with torch.no_grad():
-		conf_list, infer_class = ee_model.forwardCoEeInferenceCloud(tensor.float(), conf_list, p_tar, n_branch_edge)
-
-	return output, conf_list, infer_class
-
-
