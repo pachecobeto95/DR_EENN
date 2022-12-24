@@ -75,6 +75,40 @@ class DistortionApplier(object):
 		raise Exception("This distortion type has not implemented yet.")
 
 
+def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_dim, dim):
+
+
+	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
+
+	torch.manual_seed(args.seed)
+	np.random.seed(seed=args.seed)
+
+	transformations_test = transforms.Compose([
+		transforms.Resize((input_dim, input_dim)),
+		transforms.CenterCrop((dim, dim)),
+		#transforms.RandomApply([DistortionApplier(distortion_type, distortion_values)], p=args.distortion_prob),
+		#transforms.ToTensor(), 
+		#transforms.Normalize(mean = mean, std = std),
+		])
+
+	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
+
+	test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
+
+	#Load the indices to always use the same indices for training, validating and testing.
+	test_idx = np.load(test_idx_path)
+
+	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
+
+	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
+
+	return test_loader
+
+
+
+
+
+
 def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, distortion_type, distortion_values):
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 

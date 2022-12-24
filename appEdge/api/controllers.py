@@ -1,6 +1,7 @@
 from flask import Blueprint, g, render_template, request, jsonify, session, redirect, url_for, current_app as app
 import json, os, time, sys, config
 from .services import edgeProcessing
+from .services import edgeProcessing_alt
 #from .services import edgeInference
 #import atexit, torch, requests
 import torch, requests
@@ -65,3 +66,87 @@ def edge_naive_ensemble_inferece():
 
 	else:
 		return jsonify(result), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@api.route('/edge/edge_ee_inference_alt', methods=["POST"])
+def edge_ee_inferece_alt():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
+
+	data = request.json
+
+	result = edgeProcessing_alt.eeDnnInference(data)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+
+	else:
+		return jsonify(result), 500
+
+
+
+
+@api.route('/edge/edge_ensemble_inference_alt', methods=["POST"])
+def edge_ensemble_inferece_alt():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
+
+	data = request.json
+
+	result = edgeProcessing_alt.ensembleDnnInference(data)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+
+	else:
+		return jsonify(result), 500
+
+
+
+
+@api.route('/edge/edge_naive_ensemble_inference_alt', methods=["POST"])
+def edge_naive_ensemble_inferece_alt():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
+
+	data = request.json
+
+	result = edgeProcessing_alt.naiveEnsembleDnnInference(data)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+
+	else:
+		return jsonify(result), 500
+
+
+
+
+
+
+
+
+
+
+
+

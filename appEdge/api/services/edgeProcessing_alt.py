@@ -42,13 +42,12 @@ def compute_acc_branches(df_ee, distortion_lvl, distortion_type):
 	return acc_list
 
 
-def eeDnnInference(fileImg, params):
+def eeDnnInference(data):
 
 	response_request = {"status": "ok"}
 
-	image_bytes = fileImg.read()
+	img_tensor = torch.Tensor(data["img"]).to(device)
 
-	img_tensor = utils.transform_image(image_bytes).to(device)
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
@@ -71,14 +70,12 @@ def eeDnnInference(fileImg, params):
 	return response_request
 
 
-def ensembleDnnInference(fileImg, params):
+def ensembleDnnInference(data):
 
 	response_request = {"status": "ok"}
 
-	image_bytes = fileImg.read()
 
-	img_tensor = utils.transform_image(image_bytes).to(device)
-
+	img_tensor = 	torch.Tensor(data["img"]).to(device)
 
 	acc_branches = compute_acc_branches(df_ee, float(params["distortion_lvl"]), params["distortion_type"])
 
@@ -101,19 +98,20 @@ def ensembleDnnInference(fileImg, params):
 
 	return response_request
 
-def naiveEnsembleDnnInference(fileImg, params):
+def naiveEnsembleDnnInference(data):
 
 	response_request = {"status": "ok"}
 
-	image_bytes = fileImg.read()
 
-	img_tensor = utils.transform_image(image_bytes).to(device)
+	img_tensor = torch.Tensor(data["img"]).to(device)
+
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
 	starter.record()
 
 	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
+
 
 	if (not wasClassified):
 		response_request = sendToCloud(config.url_cloud_naive_ensemble, output, conf_list, infer_class, params)
