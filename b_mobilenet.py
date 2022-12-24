@@ -387,7 +387,7 @@ class B_MobileNet(nn.Module):
 
     output_list, class_list  = [], []
 
-    for i, exitBlock in enumerate(self.exits[n_branch_edge:]): #[config.n_branch_edge:] it acts to select until branches will be processed. 
+    for i, exitBlock in enumerate(self.exits[n_branch_edge:], n_branch_edge): #[config.n_branch_edge:] it acts to select until branches will be processed. 
       
       x = self.stages[i](x)
 
