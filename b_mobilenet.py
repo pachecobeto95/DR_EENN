@@ -5,7 +5,7 @@ from pthflops import count_ops
 import torchvision.models as models
 import numpy as np
 import config
-from statistics import mode, multimode
+from statistics import mode
 
 
 class ConvBasic(nn.Module):
@@ -365,7 +365,8 @@ class B_MobileNet(nn.Module):
 
 
     max_conf_idx = np.argmax(conf_list)
-    mode_list = multimode(class_list)
+    #mode_list = multimode(class_list)
+    mode_list = mode(class_list)
     
     ensemble_conf = conf_list[max_conf_idx]
 

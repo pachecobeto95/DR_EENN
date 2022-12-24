@@ -21,7 +21,6 @@ def extractData(df, distortion_lvl, distortion_type_data):
 
 	df = df[df.distortion_type_data=="pristine"] if (distortion_lvl==0) else df[df.distortion_type_data==distortion_type_data]
 
-	print(distortion_lvl, type(distortion_lvl))
 	df = df[df.distortion_lvl == distortion_lvl]
 
 	return df
@@ -118,6 +117,9 @@ def naiveEnsembleDnnInference(fileImg, params):
 	starter.record()
 
 	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
+
+	return {"status": "ok"}
+
 
 	if (not wasClassified):
 		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, params)
