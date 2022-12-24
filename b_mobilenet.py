@@ -425,13 +425,14 @@ class B_MobileNet(nn.Module):
     conf, infered_class = torch.max(self.softmax(output), 1)
     
     conf_list.append(conf.item())
-    class_list.append(infered_class)
+    class_list.append(infered_class.item())
     
     if (conf.item() >= p_tar):
       return conf, infered_class
     
     else:
       max_conf = np.argmax(conf_list)
+      print(max_conf, conf_list, class_list)
       return conf_list[max_conf], class_list[max_conf]
 
 
