@@ -90,7 +90,7 @@ def ensembleDnnInference(fileImg, params):
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_ensemble, output, conf_list, params)
+		response_request = sendToCloud(config.url_cloud_ensemble, output, conf_list, infer_class, params)
 
 	ender.record()
 	torch.cuda.synchronize()
@@ -119,7 +119,7 @@ def naiveEnsembleDnnInference(fileImg, params):
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_naive_ensemble, output, conf_list, params)
+		response_request = sendToCloud(config.url_cloud_naive_ensemble, output, conf_list, infer_class, params)
 
 	ender.record()
 	torch.cuda.synchronize()
