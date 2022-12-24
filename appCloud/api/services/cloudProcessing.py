@@ -9,10 +9,12 @@ import torchvision.models as models
 import torch.nn as nn
 
 
-#ee_model = utils.init_ee_dnn(device)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
+
+ee_model = utils.init_ee_dnn(device)
 
 backbone_model = utils.init_backbone_dnn(device)
 
