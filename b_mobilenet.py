@@ -379,7 +379,7 @@ class B_MobileNet(nn.Module):
 
     wasClassified = True if(ensemble_conf >= p_tar) else False
       
-    return x, conf_list, mode_list, wasClassified
+    return x, [conf_list], [mode_list], wasClassified
 
 
   def forwardCoEeInferenceCloud(self, x, conf_list, p_tar, n_branch_edge):
