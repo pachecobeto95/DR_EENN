@@ -164,11 +164,14 @@ def run_naive_ensemble_dnn_inference(img_tensor, distortion_type, nr_branch_edge
 
 def saveInferenceTime(inf_time, params, device):
 
+	save_inf_time_path = os.path.join(config.DIR_NAME, "inference_time_%s.csv"%(params["mode"]) )
+
+
 	result = {"inference_time": [inf_time]}
 	result.update(params)
 
 	df = pd.DataFrame(result)
-	df.to_csv(config.save_inf_time_path, mode='a', header=not os.path.exists(config.save_inf_time_path) )
+	df.to_csv(save_inf_time_path, mode='a', header=not os.path.exists(save_inf_time_path) )
 
 
 def sendToCloud(url, feature_map, conf_list, infer_class_list, params):
