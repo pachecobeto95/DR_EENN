@@ -324,7 +324,7 @@ class B_MobileNet(nn.Module):
       else:
         conf_list.append(conf_branch.item()), class_list.append(infered_class_branch.item())
       
-    sys.exit()
+    #sys.exit()
     return x, conf_list, class_list, False
 
   def forwardEnsembleInference(self, x, acc_branches, nr_branch_edge, p_tar, device):
@@ -386,7 +386,8 @@ class B_MobileNet(nn.Module):
 
     output_list, class_list  = [], []
 
-    for i, exitBlock in enumerate(self.exits[n_branch_edge-1:]): #[:config.n_branch_edge] it acts to select until branches will be processed. 
+    for i, exitBlock in enumerate(self.exits[n_branch_edge:]): #[:config.n_branch_edge] it acts to select until branches will be processed. 
+      print("entrou")
       x = self.stages[i](x)
 
 
