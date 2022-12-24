@@ -384,7 +384,6 @@ class B_MobileNet(nn.Module):
 
   def forwardCoEeInferenceCloud(self, x, conf_list, class_list, p_tar, n_branch_edge):
 
-    output_list, class_list  = [], []
 
     for i, exitBlock in enumerate(self.exits[n_branch_edge:], n_branch_edge): #[config.n_branch_edge:] it acts to select until branches will be processed. 
       
@@ -410,10 +409,10 @@ class B_MobileNet(nn.Module):
       return conf_list[max_conf], class_list[max_conf]
 
 
-  def forwardEnsembleInferenceCloud(self, x, conf_list, p_tar, n_branch_edge):
+  def forwardEnsembleInferenceCloud(self, x, conf_list, class_list, p_tar, n_branch_edge):
 
 
-    output_list, class_list  = [], []
+    output_list = []
 
     for i, exitBlock in enumerate(self.exits[n_branch_edge:], n_branch_edge): #[config.n_branch_edge:] it acts to select until branches will be processed. 
       
@@ -427,20 +426,20 @@ class B_MobileNet(nn.Module):
     conf, infered_class = torch.max(self.softmax(output), 1)
     
     conf_list.append(conf.item())
-    #class_list.append(infered_class.item())
+    class_list.append(infered_class.item())
     
     if (conf.item() >= p_tar):
       return conf, infered_class
     
     else:
       max_conf = np.argmax(conf_list)
-      return conf_list[max_conf], infered_class
+      return conf_list[max_conf], class_list[max_conf]
 
 
-  def forwardNaiveEnsembleInferenceCloud(self, x, conf_list, p_tar, n_branch_edge):
+  def forwardNaiveEnsembleInferenceCloud(self, x, conf_list, class_list, p_tar, n_branch_edge):
 
 
-    output_list, class_list  = [], []
+    output_list = []
 
     for i, exitBlock in enumerate(self.exits[n_branch_edge:], n_branch_edge): #[config.n_branch_edge:] it acts to select until branches will be processed. 
       

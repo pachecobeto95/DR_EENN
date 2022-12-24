@@ -43,11 +43,12 @@ def ensembleDnnInference(data_edge):
 
 
 	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	infered_class_list =  data_edge["infer_classes"]
 
 	ee_model.eval()
 
 	with torch.no_grad():
-		conf_list, infer_class = ee_model.forwardEnsembleInferenceCloud(tensor.float(), conf_list, p_tar, n_branch_edge)
+		conf_list, infer_class = ee_model.forwardEnsembleInferenceCloud(tensor.float(), conf_list, infered_class_list, p_tar, n_branch_edge)
 
 	return {"status": "ok"}
 
@@ -60,7 +61,7 @@ def naiveEnsembleDnnInference(data_edge):
 	ee_model.eval()
 
 	with torch.no_grad():
-		conf_list, infer_class = ee_model.forwardNaiveEnsembleInferenceCloud(tensor.float(), conf_list, p_tar, n_branch_edge)
+		conf_list, infer_class = ee_model.forwardNaiveEnsembleInferenceCloud(tensor.float(), conf_list, infered_class_list, p_tar, n_branch_edge)
 
 	return {"status": "ok"}
 
