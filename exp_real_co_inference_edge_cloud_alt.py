@@ -102,7 +102,9 @@ def main(args):
 	logging.basicConfig(level=logging.DEBUG, filename=logPath, filemode="a+", format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 	
 	#This line defines the number of side branches processed at the edge
-	nr_branch_edge_list = np.arange(2, args.n_branches+1)
+	#nr_branch_edge_list = np.arange(2, args.n_branches+1)
+	nr_branch_edge_list = [3, 2]
+
 
 	distortion_lvl_list = config.distortion_level_dict["gaussian_blur"]
 
