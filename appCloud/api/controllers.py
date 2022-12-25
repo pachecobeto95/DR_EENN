@@ -96,7 +96,7 @@ def cloud_backbone_inference_alt():
 	img = data["img"]
 	del data["img"]
 
-	result = cloudProcessing_alt.backboneDnnInference(img, params)
+	result = cloudProcessing_alt.backboneDnnInference(img, data)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
