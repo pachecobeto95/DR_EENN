@@ -370,6 +370,8 @@ class B_MobileNet(nn.Module):
     
     ensemble_conf = conf_list[max_conf_idx]
 
+    print(ensemble_conf)
+
     wasClassified = True if(ensemble_conf >= p_tar) else False
       
     return x, [ensemble_conf], [mode_list], wasClassified
@@ -450,6 +452,7 @@ class B_MobileNet(nn.Module):
       return conf, infered_class
     
     else:
+      print(conf_list)
       max_conf = np.argmax(conf_list)
       return conf_list[max_conf], class_list[max_conf]
 
