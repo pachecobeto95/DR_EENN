@@ -290,9 +290,9 @@ class B_MobileNet(nn.Module):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
       conf, infered_class = torch.max(self.softmax(output_branch), 1)
-      print(conf)
+      #print(conf)
       if (conf.item() > p_tar):
-        print("early")
+      #  print("early")
         return output_branch, conf_list, infered_class, True
 
       else:
@@ -308,16 +308,16 @@ class B_MobileNet(nn.Module):
     conf_list, class_list = [], []
     n_exits = self.n_branches + 1
 
-    print(x.shape)
+    #print(x.shape)
 
     #for i, exitBlock in enumerate(self.exits):
     for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
-      print(i)
+      #print(i)
       x = self.stages[i](x)
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
-      print(conf_branch)
+      #print(conf_branch)
 
       if (conf_branch.item() >= p_tar):
         return output_branch, conf_branch.item(), infered_class_branch.item(), True
@@ -377,7 +377,7 @@ class B_MobileNet(nn.Module):
     
     ensemble_conf = conf_list[max_conf_idx]
 
-    print(ensemble_conf)
+    #print(ensemble_conf)
 
     wasClassified = True if(ensemble_conf >= p_tar) else False
       
@@ -459,7 +459,7 @@ class B_MobileNet(nn.Module):
       return conf, infered_class
     
     else:
-      print(conf_list)
+      #print(conf_list)
       max_conf = np.argmax(conf_list)
       return conf_list[max_conf], class_list[max_conf]
 
