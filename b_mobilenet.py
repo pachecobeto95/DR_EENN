@@ -309,10 +309,12 @@ class B_MobileNet(nn.Module):
     n_exits = self.n_branches + 1
 
     for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
+      print(i)
       x = self.stages[i](x)
 
       output_branch = exitBlock(x)
       conf_branch, infered_class_branch = torch.max(self.softmax(output_branch), 1)
+      print(conf_branch)
 
       if (conf_branch.item() >= p_tar):
         return output_branch, conf_branch.item(), infered_class_branch.item(), True
