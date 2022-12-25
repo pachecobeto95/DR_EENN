@@ -308,7 +308,10 @@ class B_MobileNet(nn.Module):
     conf_list, class_list = [], []
     n_exits = self.n_branches + 1
 
-    for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
+    print(x.shape)
+
+    for i, exitBlock in enumerate(self.exits)
+    #for i, exitBlock in enumerate(self.exits[:nr_branch_edge]):
       print(i)
       x = self.stages[i](x)
 
