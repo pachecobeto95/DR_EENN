@@ -90,8 +90,10 @@ def edge_ee_inferece_alt():
 	"""
 
 	data = request.json
+	img = data["img"]
+	del data["img"]
 
-	result = edgeProcessing_alt.eeDnnInference(data)
+	result = edgeProcessing_alt.eeDnnInference(img, data)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
@@ -110,8 +112,10 @@ def edge_ensemble_inferece_alt():
 	"""
 
 	data = request.json
+	img = data["img"]
+	del data["img"]
 
-	result = edgeProcessing_alt.ensembleDnnInference(data)
+	result = edgeProcessing_alt.ensembleDnnInference(img, data)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
@@ -130,8 +134,10 @@ def edge_naive_ensemble_inferece_alt():
 	"""
 
 	data = request.json
+	img = data["img"]
+	del data["img"]
 
-	result = edgeProcessing_alt.naiveEnsembleDnnInference(data)
+	result = edgeProcessing_alt.naiveEnsembleDnnInference(img, data)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200

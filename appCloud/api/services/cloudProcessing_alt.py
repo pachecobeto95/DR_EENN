@@ -15,11 +15,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 backbone_model = utils.init_backbone_dnn(device)
 
 
-def backboneDnnInference(data):
+def backboneDnnInference(img, params):
 
 	softmax = nn.Softmax(dim=1)
 	
-	img_tensor = torch.Tensor(data["img"]).to(device)
+	img_tensor = torch.Tensor(img).to(device)
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 

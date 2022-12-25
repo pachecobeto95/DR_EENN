@@ -42,11 +42,11 @@ def compute_acc_branches(df_ee, distortion_lvl, distortion_type):
 	return acc_list
 
 
-def eeDnnInference(data):
+def eeDnnInference(img, params):
 
 	response_request = {"status": "ok"}
 
-	img_tensor = torch.Tensor(data["img"]).to(device)
+	img_tensor = torch.Tensor(img).to(device)
 
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
@@ -54,74 +54,74 @@ def eeDnnInference(data):
 	starter.record()
 
 
-	output, conf_list, infer_class_list, wasClassified = run_ee_dnn_inference(img_tensor, data["distortion_type"], int(data["nr_branch_edge"]), float(data["p_tar"]), device)
+	output, conf_list, infer_class_list, wasClassified = run_ee_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, infer_class_list, data)
+		response_request = sendToCloud(config.url_cloud_ee, output, conf_list, infer_class_list, params)
 
 	ender.record()
 	torch.cuda.synchronize()
 	inf_time = starter.elapsed_time(ender)
 
 	if (response_request["status"]=="ok"):
-		saveInferenceTime(inf_time, data, device)
+		saveInferenceTime(inf_time, params, device)
 
 	return response_request
 
 
-def ensembleDnnInference(data):
+def ensembleDnnInference(img, params):
 
 	response_request = {"status": "ok"}
 
 
-	img_tensor = 	torch.Tensor(data["img"]).to(device)
+	img_tensor = 	torch.Tensor(img).to(device)
 
-	acc_branches = compute_acc_branches(df_ee, float(data["distortion_lvl"]), data["distortion_type"])
+	acc_branches = compute_acc_branches(df_ee, float(params["distortion_lvl"]), params["distortion_type"])
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
 	starter.record()
 
-	output, conf_list, infer_class, wasClassified = run_ensemble_dnn_inference(img_tensor, data, acc_branches, device)
+	output, conf_list, infer_class, wasClassified = run_ensemble_dnn_inference(img_tensor, params, acc_branches, device)
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_ensemble, output, conf_list, infer_class, data)
+		response_request = sendToCloud(config.url_cloud_ensemble, output, conf_list, infer_class, params)
 
 	ender.record()
 	torch.cuda.synchronize()
 	inf_time = starter.elapsed_time(ender)
 
 	if (response_request["status"]=="ok"):
-		saveInferenceTime(inf_time, data, device)
+		saveInferenceTime(inf_time, params, device)
 
 	return response_request
 
-def naiveEnsembleDnnInference(data):
+def naiveEnsembleDnnInference(img, params):
 
 	response_request = {"status": "ok"}
 
 
-	img_tensor = torch.Tensor(data["img"]).to(device)
+	img_tensor = torch.Tensor(img).to(device)
 
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
 	starter.record()
 
-	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, data["distortion_type"], int(data["nr_branch_edge"]), float(data["p_tar"]), device)
+	output, conf_list, infer_class, wasClassified = run_naive_ensemble_dnn_inference(img_tensor, params["distortion_type"], int(params["nr_branch_edge"]), float(params["p_tar"]), device)
 
 
 	if (not wasClassified):
-		response_request = sendToCloud(config.url_cloud_naive_ensemble, output, conf_list, infer_class, data)
+		response_request = sendToCloud(config.url_cloud_naive_ensemble, output, conf_list, infer_class, params)
 
 	ender.record()
 	torch.cuda.synchronize()
 	inf_time = starter.elapsed_time(ender)
 
 	if (response_request["status"]=="ok"):
-		saveInferenceTime(inf_time, data, device)
+		saveInferenceTime(inf_time, params, device)
 
 	return response_request
 
