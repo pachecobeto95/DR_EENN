@@ -70,7 +70,8 @@ def inferenceTimeExp(dataset_path, indices_path, distortion_lvl_list, n_classes,
 
 		for nr_branch_edge in nr_branch_edge_list:
 
-			logging.debug("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge))
+			#logging.debug("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge))
+			print("p_tar: %s, Number Branches at Edge: %s"%(p_tar, nr_branch_edge))
 
 			sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim)
 
