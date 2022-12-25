@@ -47,7 +47,7 @@ def sendDistortedImage(data, target, nr_branch_edge, p_tar, distortion_lvl, dist
 	sendImage(config.url_naive_ensemble, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 	sendImage(config.url_cloud_backbone, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 
-def sendDistortedImageSet(dataset_path, indices_path, target_list, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim):
+def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim):
 
 	test_loader = utils.load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_dim, dim)
 	
