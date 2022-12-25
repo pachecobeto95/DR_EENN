@@ -33,7 +33,7 @@ def applyDistortiontransformation(data, distortion_lvl):
 	torch.manual_seed(args.seed)
 	np.random.seed(seed=args.seed)
 
-	transformation = transforms.Compose([
+	transformation = transforms.Compose([transforms.ToPILImage(),
 		transforms.RandomApply([utils.DistortionApplier("gaussian_blur", distortion_lvl)], p=1),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
