@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 
 
 
-def sendImage(url, img, filePath, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl):
+def sendImage(url, img, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl):
 	
 	data_dict = {"img": feature_map.detach().cpu().numpy().tolist(), "p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), 
 	"distortion_type": distortion_type,
