@@ -290,7 +290,9 @@ class B_MobileNet(nn.Module):
       x = self.stages[i](x)
       output_branch = exitBlock(x)
       conf, infered_class = torch.max(self.softmax(output_branch), 1)
+      print(conf)
       if (conf.item() > p_tar):
+        print("early")
         return output_branch, conf_list, infered_class, True
 
       else:
