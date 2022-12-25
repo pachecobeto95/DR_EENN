@@ -34,7 +34,7 @@ def applyDistortiontransformation(data, distortion_lvl):
 	np.random.seed(seed=args.seed)
 
 	transformation = transforms.Compose([
-		transforms.RandomApply([utils.DistortionApplier("gaussian_blur", distortion_values)], p=args.distortion_prob),
+		transforms.RandomApply([utils.DistortionApplier("gaussian_blur", distortion_lvl)], p=1),
 		transforms.ToTensor(), 
 		transforms.Normalize(mean = mean, std = std),
 		])
