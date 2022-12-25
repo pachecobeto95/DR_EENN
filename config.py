@@ -106,7 +106,6 @@ ee_inference_data_path = os.path.join(DIR_NAME, "inference_data", "caltech256", 
 url_ee_alt = "%s/api/edge/edge_ee_inference_alt"%(URL_EDGE)
 url_ensemble_alt = "%s/api/edge/edge_ensemble_inference_alt"%(URL_EDGE)
 url_naive_ensemble_alt = "%s/api/edge/edge_naive_ensemble_inference_alt"%(URL_EDGE)
-url_cloud_backbone_alt = "%s/api/cloud/cloud_backbone_inference_alt"%(URL_CLOUD)
 
 
 
