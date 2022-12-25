@@ -5,7 +5,7 @@ import torchvision.models as models
 import pandas as pd
 import torchvision.transforms as transforms
 from PIL import Image
-from b_mobilenet import B_MobileNet
+from .b_mobilenet import B_MobileNet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
