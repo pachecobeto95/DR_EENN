@@ -1,6 +1,6 @@
 from flask import Blueprint, g, render_template, request, jsonify, session, redirect, url_for, current_app as app
 import json, os, time, sys, config
-from .services import cloudProcessing
+from .services import cloudProcessing, cloudProcessing_alt
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -93,7 +93,7 @@ def cloud_backbone_inference_alt():
 
 	data = request.json
 
-	result = cloudProcessing.backboneDnnInference(data)
+	result = cloudProcessing_alt.backboneDnnInference(data)
 
 	if (result["status"] ==  "ok"):
 		return jsonify(result), 200
