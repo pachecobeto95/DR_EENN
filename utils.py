@@ -93,7 +93,7 @@ def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_d
 
 	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
-	test_idx_path = os.path.join(save_indices_path, "test_idx_caltech256.npy")
+	test_idx_path = os.path.join(indices_path, "test_idx_caltech256.npy")
 
 	#Load the indices to always use the same indices for training, validating and testing.
 	test_idx = np.load(test_idx_path)
