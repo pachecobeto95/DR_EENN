@@ -87,7 +87,7 @@ def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_d
 		transforms.Resize((input_dim, input_dim)),
 		transforms.CenterCrop((dim, dim)),
 		#transforms.RandomApply([DistortionApplier(distortion_type, distortion_values)], p=args.distortion_prob),
-		#transforms.ToTensor(), 
+		transforms.ToTensor(), 
 		#transforms.Normalize(mean = mean, std = std),
 		])
 
