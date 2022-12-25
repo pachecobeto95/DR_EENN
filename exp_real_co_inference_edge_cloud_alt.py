@@ -68,8 +68,6 @@ def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar
 
 			sendDistortedImage(data, target, nr_branch_edge, p_tar, distortion_lvl, distortion_type="gaussian_blur")
 
-			del data
-		del target
 
 def inferenceTimeExp(dataset_path, indices_path, distortion_lvl_list, n_classes, input_dim, dim, p_tar_list, nr_branch_edge_list):
 
