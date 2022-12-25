@@ -54,6 +54,7 @@ def naiveEnsembleDnnInference(data_edge):
 
 
 	tensor, conf_list, p_tar, n_branch_edge = torch.Tensor(data_edge["feature"]).to(device), data_edge["conf"], float(data_edge["p_tar"]), int(data_edge["nr_branch_edge"])
+	infered_class_list =  data_edge["infer_classes"]
 
 	ee_model.eval()
 
