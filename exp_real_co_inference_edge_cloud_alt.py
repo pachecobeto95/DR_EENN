@@ -26,7 +26,7 @@ def sendImage(url, img, target, nr_branch_edge, p_tar, distortion_type, distorti
 
 def applyDistortiontransformation(data, distortion_lvl):
 
-	data = data[0]
+	#data = data[0]
 
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
