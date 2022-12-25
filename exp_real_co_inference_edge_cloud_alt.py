@@ -2,6 +2,7 @@ import os, config, time, utils, requests, sys, json, os, argparse, logging, torc
 import numpy as np
 from requests.exceptions import HTTPError, ConnectTimeout
 from PIL import Image
+import torchvision.transforms as transforms
 
 
 
