@@ -69,6 +69,7 @@ def cloud_backbone_inference():
 	into smart sity context
 	"""
 
+
 	fileImg = request.files['img']
 	params = json.load(request.files['data'])
 
@@ -81,6 +82,24 @@ def cloud_backbone_inference():
 		return jsonify(result), 500
 
 
+
+
+@api.route('/cloud/cloud_backbone_inference_alt', methods=["POST"])
+def cloud_backbone_inference_alt():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
+
+	data = request.json
+
+	result = cloudProcessing.backboneDnnInference(data)
+
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
+
+	else:
+		return jsonify(result), 500
 
 
 
