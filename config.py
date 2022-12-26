@@ -107,6 +107,6 @@ url_ee_alt = "%s/api/edge/edge_ee_inference_alt"%(URL_EDGE)
 url_ensemble_alt = "%s/api/edge/edge_ensemble_inference_alt"%(URL_EDGE)
 url_naive_ensemble_alt = "%s/api/edge/edge_naive_ensemble_inference_alt"%(URL_EDGE)
 url_cloud_backbone_alt = "%s/api/cloud/cloud_backbone_inference_alt"%(URL_CLOUD)
-
+url_edge_backbone_alt = "%s/api/edge/edge_backbone_inference_alt"%(URL_EDGE)
 
 

@@ -147,10 +147,22 @@ def edge_naive_ensemble_inferece_alt():
 
 
 
+@api.route('/edge/edge_backbone_inference_alt', methods=["POST"])
+def edge_backbone_inference_alt():
+	"""
+	This function receives an image from user or client with smartphone or even a insurance camera 
+	into smart sity context
+	"""
 
+	data = request.json
 
+	result = edgeProcessing_alt.backboneDnnInference(data)
 
+	if (result["status"] ==  "ok"):
+		return jsonify(result), 200
 
+	else:
+		return jsonify(result), 500
 
 
 

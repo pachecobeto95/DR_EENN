@@ -21,27 +21,8 @@ def backboneDnnInference(img, params):
 	
 	img_tensor = torch.Tensor(img).to(device)
 
-	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
-
-	starter.record()
 
 	output = backbone_model(img_tensor)
 	conf, inf_class = torch.max(softmax(output), 1)
 
-	ender.record()
-	torch.cuda.synchronize()
-	inf_time = starter.elapsed_time(ender)
-
-	saveInferenceTime(inf_time, params, device)
-
 	return {"status": "ok"}
-
-
-
-def saveInferenceTime(inf_time, params, device):
-
-	result = {"inference_time": [inf_time]}
-	result.update(params)
-
-	df = pd.DataFrame(result)
-	df.to_csv(config.save_backbone_inf_time_path, mode='a', header=not os.path.exists(config.save_backbone_inf_time_path) )

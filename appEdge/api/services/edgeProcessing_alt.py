@@ -192,3 +192,52 @@ def sendToCloud(url, feature_map, conf_list, infer_class_list, params):
 
 	else:
 		return {"status": "ok"}
+
+
+def backboneDnnInference(data):
+
+
+	response_request = {"status": "ok"}
+
+	img_tensor = torch.Tensor(img).to(device)
+
+	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+
+	starter.record()
+
+	response_request = sendToCloud_Backbone(config.url_cloud_backbone_alt, data)
+
+	ender.record()
+	torch.cuda.synchronize()
+	inf_time = starter.elapsed_time(ender)
+
+	del data["img"]
+
+	if (response_request["status"]=="ok"):
+		saveInferenceTime(inf_time, data)
+
+	return response_request
+
+
+def sendToCloud_Backbone(url, data):
+	"""
+	This functions sends output data from a partitioning layer from edge device to cloud server.
+	This function also sends the info of partitioning layer to the cloud.
+	Argments:
+
+	feature_map (Tensor): output data from partitioning layer
+	partitioning_layer (int): partitioning layer decided by the optimization method. 
+	"""
+
+	
+
+	try:
+		r = requests.post(url, json=data, timeout=config.timeout)
+	except requests.exceptions.ConnectTimeout:
+		return {"status": "error"}
+
+	if (r.status_code != 200 and r.status_code != 201):
+		return {"status": "error"}
+
+	else:
+		return {"status": "ok"}

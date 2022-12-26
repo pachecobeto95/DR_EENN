@@ -194,3 +194,5 @@ def sendToCloud(url, feature_map, conf_list, infer_class_list, params):
 
 	else:
 		return {"status": "ok"}
+
+
