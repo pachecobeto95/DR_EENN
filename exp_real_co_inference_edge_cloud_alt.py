@@ -46,7 +46,7 @@ def sendDistortedImage(data, target, nr_branch_edge, p_tar, distortion_lvl, dist
 	sendImage(config.url_ee_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 	sendImage(config.url_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 	sendImage(config.url_naive_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
-	sendImage(config.url_cloud_backbone_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
+	sendImage(config.url_edge_backbone_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
 
 def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim):
 
