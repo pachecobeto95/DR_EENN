@@ -199,7 +199,7 @@ def backboneDnnInference(data):
 
 	response_request = {"status": "ok"}
 
-	img_tensor = torch.Tensor(img).to(device)
+	img_tensor = torch.Tensor(data["img"]).to(device)
 
 	starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
@@ -214,9 +214,20 @@ def backboneDnnInference(data):
 	del data["img"]
 
 	if (response_request["status"]=="ok"):
-		saveInferenceTime(inf_time, data)
+		saveInferenceTimeBackbone(inf_time, data)
 
 	return response_request
+
+def saveInferenceTimeBackbone(inf_time, params):
+
+	save_inf_time_path = os.path.join(config.DIR_NAME, "inference_time_backbone%s.csv"%(params["mode"]) )
+
+
+	result = {"inference_time": [inf_time]}
+	result.update(params)
+
+	df = pd.DataFrame(result)
+	df.to_csv(save_inf_time_path, mode='a', header=not os.path.exists(save_inf_time_path) )
 
 
 def sendToCloud_Backbone(url, data):
