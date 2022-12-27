@@ -110,7 +110,7 @@ def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_d
 
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	return val_loader, test_loader
+	return val_loader
 
 
 
