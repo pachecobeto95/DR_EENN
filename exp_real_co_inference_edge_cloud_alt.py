@@ -52,9 +52,7 @@ def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar
 
 
 	val_loader, test_loader = utils.load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_dim, dim)
-	print(len(val_loader), len(test_loader))
 
-	sys.exit()
 
 	for i, (data, target) in enumerate(test_loader, 1):
 
