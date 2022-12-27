@@ -6,11 +6,11 @@ import torchvision.transforms as transforms
 
 
 
-def sendImage(url, img, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl):
+def sendImage(url, img, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl, mode):
 	
 	data_dict = {"img": img.detach().cpu().numpy().tolist(), "p_tar": str(p_tar), "target": str(target), "nr_branch_edge": str(nr_branch_edge), 
 	"distortion_type": distortion_type,
-	"distortion_lvl": str(distortion_lvl), "mode": "_alt"}
+	"distortion_lvl": str(distortion_lvl), "mode": mode}
 
 	try:
 		r = requests.post(url, json=data_dict, timeout=config.timeout)
@@ -43,10 +43,10 @@ def applyDistortiontransformation(data, distortion_lvl):
 
 
 def sendDistortedImage(data, target, nr_branch_edge, p_tar, distortion_lvl, distortion_type):
-	sendImage(config.url_ee_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
-	sendImage(config.url_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
-	sendImage(config.url_naive_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
-	sendImage(config.url_edge_backbone_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl)
+	sendImage(config.url_ee_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl, mode="eednn")
+	sendImage(config.url_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl, mode="ensemble")
+	sendImage(config.url_naive_ensemble_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl, mode="naive_ensemble")
+	sendImage(config.url_edge_backbone_alt, data, target, nr_branch_edge, p_tar, distortion_type, distortion_lvl, mode="backbone")
 
 def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim):
 
