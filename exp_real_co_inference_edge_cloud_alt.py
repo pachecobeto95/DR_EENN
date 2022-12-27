@@ -50,11 +50,11 @@ def sendDistortedImage(data, target, nr_branch_edge, p_tar, distortion_lvl, dist
 
 def sendDistortedImageSet(dataset_path, indices_path, distortion_lvl_list, p_tar, nr_branch_edge, n_classes, input_dim, dim):
 
-	print("entrou")
 
-	test_loader = utils.load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_dim, dim)
-	
-	print("saiu")	
+	val_loader, test_loader = utils.load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_dim, dim)
+	print(len(val_loader), len(test_loader))
+
+	sys.exit()
 
 	for i, (data, target) in enumerate(test_loader, 1):
 
@@ -89,7 +89,7 @@ def main(args):
 		"pristine_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.n_branches, args.model_id) )
 
 
-	p_tar_list = [0.7, 0.8, 0.85, 0.9]
+	p_tar_list = [0.7, 0.8, 0.9]
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
@@ -101,7 +101,7 @@ def main(args):
 	
 	#This line defines the number of side branches processed at the edge
 	#nr_branch_edge_list = np.arange(2, args.n_branches+1)
-	nr_branch_edge_list = [3, 2]
+	nr_branch_edge_list = [3]
 
 
 	distortion_lvl_list = config.distortion_level_dict["gaussian_blur"]
