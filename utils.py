@@ -91,18 +91,28 @@ def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_d
 		#transforms.Normalize(mean = mean, std = std),
 		])
 
+	val_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 	test_set = datasets.ImageFolder(dataset_path, transform=transformations_test)
 
+
+	val_idx_path = os.path.join(save_indices_path, "validation_idx_caltech256_1.npy")
 	test_idx_path = os.path.join(indices_path, "test_idx_caltech256.npy")
 
 	#Load the indices to always use the same indices for training, validating and testing.
+	val_idx = np.load(val_idx_path)	
 	test_idx = np.load(test_idx_path)
+
+
+	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
+	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
 
 	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	return test_loader
+	return val_loader, test_loader
+
+
 
 
 
