@@ -87,7 +87,7 @@ def main(args):
 		"pristine_ee_model_mobilenet_%s_branches_id_%s.pth"%(args.n_branches, args.model_id) )
 
 
-	p_tar_list = [0.7, 0.8, 0.9]
+	p_tar_list = [0.8, 0.9]
 
 	indices_path = os.path.join(config.DIR_NAME, "indices")
 	
