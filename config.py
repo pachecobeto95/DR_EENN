@@ -26,12 +26,12 @@ timeout = 10
 
 nr_class_dict = {"caltech256": 258}
 #blur_levels = [0.1, 0.2, 0.5, 0.8, 0.9, 1, 1.2, 1.5, 1.8, 2]
-blur_levels = [0.1, 0.5, 0.8, 1, 1.5]
-#distortion_level_dict = {"pristine": [0], "gaussian_blur": [0.1, 0.2, 0.5, 0.8, 0.9, 1, 1.2, 1.5, 1.8, 2, 2.2, 2.5, 2.7, 2.8, 3], 
-#"gaussian_noise": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-
-distortion_level_dict = {"pristine": [0], "gaussian_blur": blur_levels, 
+#blur_levels = [0.1, 0.5, 0.8, 1, 1.5]
+distortion_level_dict = {"pristine": [0], "gaussian_blur": [0.1, 0.2, 0.5, 0.8, 0.9, 1, 1.2, 1.5, 1.8, 2, 2.2, 2.5, 2.7, 2.8, 3], 
 "gaussian_noise": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+
+#distortion_level_dict = {"pristine": [0], "gaussian_blur": blur_levels, 
+#"gaussian_noise": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
 
 
 distortion_type_list = ["pristine", "gaussian_blur", "gaussian_noise"]
