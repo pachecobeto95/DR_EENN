@@ -329,7 +329,7 @@ def compute_inf_time_ee(df, df_ee_inf_time, distortion_lvl, n_branches_edge, n_e
 
 	std_flop = std_flop/n_samples
 	
-	return avg_inf_time, std_inf_time, avg_flops, std_flop
+	return avg_inf_time, std_inf_time, avg_flops, math.sqrt(std_flop)
 
 def compute_inf_time_ensemble(df, df_ee_inf_time, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
 
@@ -372,7 +372,7 @@ def compute_inf_time_ensemble(df, df_ee_inf_time, distortion_lvl, n_branches_edg
 
 	std_flop = std_flop/n_samples
 	
-	return avg_inf_time, std_inf_time, avg_flops, std_flop
+	return avg_inf_time, std_inf_time, avg_flops, math.sqrt(std_flop)
 
 
 def compute_inf_time_naive_ensemble(df, df_ee_inf_time, distortion_lvl, n_branches_edge, n_exits, threshold, distortion_type):
