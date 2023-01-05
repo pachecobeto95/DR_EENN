@@ -229,7 +229,6 @@ def extract_inf_time(df_backbone, df_ee, df_ee_inf_time, df_backbone_inf_time, n
 
 	std_flop_backbone_list, std_flop_ee_list, std_flop_ensemble_list, std_flop_naive_ensemble_list  = [], [], [], []
 
-
 	for distortion_lvl in distortion_levels:
 		print("Threshold: %s, Nr of branches at the Edge: %s, Distortion Lvl: %s"%(threshold, n_branch_edge, distortion_lvl))
 
@@ -248,6 +247,10 @@ def extract_inf_time(df_backbone, df_ee, df_ee_inf_time, df_backbone_inf_time, n
 		std_inf_time_backbone_list.append(std_inf_time_backbone), std_inf_time_ee_list.append(std_inf_time_ee), std_inf_time_ensemble_list.append(std_inf_time_ensemble)
 		std_inf_time_naive_ensemble_list.append(std_inf_time_naive_ensemble)
 
+		std_flop_backbone_list.append(std_flops_ee), std_flop_ee_list.append(std_flops_ee), std_flop_ensemble_list.append(std_flops_ensemble)
+
+
+
 	return {"inf_time_ee": inf_time_ee_list, "inf_time_backbone": inf_time_backbone_list, "inf_time_ensemble": inf_time_ensemble_list, 
 	"inf_time_naive_ensemble": inf_time_naive_ensemble_list, 
 	"flops_backbone": flops_backbone_list, "flops_ee": flops_ee_list, "flops_ensemble": flops_ensemble_list, 
@@ -255,7 +258,10 @@ def extract_inf_time(df_backbone, df_ee, df_ee_inf_time, df_backbone_inf_time, n
 	"std_inf_time_backbone": std_inf_time_backbone_list,
 	"std_inf_time_ee": std_inf_time_ee_list,
 	"std_inf_time_ensemble": std_inf_time_ensemble_list,
-	"std_inf_time_naive_ensemble": std_inf_time_naive_ensemble_list}
+	"std_inf_time_naive_ensemble": std_inf_time_naive_ensemble_list,
+	"std_flop_backbone": std_flop_backbone_list,
+	"std_flop_ee": std_flop_ee_list,
+	"std_flop_ensemble": std_flop_ensemble_list}
 
 def compute_inf_time_backbone(df, df_backbone_inf_time, distortion_lvl, distortion_type):
 	df = extractData(df, distortion_lvl, distortion_type)
@@ -458,7 +464,7 @@ def main(args):
 	df_backbone_inf_time = df_backbone_inf_time.loc[:, ~df_backbone_inf_time.columns.str.contains('^Unnamed')]
 
 	save_results_path = os.path.join(save_results_dir, 
-		"%s_model_ensemble_analysis_%s_branches_%s_%s_final_final_final.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
+		"%s_model_ensemble_analysis_%s_branches_%s_%s_GREAT_FINAL.csv"%(args.distortion_type_model, args.n_branches, args.model_name, args.dataset_name))
 
 
 	exp_ensemble_analysis(args, df_backbone, df_ee, df_ee_inf_time, df_backbone_inf_time, save_results_path, distortion_type="gaussian_blur")
