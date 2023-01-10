@@ -200,16 +200,16 @@ class B_MobileNet(nn.Module):
 
   def forwardTrain(self, x):
 
-    prob_vector_list, conf_list, class_list  = [], [], []
-    inference_time_list = []
+    conf_list, class_list  = [], []
+    #inference_time_list = []
 
-    cumulative_inference_time = 0.0
+    #cumulative_inference_time = 0.0
 
-    starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+    #starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
     for i, exitBlock in enumerate(self.exits):
       
-      starter.record()
+      #starter.record()
 
       x = self.stages[i](x)
       output_branch = exitBlock(x)
@@ -217,17 +217,17 @@ class B_MobileNet(nn.Module):
       prob_vector = self.softmax(output_branch)
       conf, infered_class = torch.max(prob_vector, 1)
             
-      ender.record()
-      torch.cuda.synchronize()
-      curr_time = starter.elapsed_time(ender)
+      #ender.record()
+      #torch.cuda.synchronize()
+      #curr_time = starter.elapsed_time(ender)
 
-      cumulative_inference_time += curr_time
+      #cumulative_inference_time += curr_time
 
-      inference_time_list.append(cumulative_inference_time)
+      #inference_time_list.append(cumulative_inference_time)
 
-      conf_list.append(conf), class_list.append(infered_class-1), prob_vector_list.append(prob_vector)
+      conf_list.append(conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector)
 
-    starter.record()
+    #starter.record()
 
     x = self.stages[-1](x)
     x = x.mean(3).mean(2)
@@ -235,20 +235,21 @@ class B_MobileNet(nn.Module):
     output = self.fully_connected(x)
     prob_vector = self.softmax(output)
 
-    ender.record()
-    torch.cuda.synchronize()
-    curr_time = starter.elapsed_time(ender)
+    #ender.record()
+    #torch.cuda.synchronize()
+    #curr_time = starter.elapsed_time(ender)
 
-    cumulative_inference_time += curr_time
+    #cumulative_inference_time += curr_time
 
-    inference_time_list.append(cumulative_inference_time)
+    #inference_time_list.append(cumulative_inference_time)
 
     infered_conf, infered_class = torch.max(prob_vector, 1)
     
     conf_list.append(infered_conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
-    prob_vector_list.append(prob_vector)
+    #prob_vector_list.append(prob_vector)
 
-    return prob_vector_list, conf_list, class_list, inference_time_list
+    #return prob_vector_list, conf_list, class_list, inference_time_list
+    return conf_list, class_list
 
   def forwardEval(self, x, p_tar):
     output_list, conf_list, class_list  = [], [], []
