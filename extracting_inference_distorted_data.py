@@ -47,14 +47,14 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
 	target_list = np.array(target_list)
-	inference_time_list = np.array(inference_time_list)
-	flop_list = np.array(flop_list)
+	#inference_time_list = np.array(inference_time_list)
+	#flop_list = np.array(flop_list)
 
 	results = {"distortion_type_model": [dist_type_model]*len(target_list),
 	"distortion_type_data": [dist_type_data]*len(target_list), "distortion_lvl": [distortion_lvl]*len(target_list), 
-	"target": target_list,
-	"inference_time": inference_time_list,
-	"flop": flop_list}
+	"target": target_list}
+	#"inference_time": inference_time_list,
+	#"flop": flop_list}
 
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
