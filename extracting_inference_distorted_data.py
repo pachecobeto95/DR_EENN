@@ -119,13 +119,13 @@ def main(args):
 		print("Model: %s"%(distortion_type_model))
 
 		extracting_inference_data(args, ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
-			device, distortion_type_model, dist_level_dict, distortion_type_data="pristine")
+			device, distortion_type_model, dist_level_dict, dist_type_data="pristine")
 
 		extracting_inference_data(args, ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
-			device, distortion_type_model, dist_level_dict, distortion_type_data="gaussian_blur")
+			device, distortion_type_model, dist_level_dict, dist_type_data="gaussian_blur")
 
 		extracting_inference_data(args, ee_model, input_dim, dim, inference_data_path, dataset_path, indices_path, 
-			device, distortion_type_model, dist_level_dict, distortion_type_data="gaussian_noise")
+			device, distortion_type_model, dist_level_dict, dist_type_data="gaussian_noise")
 
 
 
