@@ -200,11 +200,9 @@ class B_MobileNet(nn.Module):
 
   def compute_entropy(self, prob_vector):
 
-    entropy = 0.0 
-    for prob in prob_vector:
-      entropy += prob*np.log(prob)
+    entropy = torch.dot(prob_vector, torch.log(prob_vector))
 
-    return entropy
+    return entropy.item()
 
   def forwardTrain(self, x):
 
