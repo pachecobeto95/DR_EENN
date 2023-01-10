@@ -113,12 +113,6 @@ def load_caltech256_inference_time_exp(args, dataset_path, indices_path, input_d
 	return val_loader
 
 
-
-
-
-
-
-
 def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, distortion_type, distortion_values):
 	mean, std = [0.457342265910642, 0.4387686270106377, 0.4073427106250871], [0.26753769276329037, 0.2638145880487105, 0.2776826934044154]
 
@@ -171,16 +165,15 @@ def load_caltech256(args, dataset_path, save_indices_path, input_dim, dim, disto
 		#Save the training, validation and testing indices.
 		np.save(train_idx_path, train_idx), np.save(val_idx_path, val_idx), np.save(test_idx_path, test_idx)
 
-	#train_data = torch.utils.data.Subset(train_set, indices=train_idx)
-	#val_data = torch.utils.data.Subset(val_set, indices=val_idx)
+	train_data = torch.utils.data.Subset(train_set, indices=train_idx)
+	val_data = torch.utils.data.Subset(val_set, indices=val_idx)
 	test_data = torch.utils.data.Subset(test_set, indices=test_idx)
 
-	#train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size_train, shuffle=True, num_workers=4, pin_memory=True)
-	#val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size_train, shuffle=True, num_workers=4, pin_memory=True)
+	val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, num_workers=4, pin_memory=True)
 	test_loader = torch.utils.data.DataLoader(test_data, batch_size=1, num_workers=4, pin_memory=True)
 
-	#return train_loader, val_loader, test_loader
-	return 0, 0, test_loader
+	return train_loader, val_loader, test_loader
 
 
 def compute_metrics(criterion, output_list, conf_list, class_list, target, loss_weights):
