@@ -22,7 +22,7 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 
 	n_exits = n_branches + 1
 	conf_branches_list, infered_class_branches_list, target_list, correct_list = [], [], [], []
-	flop_list, inference_time_list = [], []
+	#flop_list, inference_time_list = [], []
 
 	model.eval()
 
@@ -31,14 +31,14 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 
 			data, target = data.to(device), target.to(device)
 
-			conf_branches, infered_class_branches, inference_time, flop = model(data)
+			conf_branches, infered_class_branches = model(data)
 
 			conf_branches_list.append([conf.item() for conf in conf_branches])
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
-			inference_time_list.append(inference_time)
-			flop_list.append(flop)
+			#inference_time_list.append(inference_time)
+			#lop_list.append(flop)
 
 			del data, target
 			torch.cuda.empty_cache()
