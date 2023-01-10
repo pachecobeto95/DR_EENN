@@ -71,7 +71,7 @@ def extracting_inference_data(args, model, input_dim, dim, inference_data_path, 
 	for distortion_lvl in distortion_lvl_list:
 		print("Distortion Level: %s"%(distortion_lvl))
 
-		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, distortion_type_data, distortion_lvl)
+		_, _, test_loader = utils.load_caltech256(args, dataset_path, indices_path, input_dim, dim, dist_type_data, distortion_lvl)
 
 		result = run_inference_data(model, test_loader, args.n_branches, dist_type_model, dist_type_data, distortion_lvl, device)
 
