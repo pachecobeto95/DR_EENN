@@ -290,6 +290,7 @@ class Early_Exit_DNN(nn.Module):
 		"""
 
 		conf_list, class_list  = [], [], []
+		print("aqui")
 
 		for i, exitBlock in enumerate(self.exits):
 
