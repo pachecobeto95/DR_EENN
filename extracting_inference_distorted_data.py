@@ -37,6 +37,7 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
+			print(entropy_branches)
 			#inference_time_list.append(inference_time)
 			#lop_list.append(flop)
 
