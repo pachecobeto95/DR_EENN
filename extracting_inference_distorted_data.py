@@ -71,6 +71,8 @@ def save_result(result, save_path):
 
 def extracting_inference_data(args, model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, dist_type_model, dist_level_dict, dist_type_data):
 
+	print(dist_type_data, dist_level_dict[dist_type_data])
+	
 	distortion_lvl_list = dist_level_dict[dist_type_data]
 
 	for distortion_lvl in distortion_lvl_list:
