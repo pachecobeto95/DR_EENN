@@ -21,7 +21,7 @@ def load_distorted_ee_dnn(args, pristine_model_path, blur_model_path, noise_mode
 def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_type_data, distortion_lvl, device):
 
 	n_exits = n_branches + 1
-	conf_branches_list, infered_class_branches_list, target_list, correct_list = [], [], [], []
+	conf_branches_list, infered_class_branches_list, target_list, correct_list, entropy_list = [], [], [], [], []
 	#flop_list, inference_time_list = [], []
 
 	model.eval()
@@ -31,9 +31,9 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 
 			data, target = data.to(device), target.to(device)
 
-			conf_branches, infered_class_branches = model(data)
+			entropy_branches, conf_branches, infered_class_branches = model(data)
 
-			conf_branches_list.append([conf.item() for conf in conf_branches])
+			conf_branches_list.append([conf.item() for conf in conf_branches]), entropy_list.append(entropy_branches)
 			infered_class_branches_list.append([inf_class.item() for inf_class in infered_class_branches])    
 			correct_list.append([infered_class_branches[i].eq(target.view_as(infered_class_branches[i])).sum().item() for i in range(n_exits)])
 			target_list.append(target.item())
@@ -44,6 +44,7 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 			torch.cuda.empty_cache()
 
 	conf_branches_list = np.array(conf_branches_list)
+	entropy_list = np.array(entropy_list)
 	infered_class_branches_list = np.array(infered_class_branches_list)
 	correct_list = np.array(correct_list)
 	target_list = np.array(target_list)
@@ -59,7 +60,8 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 	for i in range(n_exits):
 		results.update({"conf_branch_%s"%(i+1): conf_branches_list[:, i],
 			"infered_class_branches_%s"%(i+1): infered_class_branches_list[:, i],
-			"correct_branch_%s"%(i+1): correct_list[:, i]}) 
+			"correct_branch_%s"%(i+1): correct_list[:, i],
+			"entropy_branch_%s"%(i+1): entropy_list[:, i]}) 
 
 	return results
 
@@ -72,7 +74,7 @@ def save_result(result, save_path):
 def extracting_inference_data(args, model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, dist_type_model, dist_level_dict, dist_type_data):
 
 	print(dist_type_data, dist_level_dict[dist_type_data])
-	
+
 	distortion_lvl_list = dist_level_dict[dist_type_data]
 
 	for distortion_lvl in distortion_lvl_list:

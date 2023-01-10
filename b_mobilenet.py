@@ -198,14 +198,24 @@ class B_MobileNet(nn.Module):
     self.fully_connected = self.model.classifier
 
 
+  def compute_entropy(self, prob_vector):
+
+    entropy = 0.0 
+    for prob in prob_vector:
+      entropy += prob*np.log(prob)
+
+    return entropy
+
   def forwardTrain(self, x):
 
-    conf_list, class_list  = [], []
+    entropy_list, conf_list, class_list = [], [], []
     #inference_time_list = []
 
     #cumulative_inference_time = 0.0
 
     #starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+
+
 
     for i, exitBlock in enumerate(self.exits):
       
@@ -216,6 +226,7 @@ class B_MobileNet(nn.Module):
 
       prob_vector = self.softmax(output_branch)
       conf, infered_class = torch.max(prob_vector, 1)
+      entropy = self.compute_entropy(prob_vector)
             
       #ender.record()
       #torch.cuda.synchronize()
@@ -226,6 +237,7 @@ class B_MobileNet(nn.Module):
       #inference_time_list.append(cumulative_inference_time)
 
       conf_list.append(conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector)
+      entropy_list.append(entropy)
 
     #starter.record()
 
@@ -234,6 +246,8 @@ class B_MobileNet(nn.Module):
 
     output = self.fully_connected(x)
     prob_vector = self.softmax(output)
+    entropy = self.compute_entropy(prob_vector)
+
 
     #ender.record()
     #torch.cuda.synchronize()
@@ -247,9 +261,11 @@ class B_MobileNet(nn.Module):
     
     conf_list.append(infered_conf), class_list.append(infered_class-1)#, prob_vector_list.append(prob_vector.cpu().numpy().reshape(self.n_classes))
     #prob_vector_list.append(prob_vector)
+    entropy_list.append(entropy)
+
 
     #return prob_vector_list, conf_list, class_list, inference_time_list
-    return conf_list, class_list
+    return entropy_list, conf_list, class_list
 
   def forwardEval(self, x, p_tar):
     output_list, conf_list, class_list  = [], [], []
