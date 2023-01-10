@@ -64,6 +64,11 @@ def run_inference_data(model, test_loader, n_branches, dist_type_model, dist_typ
 	return results
 
 
+def save_result(result, save_path):
+	df = pd.DataFrame(np.array(list(result.values())).T, columns=list(result.keys()))
+	df.to_csv(save_path, mode='a', header=not os.path.exists(save_path) )
+
+
 def extracting_inference_data(args, model, input_dim, dim, inference_data_path, dataset_path, indices_path, device, dist_type_model, dist_level_dict, dist_type_data):
 
 	distortion_lvl_list = dist_level_dict[dist_type_data]
