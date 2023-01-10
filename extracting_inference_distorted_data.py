@@ -115,8 +115,8 @@ def main(args):
 
 	distortion_type_list = ["pristine", "gaussian_blur", "gaussian_noise"]
 
-	dist_level_dict = {"pristine": [0], "gaussian_blur": [0.1, 0.5, 0.8, 1, 1.5, 2, 3, 4, 5], 
-	"gaussian_noise": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+	dist_level_dict = {"pristine": [0], "gaussian_blur": [1, 2, 3, 4, 5], 
+	"gaussian_noise": [1, 10, 20, 30, 40]}
 
 
 	for ee_model, distortion_type_model in zip(distorted_ee_models, distortion_type_list):

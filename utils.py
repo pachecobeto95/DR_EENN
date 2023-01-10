@@ -43,8 +43,8 @@ class DistortionApplier(object):
 
 	def gaussian_blur(self, img, distortion_lvl):
 		#image = np.array(img)
-		#kernel_size = int(4*np.ceil(distortion_lvl/2)+1) if (distortion_lvl < 1) else 	4*distortion_lvl+1
-		kernel_size = int(2*np.ceil(distortion_lvl/2)+1) if ( isinstance(distortion_lvl, float) ) else 	2*distortion_lvl+1
+		kernel_size = int(4*np.ceil(distortion_lvl/2)+1) if (distortion_lvl < 1) else 	4*distortion_lvl+1
+		#kernel_size = int(2*np.ceil(distortion_lvl/2)+1) if ( isinstance(distortion_lvl, float) ) else 	2*distortion_lvl+1
 		blurrer = transforms.GaussianBlur(kernel_size=(kernel_size, kernel_size), sigma=distortion_lvl)
 		return blurrer(img)
 
