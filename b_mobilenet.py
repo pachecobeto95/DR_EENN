@@ -200,10 +200,7 @@ class B_MobileNet(nn.Module):
 
   def compute_entropy(self, prob_vector):
 
-
-    print(prob_vector.shape)
-
-    entropy = torch.dot(prob_vector, torch.log(prob_vector))
+    entropy = torch.dot(prob_vector[0], torch.log(prob_vector[0]))
 
     return entropy.item()
 
