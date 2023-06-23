@@ -13,20 +13,21 @@ def main(args):
 	dataset_path = config.dataset_path_dict[args.dataset_name]		
 	indices_path = config.indices_path_dict[args.dataset_name]
 
+	dir_path = os.path.join(".", "models", "caltech256", "mobilenet")
 
-	model_path = os.path.join(config.DIR_NAME, "undistorted_models", config.dataset_name, config.model_name, 
-		"ee_model_%s_%s.pth"%(config.model_name, args.model_id))
+	model_path = os.path.join(dir_path, "pristine_ee_model_mobilenet_1_branches_id_3.pth")
 	
-	save_model_path = os.path.join(config.DIR_NAME, "distorted_models", config.dataset_name, config.model_name, 
-		"%s_ee_model_%s_%s.pth"%(args.distortion_type, config.model_name, args.model_id))
+	save_model_path = os.path.join(dir_path, "all_distortion_ee_model_mobilenet_3_branches_id_1.pth")
 
-	history_path = os.path.join(config.DIR_NAME, "history", config.dataset_name, config.model_name, 
-		"distorted_%s_history_ee_model_%s_%s.csv"%(, config.model_name, args.model_id))
+	history_path = os.path.join(".", "all_distortion_history_ee_model_mobilenet.csv")
 
 	device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 	if not (os.path.exists(indices_path)):
 		os.makedirs(indices_path)
+
+	
+	sys.exit()
 
 	distortion_values = config.distortion_level_dict[args.distortion_type]
 	train_loader, val_loader, test_loader = utils.load_caltech256(args, dataset_path, indices_path, distortion_values)
@@ -120,6 +121,10 @@ if (__name__ == "__main__"):
 		help='Exit Type. Default: %s'%(config.exit_type))
 
 	parser.add_argument('--distribution', type=str, default=config.distribution, 
+
+
+
+
 		help='Distribution of the early exits. Default: %s'%(config.distribution))
 
 	parser.add_argument('--pretrained', type=bool, default=config.pretrained, help='Backbone DNN is pretrained.')
