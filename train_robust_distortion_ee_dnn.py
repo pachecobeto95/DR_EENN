@@ -26,7 +26,7 @@ def main(args):
 	if not (os.path.exists(indices_path)):
 		os.makedirs(indices_path)
 
-	
+	print(device)
 	sys.exit()
 
 	distortion_values = config.distortion_level_dict[args.distortion_type]
