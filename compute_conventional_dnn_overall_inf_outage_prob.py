@@ -28,7 +28,7 @@ def computeOverallAccuracy(df_batch, threshold, n_branches):
 
 	overall_acc = float(correct)/n_samples
 
-	print(correct, n_samples)
+	return overall_acc
 
 def computeInferenceOutageProb(df_batches, threshold, n_branches):
 	outage = 0
