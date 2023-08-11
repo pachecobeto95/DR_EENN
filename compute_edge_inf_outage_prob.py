@@ -65,7 +65,7 @@ def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches
 	outage_rounds = []
 
 	for n_round in range(n_rounds):
-		print("Number of Rounds: %s"%(n_round))
+		#print("Number of Rounds: %s"%(n_round))
 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
@@ -111,11 +111,18 @@ def save_outage_results(outage, savePath):
 
 def main(args):
 
-	edge_inf_outage_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023", 
+	#edge_inf_outage_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023", 
+	#	"edge_inf_outage_prob_%s_branches_id_%s.csv"%(args.n_branches, args.model_id))
+	
+	#inference_data_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
+	#	"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
+
+	edge_inf_outage_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
 		"edge_inf_outage_prob_%s_branches_id_%s.csv"%(args.n_branches, args.model_id))
 	
-	inference_data_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
+	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
+
 
 	threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
 
@@ -126,7 +133,7 @@ def main(args):
 	df_noise = df_inf_data[df_inf_data.distortion_type_data == "gaussian_noise"]
 
 	for threshold in threshold_list:
-		print("Threshold: %s"%(threshold))
+		#print("Threshold: %s"%(threshold))
 
 		pristine_outage = getInfOutageProbThreshold(df_pristine, threshold, args.n_branches, args.n_rounds, 
 			args.n_batches, args.inf_mode, dist_type_data="pristine")
