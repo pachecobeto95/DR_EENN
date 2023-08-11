@@ -23,6 +23,12 @@ max_patience = 20
 model_id = 1
 distribution = "linear"
 timeout = 10
+threshold_start = 0.5
+threshold_end = 1.0
+threshold_step = 0.02
+n_rounds_outage = 100
+batch_size_outage = 256
+
 
 nr_class_dict = {"caltech256": 258}
 blur_levels = [0.1, 0.2, 0.5, 0.8, 0.9, 1, 1.2, 1.5, 1.8, 2]
