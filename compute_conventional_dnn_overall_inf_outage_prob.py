@@ -20,23 +20,23 @@ def compute_confidence_interval(outage_rounds, confidence=0.95):
 
 	return conf_interval
 
-def computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode):
+def computeOverallAccuracy(df_batch, threshold, n_branches):
 
 	n_samples = len(df_batch)
 
 	print(df_batch.columns)
 
-def computeInferenceOutageProb(df_batches, threshold, n_branches, inf_mode):
+def computeInferenceOutageProb(df_batches, threshold, n_branches):
 	outage = 0
 	for df_batch in df_batches:
-		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode)
+		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches)
 		outage += 1 if(overall_acc < threshold) else 0
 
 	outage_prob = float(outage)/len(df_batches)
 	return outage_prob
 
 
-def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches, inf_mode):
+def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches):
 
 	outage_rounds = []
 
@@ -46,7 +46,7 @@ def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
 
-		outage_prob = computeInferenceOutageProb(df_batches, threshold, n_branches, inf_mode)
+		outage_prob = computeInferenceOutageProb(df_batches, threshold, n_branches)
 
 		outage_rounds.append(outage_prob)
 
@@ -59,7 +59,7 @@ def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches
 	return avg_outage, ic_outage[0], ic_outage[1] 
 
 
-def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, inf_mode, dist_type_data):
+def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, dist_type_data):
 	
 	avg_outage_list, bottom_ic_outage_list, upper_ic_outage_list = [], [], []
 
@@ -103,9 +103,9 @@ def main(args):
 		print("Threshold: %s"%(threshold))
 
 		pristine_outage = getInfOutageProbThreshold(df_pristine, threshold, args.n_branches, args.n_rounds, 
-			args.n_batches, args.inf_mode, dist_type_data="pristine")
+			args.n_batches, dist_type_data="pristine")
 		blur_outage = getInfOutageProbThreshold(df_blur, threshold, args.n_branches, args.n_rounds, 
-			args.n_batches, args.inf_mode, dist_type_data="gaussian_blur")
+			args.n_batches, dist_type_data="gaussian_blur")
 		
 		save_outage_results(pristine_outage, edge_inf_outage_path)
 		save_outage_results(blur_outage, edge_inf_outage_path)
