@@ -100,7 +100,8 @@ def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, in
 	"upper_ic_outage": upper_ic_outage_list, "threshold": len(avg_outage_list)*[threshold], 
 	"distortion_lvl": df.distortion_lvl.unique(), 
 	"distortion_type_data": len(avg_outage_list)*[dist_type_data], 
-	"n_rounds": len(avg_outage_list)*[n_rounds], "n_batches": len(avg_outage_list)*[n_batches]}
+	"n_rounds": len(avg_outage_list)*[n_rounds], "n_batches": len(avg_outage_list)*[n_batches],
+	"inf_mode": len(avg_outage_list)*[inf_mode]}
 
 	return result_dict
 
