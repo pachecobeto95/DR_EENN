@@ -17,7 +17,23 @@ def main(args):
 
 	df_inf_data = pd.read_csv(inference_data_path)
 
-	print(df_inf_data.distortion_type_model.unique())
+	print(df_inf_data.distortion_type_data.unique())
+
+	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
+	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
+	df_noise = df_inf_data[df_inf_data.distortion_type_data == "gaussian_noise"]
+
+	for threshold in threshold_list:
+		#print("Threshold: %s"%(threshold))
+
+		pristine_outage = getInfOutageProbThreshold(df_pristine, threshold, args.n_branches, args.n_rounds, 
+			args.n_batches, args.inf_mode, dist_type_data="pristine")
+		blur_outage = getInfOutageProbThreshold(df_blur, threshold, args.n_branches, args.n_rounds, 
+			args.n_batches, args.inf_mode, dist_type_data="gaussian_blur")
+		
+		save_outage_results(pristine_outage, edge_inf_outage_path)
+		save_outage_results(blur_outage, edge_inf_outage_path)
+
 
 
 if (__name__ == "__main__"):
