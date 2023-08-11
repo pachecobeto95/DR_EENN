@@ -45,7 +45,7 @@ def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches
 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
-
+		print(threshold)
 		outage_prob = computeInferenceOutageProb(df_batches, threshold, n_branches)
 
 		outage_rounds.append(outage_prob)
