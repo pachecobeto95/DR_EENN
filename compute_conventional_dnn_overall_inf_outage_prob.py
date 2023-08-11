@@ -11,8 +11,7 @@ def main(args):
 		"overall_inf_outage_prob_%s_branches_id_%s.csv"%(args.n_branches, args.model_id))
 	
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
-		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
-
+		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
 
