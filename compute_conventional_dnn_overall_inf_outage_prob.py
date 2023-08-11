@@ -26,7 +26,7 @@ def computeOverallAccuracy(df_batch, threshold, n_branches):
 
 	correct = df_batch.correct.sum()
 
-
+	overall_acc = float(correct)/n_samples
 
 	print(correct, n_samples)
 
