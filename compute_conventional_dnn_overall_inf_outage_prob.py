@@ -17,7 +17,7 @@ def main(args):
 
 	df_inf_data = pd.read_csv(inference_data_path)
 
-	print(df_inf_data.columns)
+	print(df_inf_data.distortion_type_model.unique())
 
 
 if (__name__ == "__main__"):
