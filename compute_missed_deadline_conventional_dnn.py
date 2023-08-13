@@ -111,23 +111,23 @@ def save_outage_results(results, savePath):
 
 def main(args):
 
-	missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023", 
-		"missed_deadline_prob_3_branches_id_%s.csv"%(args.model_id))
+	#missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023", 
+	#	"missed_deadline_prob_3_branches_id_%s.csv"%(args.model_id))
 	
-	inference_data_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
-		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
-
-	inference_time_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
-		"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
-
-	#missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
-	#	"edge_inf_outage_prob_%s_branches_id_%s.csv"%(args.n_branches, args.model_id))
-	
-	#inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
+	#inference_data_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
 	#	"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
 
-	#inference_time_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
+	#inference_time_path = os.path.join(config.DIR_NAME, "inference_data_sbrc2023",  
 	#	"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
+
+	missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
+		"missed_deadline_prob_3_branches_id_%s.csv"%(args.n_branches, args.model_id))
+	
+	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
+		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
+
+	inference_time_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
+		"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
