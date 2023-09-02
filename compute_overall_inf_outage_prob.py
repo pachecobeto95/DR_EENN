@@ -62,7 +62,7 @@ def computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, n_batches
 	outage_rounds = []
 
 	for n_round in range(n_rounds):
-		#print("Number of Rounds: %s"%(n_round))
+		print("Number of Rounds: %s"%(n_round))
 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
@@ -128,7 +128,7 @@ def main(args):
 	df_noise = df_inf_data[df_inf_data.distortion_type_data == "gaussian_noise"]
 
 	for threshold in threshold_list:
-		#print("Threshold: %s"%(threshold))
+		print("Threshold: %s"%(threshold))
 
 		pristine_outage = getInfOutageProbThreshold(df_pristine, threshold, args.n_branches, args.n_rounds, 
 			args.n_batches, args.inf_mode, dist_type_data="pristine")
