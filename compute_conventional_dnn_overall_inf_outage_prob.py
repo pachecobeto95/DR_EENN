@@ -69,7 +69,7 @@ def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, di
 	for distortion_lvl in df.distortion_lvl.unique():
 		df_dist_lvl = df[df.distortion_lvl == distortion_lvl]
 
-		avg_outage, bottom_ic_outage, upper_ic_outage = computeAvgInferenceOutageProb(df, threshold, n_branches, n_rounds, 
+		avg_outage, bottom_ic_outage, upper_ic_outage = computeAvgInferenceOutageProb(df_dist_lvl, threshold, n_branches, n_rounds, 
 			n_batches)
 
 		avg_outage_list.append(avg_outage), bottom_ic_outage_list.append(bottom_ic_outage)
