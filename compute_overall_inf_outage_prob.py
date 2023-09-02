@@ -103,6 +103,10 @@ def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, in
 
 	return result_dict
 
+def save_outage_results(outage, savePath):
+	df = pd.DataFrame(outage)
+	df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
+
 
 def main(args):
 
