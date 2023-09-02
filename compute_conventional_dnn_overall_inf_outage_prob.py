@@ -116,8 +116,8 @@ def main(args):
 		blur_outage = getInfOutageProbThreshold(df_blur, threshold, args.n_branches, args.n_rounds, 
 			args.n_batches, dist_type_data="gaussian_blur")
 		
-		save_outage_results(pristine_outage, edge_inf_outage_path)
-		save_outage_results(blur_outage, edge_inf_outage_path)
+		save_outage_results(pristine_outage, overall_inf_outage_path)
+		save_outage_results(blur_outage, overall_inf_outage_path)
 
 
 
