@@ -85,6 +85,11 @@ def getInfOutageProbThreshold(df, threshold, n_branches, n_rounds, n_batches, di
 	return result_dict
 
 
+def save_outage_results(outage, savePath):
+	df = pd.DataFrame(outage)
+	df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
+
+
 def main(args):
 
 	overall_inf_outage_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
