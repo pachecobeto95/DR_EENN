@@ -86,7 +86,7 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, n_rounds, 
 	for distortion_lvl in df.distortion_lvl.unique():
 		df_dist_lvl = df[df.distortion_lvl == distortion_lvl]
 
-		avg_missed_deadline, bottom_ic_md, upper_ic_md = computeAvgMissedDeadlineProb(df, df_inf_time, threshold, 
+		avg_missed_deadline, bottom_ic_md, upper_ic_md = computeAvgMissedDeadlineProb(df_dist_lvl, df_inf_time, threshold, 
 			t_tar, n_rounds, n_batches)
 
 		avg_missed_deadline_list.append(avg_missed_deadline), bottom_ic_md_list.append(bottom_ic_md)
