@@ -134,7 +134,8 @@ def main(args):
 	df_inf_time = pd.read_csv(inference_time_path)
 
 
-	threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
+	#threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
+	threshold_list = [0.7, 0.8, 0.9]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
 	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
