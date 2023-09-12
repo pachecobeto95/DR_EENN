@@ -141,8 +141,8 @@ def main(args):
 	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
-	for t_tar in t_tar_list:
-		for threshold in threshold_list:
+	for threshold in threshold_list:
+		for t_tar in t_tar_list:
 			print("Ttar: %s, Threshold: %s"%(t_tar, threshold))
 
 			pristine_missed_deadline = getMissedDeadlineProbThreshold(df_pristine, df_inf_time, threshold, 
