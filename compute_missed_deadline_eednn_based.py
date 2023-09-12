@@ -139,7 +139,7 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, n_branches
 
 
 
-def save_outage_results(results, savePath):
+def save_missed_deadline_results(results, savePath):
 	df = pd.DataFrame(results)
 	df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
