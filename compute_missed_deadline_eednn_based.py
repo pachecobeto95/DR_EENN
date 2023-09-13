@@ -207,14 +207,12 @@ def main(args):
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
-	inference_time_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
-		"inference_time_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
+	inference_time_path = os.path.join(config.DIR_NAME, "ensemble_analysis_results", 
+		"pristine_model_ensemble_analysis_3_branches_mobilenet_caltech256_final_final_final.csv")
 
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
 
-	#threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
-	#threshold_list = np.arange(0.8, config.threshold_end, config.threshold_step)
 	threshold_list = [0.7, 0.8, 0.9]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
@@ -222,10 +220,7 @@ def main(args):
 	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
-	data_path = os.path.join("./ensemble_analysis_results", "pristine_model_ensemble_analysis_3_branches_mobilenet_caltech256_final_final_final.csv")
-	df = pd.read_csv(data_path)
-
-	print(df.columns)
+	print(df_inf_time.columns)
 
 	sys.exit()
 
