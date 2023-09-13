@@ -221,7 +221,7 @@ def main(args):
 	print(df_blur.distortion_lvl.unique())
 	print(df_inf_time.distortion_lvl.unique())
 
-	print(df_blur.p_tar.unique())
+	print(df_blur.columns)
 	print(df_inf_time.p_tar.unique())
 
 	sys.exit()
