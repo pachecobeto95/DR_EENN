@@ -122,7 +122,6 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, distortion
 
 
 def save_missed_deadline_results(results, savePath):
-	print(results)
 	df = pd.DataFrame(results)
 	df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
