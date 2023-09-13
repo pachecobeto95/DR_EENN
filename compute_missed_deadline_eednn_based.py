@@ -153,7 +153,10 @@ def main(args):
 
 	distortion_lvl_list = df_inf_time.distortion_lvl.unique()
 
-	print(df_inf_time.columns)
+	#Index(['Unnamed: 0', 'distortion_lvl', 'distortion_type', 'inference_time',
+	#	'mode', 'nr_branch_edge', 'p_tar', 'target'], dtype='object')
+
+	print(df_inf_time.mode.unique())
 
 	sys.exit()
 
