@@ -220,7 +220,7 @@ def main(args):
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
 	print(df_inf_time.columns)
-	print(df_inf_time[(df_inf_time.distortion_type == "gaussian_blur") & (df_inf_time.p_tar == 0.8)&(df_inf_time.distortion_lvl == 0.1)])
+	print(df_inf_time[(df_inf_time.distortion_type == "gaussian_blur") & (df_inf_time.p_tar == 0.8)&(df_inf_time.distortion_lvl == 0.1)].count())
 	sys.exit()
 
 
