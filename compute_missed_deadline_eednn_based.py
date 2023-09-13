@@ -207,8 +207,7 @@ def main(args):
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
-	inference_time_path = os.path.join(config.DIR_NAME, "ensemble_analysis_results", 
-		"inference_time.csv")
+	inference_time_path = os.path.join(config.DIR_NAME, "inference_time.csv")
 
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
