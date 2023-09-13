@@ -221,7 +221,7 @@ def main(args):
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
 	print(df_inf_time[(df_inf_time.distortion_type_data == "pristine") & (df_inf_time.threshold == df_inf_time.threshold.unique()[2])])
-	print(df_inf_time.threshold.unique())
+	print(df_inf_time.distortion_type_data.unique())
 	sys.exit()
 
 
