@@ -66,7 +66,8 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar, n_branc
 	for df_batch in df_batches:
 		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode)
 		inference_time = computeInferenceTime(df_inf_time, threshold, n_branches, inf_mode)
-		
+		print(inference_time)
+		sys.exit()
 		missed_deadline += 1 if((overall_acc < threshold) or (inference_time > t_tar)) else 0
 
 	missed_deadline_prob = float(missed_deadline)/len(df_batches)
