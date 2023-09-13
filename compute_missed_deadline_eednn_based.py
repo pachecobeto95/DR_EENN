@@ -31,23 +31,68 @@ def computeInferenceTime(df_batch, df_inf_time, threshold, n_branches, inf_mode)
 	inference_time = 0
 
 	remaining_data = df_batch
+
 	for i in range(1, n_exits+1):
 		current_n_samples = len(remaining_data)
 
 		if (i == n_exits):
 			early_exit_samples = np.ones(current_n_samples, dtype=bool)
+			overhead_layer = overhead
 		else:
 			early_exit_samples = remaining_data["%sconf_branch_%s"%(mode, i)] >= threshold
+			overhead_layer = 0
 
 		numexits[i-1] = remaining_data[early_exit_samples]["%sconf_branch_%s"%(mode, i)].count()
 
-		inference_time += numexits[i-1]*df_inf_time['inference_time_branches_4'].mean()
+		inference_time += numexits[i-1]*(overhead_layer + df_inf_time['inference_time_branches_%s'%(i)].mean())
 
 		remaining_data = remaining_data[~early_exit_samples]
 
 	avg_inference_time = inference_time/n_samples
 
 	return avg_inference_time
+
+
+def compute_inference_time_multi_branches(temp_list, n_branches, max_exits, threshold, df, df_device, overhead):
+	
+	avg_inference_time = 0
+	n_samples = len(df)
+	n_exits_device_list = []
+	n_remaining_samples = n_samples
+	remaining_data = df
+
+	for i in range(n_branches):
+
+		logit_branch = getLogitBranches(remaining_data, i)
+
+		conf_list, infered_class_list = get_confidences(logit_branch, i, temp_list)
+
+		early_exit_samples = conf_list >= threshold
+		
+		n_exit_branch = remaining_data[early_exit_samples]["conf_branch_%s"%(i+1)].count()
+		n_exits_device_list.append(n_exit_branch)
+
+		inf_time_branch_device = df_device["inferente_time_branch_%s"%(i+1)].mean()
+
+		avg_inference_time += n_exit_branch*inf_time_branch_device
+
+		n_remaining_samples -= n_exit_branch
+		inf_time_previous_branch = inf_time_branch_device
+
+		remaining_data = remaining_data[~early_exit_samples]
+
+
+	inf_time_branch_cloud = df["inferente_time_branch_%s"%(n_branches+1)].mean()-df["inferente_time_branch_%s"%(n_branches)].mean()
+
+	avg_inference_time += n_remaining_samples*(df_device["inferente_time_branch_%s"%(n_branches)].mean()+overhead+inf_time_branch_cloud)
+
+	avg_inference_time = avg_inference_time/float(n_samples)
+	early_classification_prob = sum(n_exits_device_list)/float(n_samples)
+
+	return avg_inference_time, early_classification_prob
+
+
+
 
 def computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode):
 
@@ -173,8 +218,17 @@ def main(args):
 	threshold_list = [0.7, 0.8, 0.9]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
+
 	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
+
+	data_path = os.path.join("./ensemble_analysis_results", "pristine_model_ensemble_analysis_3_branches_mobilenet_caltech256_final_final_final.csv")
+	df = pd.read_csv(data_path)
+
+	print(df.columns)
+
+	sys.exit()
+
 
 
 	for threshold in threshold_list:
