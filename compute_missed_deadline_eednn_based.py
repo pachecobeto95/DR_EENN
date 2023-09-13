@@ -166,7 +166,7 @@ def main(args):
 			blur_missed_deadline = getMissedDeadlineProbThreshold(df_blur, df_inf_time, threshold, t_tar, 
 				distortion_lvl_list, args.n_branches, args.n_rounds, args.n_batches, args.inf_mode, dist_type_data="gaussian_blur")
 			
-			save_missed_deadline_results(pristine_missed_deadline, missed_deadline_path)
+			#save_missed_deadline_results(pristine_missed_deadline, missed_deadline_path)
 			save_missed_deadline_results(blur_missed_deadline, missed_deadline_path)
 
 
