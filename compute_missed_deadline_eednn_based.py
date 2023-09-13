@@ -66,8 +66,7 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar, n_branc
 	for df_batch in df_batches:
 		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode)
 		inference_time = computeInferenceTime(df_inf_time, threshold, n_branches, inf_mode)
-		print(overall_acc, inference_time)
-		sys.exit()
+
 		missed_deadline += 1 if((overall_acc < threshold) or (inference_time > t_tar)) else 0
 
 	missed_deadline_prob = float(missed_deadline)/len(df_batches)
@@ -123,6 +122,7 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, distortion
 
 
 def save_missed_deadline_results(results, savePath):
+	print(results)
 	df = pd.DataFrame(results)
 	df.to_csv(savePath, mode='a', header=not os.path.exists(savePath))
 
