@@ -24,7 +24,9 @@ def compute_confidence_interval(outage_rounds, confidence=0.95):
 
 def computeInferenceTime(df_inf_time, threshold, n_branches, inf_mode):
 
-	print(df_inf_time[df_inf_time.p_tar == threshold])
+	df_inf_time = df_inf_time[(df_inf_time.p_tar == threshold) & (df_inf_time["mode"] == inf_mode)]
+
+	return df_inf_time.inference_time.mean()
 
 
 def computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode):
@@ -155,10 +157,6 @@ def main(args):
 
 	#Index(['Unnamed: 0', 'distortion_lvl', 'distortion_type', 'inference_time',
 	#	'mode', 'nr_branch_edge', 'p_tar', 'target'], dtype='object')
-
-	print(df_inf_time["mode"].unique())
-
-	sys.exit()
 
 
 	for threshold in threshold_list:
