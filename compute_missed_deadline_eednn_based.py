@@ -215,12 +215,10 @@ def main(args):
 	threshold_list = [0.7, 0.8, 0.9]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
-
-	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
+	#df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
-	print(df_inf_time.columns)
-	print(df_inf_time[(df_inf_time.distortion_type == "gaussian_blur") & (df_inf_time.p_tar == 0.8)&(df_inf_time.distortion_lvl == 0.1)].count())
+	print(df_blur.distortion_lvl.unique())
 	sys.exit()
 
 
