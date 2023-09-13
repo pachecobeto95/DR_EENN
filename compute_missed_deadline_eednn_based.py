@@ -112,7 +112,7 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, distortion
 	result_dict = {"avg_missed_deadline": avg_missed_deadline_list, 
 	"bottom_ic_missed_deadline": bottom_ic_md_list, 
 	"upper_ic_missed_deadline": upper_ic_md_list, "threshold": len(avg_missed_deadline_list)*[threshold], 
-	"t_tar": len(avg_missed_deadline_list)*[t_tar], "distortion_lvl": df.distortion_lvl.unique(), 
+	"t_tar": len(avg_missed_deadline_list)*[t_tar], "distortion_lvl": [distortion_lvl]*len(avg_missed_deadline_list), 
 	"distortion_type_data": len(avg_missed_deadline_list)*[dist_type_data], 
 	"n_rounds": len(avg_missed_deadline_list)*[n_rounds], "n_batches": len(avg_missed_deadline_list)*[n_batches],
 	"inf_mode": len(avg_missed_deadline_list)*[inf_mode]}
