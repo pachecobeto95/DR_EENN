@@ -90,6 +90,8 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, distortion
 		avg_missed_deadline, bottom_ic_md, upper_ic_md = computeAvgMissedDeadlineProb(df_dist_lvl, df_inf_time_dist_lvl, threshold, 
 			t_tar, n_rounds, n_batches)
 
+		print("Missed Deadline Probability: %s"%(avg_missed_deadline))
+
 		avg_missed_deadline_list.append(avg_missed_deadline), bottom_ic_md_list.append(bottom_ic_md)
 		upper_ic_md_list.append(upper_ic_md)
 
@@ -123,7 +125,7 @@ def main(args):
 	#	"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
-		"missed_deadline_prob_3_branches_id_%s.csv"%(args.model_id))
+		"missed_deadline_prob_backbone.csv")
 	
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
