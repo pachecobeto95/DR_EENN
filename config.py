@@ -29,8 +29,8 @@ threshold_step = 0.02
 n_rounds_outage = 100
 batch_size_outage = 256
 t_tar_start = 0
-t_tar_end = 3000
-t_tar_step = 100
+t_tar_end = 2500
+t_tar_step = 2
 
 
 nr_class_dict = {"caltech256": 258}
