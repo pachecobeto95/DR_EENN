@@ -79,14 +79,15 @@ def computeAvgMissedDeadlineProb(df, df_inf_time, threshold, t_tar, n_rounds, n_
 	return avg_missed_deadline, ic_missed_deadline[0], ic_missed_deadline[1] 
 
 
-def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, n_rounds, n_batches, dist_type_data):
+def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, distortion_lvl_list, n_rounds, n_batches, dist_type_data):
 	
 	avg_missed_deadline_list, bottom_ic_md_list, upper_ic_md_list = [], [], []
 
-	for distortion_lvl in df.distortion_lvl.unique():
+	for distortion_lvl in distortion_lvl_list:
 		df_dist_lvl = df[df.distortion_lvl == distortion_lvl]
+		df_inf_time_dist_lvl = df_inf_time[df_inf_time.distortion_lvl == distortion_lvl]
 
-		avg_missed_deadline, bottom_ic_md, upper_ic_md = computeAvgMissedDeadlineProb(df_dist_lvl, df_inf_time, threshold, 
+		avg_missed_deadline, bottom_ic_md, upper_ic_md = computeAvgMissedDeadlineProb(df_dist_lvl, df_inf_time_dist_lvl, threshold, 
 			t_tar, n_rounds, n_batches)
 
 		avg_missed_deadline_list.append(avg_missed_deadline), bottom_ic_md_list.append(bottom_ic_md)
@@ -95,7 +96,7 @@ def getMissedDeadlineProbThreshold(df, df_inf_time, threshold, t_tar, n_rounds, 
 	result_dict = {"avg_missed_deadline": avg_missed_deadline_list, 
 	"bottom_ic_missed_deadline": bottom_ic_md_list, 
 	"upper_ic_missed_deadline": upper_ic_md_list, "threshold": len(avg_missed_deadline_list)*[threshold], 
-	"t_tar": len(avg_missed_deadline_list)*[t_tar], "distortion_lvl": df.distortion_lvl.unique(), 
+	"t_tar": len(avg_missed_deadline_list)*[t_tar], "distortion_lvl": distortion_lvl_list, 
 	"distortion_type_data": len(avg_missed_deadline_list)*[dist_type_data], 
 	"n_rounds": len(avg_missed_deadline_list)*[n_rounds], "n_batches": len(avg_missed_deadline_list)*[n_batches],
 	"inf_mode": len(avg_missed_deadline_list)*["conventional"]}
@@ -127,8 +128,7 @@ def main(args):
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
 
-	inference_time_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
-		"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
+	inference_time_path = os.path.join(config.DIR_NAME, "inference_time_backbone.csv")
 
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
@@ -138,20 +138,22 @@ def main(args):
 	threshold_list = [0.7, 0.8, 0.9]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
-	df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
+	#df_pristine = df_inf_data[df_inf_data.distortion_type_data == "pristine"]
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
+
+	distortion_lvl_list = df_inf_time.distortion_lvl.unique()
 
 	for threshold in threshold_list:
 		for t_tar in t_tar_list:
 			print("Ttar: %s, Threshold: %s"%(t_tar, threshold))
 
-			pristine_missed_deadline = getMissedDeadlineProbThreshold(df_pristine, df_inf_time, threshold, 
-				t_tar, args.n_rounds, args.n_batches, dist_type_data="pristine")
+			#pristine_missed_deadline = getMissedDeadlineProbThreshold(df_pristine, df_inf_time, threshold, 
+			#	t_tar, args.n_rounds, args.n_batches, dist_type_data="pristine")
 			
 			blur_missed_deadline = getMissedDeadlineProbThreshold(df_blur, df_inf_time, threshold, 
-				t_tar, args.n_rounds, args.n_batches, dist_type_data="gaussian_blur")
+				t_tar, distortion_lvl_list, args.n_rounds, args.n_batches, dist_type_data="gaussian_blur")
 			
-			save_missed_deadline_results(pristine_missed_deadline, missed_deadline_path)
+			#save_missed_deadline_results(pristine_missed_deadline, missed_deadline_path)
 			save_missed_deadline_results(blur_missed_deadline, missed_deadline_path)
 
 
