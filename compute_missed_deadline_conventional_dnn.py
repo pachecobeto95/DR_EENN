@@ -25,7 +25,7 @@ def computeInferenceTime(df_batch, df_inf_time, threshold):
 
 	#n_samples = len(df_batch)
 
-	avg_inference_time = df_batch.inference_time.mean()
+	avg_inference_time = df_inf_time.inference_time.mean()
 
 	return avg_inference_time
 
