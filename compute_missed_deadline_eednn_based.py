@@ -148,15 +148,13 @@ def main(args):
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
 
-	threshold_list = [0.7, 0.8, 0.9]
+	#threshold_list = [0.7, 0.8, 0.9]
+	threshold_list = [0.83, 0.85]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
 	df_blur = df_inf_data[df_inf_data.distortion_type_data == "gaussian_blur"]
 
 	distortion_lvl_list = df_inf_time.distortion_lvl.unique()
-
-	#Index(['Unnamed: 0', 'distortion_lvl', 'distortion_type', 'inference_time',
-	#	'mode', 'nr_branch_edge', 'p_tar', 'target'], dtype='object')
 
 
 	for threshold in threshold_list:
