@@ -82,7 +82,11 @@ def computeAvgMissedDeadlineProb(df, df_inf_time, threshold, t_tar, n_branches, 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
 
-		missed_deadline_prob = computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar, n_branches, inf_mode)
+		df_inf_time = df_inf_time.sample(frac=1)
+		df_batches_inf_time = chunker(df_inf_time, batch_size=n_batches)
+
+
+		missed_deadline_prob = computeMissedDeadlineProb(df_batches, df_batches_inf_time, threshold, t_tar, n_branches, inf_mode)
 
 		missed_deadline_rounds.append(missed_deadline_prob)
 
