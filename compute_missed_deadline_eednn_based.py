@@ -24,9 +24,11 @@ def compute_confidence_interval(outage_rounds, confidence=0.95):
 
 def computeInferenceTime(df_inf_time, threshold, n_branches, inf_mode):
 
-	df_inf_time = df_inf_time[(df_inf_time.p_tar == threshold) & (df_inf_time["mode"] == inf_mode)]
+	#df_inf_time = df_inf_time[(df_inf_time.p_tar == threshold) & (df_inf_time["mode"] == inf_mode)]
 
-	return df_inf_time.inference_time.mean()
+	#return df_inf_time.inference_time.mean()
+	return np.mean(df_inf_time)
+
 
 
 def computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode):
@@ -82,12 +84,11 @@ def computeAvgMissedDeadlineProb(df, df_inf_time, threshold, t_tar, n_branches, 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
 
-		df_inf_time = df_inf_time.sample(frac=1)
-		df_batches_inf_time = chunker(df_inf_time, batch_size=n_batches)
 
-		
-		print(type(df_batches), type(df_batches_inf_time))
+		df_inf_time_int = df_inf_time[(df_inf_time.p_tar == threshold) & (df_inf_time["mode"] == inf_mode)]
 
+		df_inf_time_int = df_inf_time_int.sample(frac=1)
+		df_batches_inf_time = chunker(df_inf_time_int.inference_time.values, batch_size=n_batches)
 
 		missed_deadline_prob = computeMissedDeadlineProb(df_batches, df_batches_inf_time, threshold, t_tar, n_branches, inf_mode)
 
