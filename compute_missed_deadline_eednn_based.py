@@ -25,10 +25,7 @@ def compute_confidence_interval(outage_rounds, confidence=0.95):
 def computeInferenceTime(df_inf_time, threshold, n_branches, inf_mode):
 
 	#df_inf_time = df_inf_time[(df_inf_time.p_tar == threshold) & (df_inf_time["mode"] == inf_mode)]
-
 	#return df_inf_time.inference_time.mean()
-	print(type(df_inf_time))
-	print(df_inf_time)
 	return np.mean(df_inf_time)
 
 
