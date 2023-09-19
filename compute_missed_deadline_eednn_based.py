@@ -65,6 +65,7 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar, n_branc
 	missed_deadline = 0
 	
 	for df_batch, df_inf_time_batch in zip(df_batches, df_inf_time):
+		print("oi")
 		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode)
 		inference_time = computeInferenceTime(df_inf_time_batch, threshold, n_branches, inf_mode)
 
@@ -79,7 +80,6 @@ def computeAvgMissedDeadlineProb(df, df_inf_time, threshold, t_tar, n_branches, 
 	missed_deadline_rounds = []
 
 	for n_round in range(n_rounds):
-		print("Number of Rounds: %s"%(n_round))
 
 		df = df.sample(frac=1)
 		df_batches = chunker(df, batch_size=n_batches)
