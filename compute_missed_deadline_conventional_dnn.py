@@ -54,11 +54,11 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar):
 		missed_deadline += 1 if((overall_acc < threshold) or (inference_time > t_tar)) else 0
 
 		count += 1
-		print(inference_time, inference_time > t_tar, missed_deadline)
+		#print(inference_time, inference_time > t_tar, missed_deadline)
 
 
 	missed_deadline_prob = float(missed_deadline)/count
-	print("Pmd: %s"%missed_deadline_prob)
+	#print("Pmd: %s"%missed_deadline_prob)
 	return missed_deadline_prob
 
 
@@ -136,7 +136,7 @@ def main(args):
 	#	"inference_time_backbone_id_%s_final_final.csv"%(args.model_id))
 
 	missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
-		"missed_deadline_prob_backbone_final.csv")
+		"missed_deadline_prob_backbone_final_final.csv")
 	
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_backbone_id_%s_final_final.csv"%(args.model_id))
@@ -149,7 +149,7 @@ def main(args):
 
 	#threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
 	#threshold_list = [0.7, 0.8, 0.9]
-	threshold_list = [0.83]
+	threshold_list = [0.8, 0.83]
 
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
