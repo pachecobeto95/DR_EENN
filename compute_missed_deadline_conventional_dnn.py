@@ -25,9 +25,9 @@ def computeInferenceTime(df_batch, df_inf_time, threshold):
 
 	#n_samples = len(df_batch)
 
-	avg_inference_time = df_inf_time.inference_time.mean()
+	#avg_inference_time = df_inf_time.inference_time.mean()
 
-	return avg_inference_time
+	return np.mean(df_inf_time)
 
 def computeOverallAccuracy(df_batch, threshold):
 
@@ -45,9 +45,9 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar):
 	
 	missed_deadline = 0
 	
-	for df_batch in df_batches:
+	for df_batch, df_batch_inf_time in zip(df_batches, df_inf_time):
 		overall_acc = computeOverallAccuracy(df_batch, threshold)
-		inference_time = computeInferenceTime(df_batch, df_inf_time, threshold)
+		inference_time = computeInferenceTime(df_batch, df_batch_inf_time, threshold)
 		
 		missed_deadline += 1 if((overall_acc < threshold) or (inference_time > t_tar)) else 0
 
@@ -67,7 +67,7 @@ def computeAvgMissedDeadlineProb(df, df_inf_time, threshold, t_tar, n_rounds, n_
 		df_batches = chunker(df, batch_size=n_batches)
 
 		df_inf_time = df_inf_time.sample(frac=1)
-		df_batches_inf_time = chunker(df_inf_time, batch_size=n_batches)
+		df_batches_inf_time = chunker(df_inf_time.inference_time.values, batch_size=n_batches)
 
 
 		missed_deadline_prob = computeMissedDeadlineProb(df_batches, df_batches_inf_time, threshold, t_tar)
