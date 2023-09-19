@@ -65,7 +65,7 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar, n_branc
 	missed_deadline = 0
 	
 	for df_batch, df_inf_time_batch in zip(df_batches, df_inf_time):
-		print("oi")
+		#print("oi")
 		overall_acc = computeOverallAccuracy(df_batch, threshold, n_branches, inf_mode)
 		inference_time = computeInferenceTime(df_inf_time_batch, threshold, n_branches, inf_mode)
 
