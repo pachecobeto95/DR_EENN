@@ -48,6 +48,8 @@ def computeMissedDeadlineProb(df_batches, df_inf_time, threshold, t_tar):
 	for df_batch, df_batch_inf_time in zip(df_batches, df_inf_time):
 		overall_acc = computeOverallAccuracy(df_batch, threshold)
 		inference_time = computeInferenceTime(df_batch, df_batch_inf_time, threshold)
+
+		print(inference_time)
 		
 		missed_deadline += 1 if((overall_acc < threshold) or (inference_time > t_tar)) else 0
 
@@ -142,7 +144,7 @@ def main(args):
 
 	#threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
 	#threshold_list = [0.7, 0.8, 0.9]
-	threshold_list = [0.8, 0.83]
+	threshold_list = [0.83]
 
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
