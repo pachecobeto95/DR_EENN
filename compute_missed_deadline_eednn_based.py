@@ -155,7 +155,7 @@ def main(args):
 	df_inf_data = pd.read_csv(inference_data_path)
 	df_inf_time = pd.read_csv(inference_time_path)
 
-	threshold_list = [0.8, 0.83, 0.85, 0.9]
+	threshold_list = [0.83]
 	#threshold_list = [0.83, 0.85]
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
