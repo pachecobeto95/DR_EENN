@@ -163,9 +163,6 @@ def main(args):
 
 	distortion_lvl_list = df_inf_time.distortion_lvl.unique()
 
-	print(df_inf_time.p_tar.unique())
-	sys.exit()
-
 	for threshold in threshold_list:
 		for t_tar in t_tar_list:
 			print("Ttar: %s, Threshold: %s"%(t_tar, threshold))
