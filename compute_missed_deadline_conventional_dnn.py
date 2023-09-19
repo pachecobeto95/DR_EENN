@@ -142,7 +142,7 @@ def main(args):
 
 	#threshold_list = np.arange(config.threshold_start, config.threshold_end, config.threshold_step)
 	#threshold_list = [0.7, 0.8, 0.9]
-	threshold_list = [0.83, 0.85]
+	threshold_list = [0.83]
 
 	t_tar_list = np.arange(config.t_tar_start, config.t_tar_end, config.t_tar_step)
 
