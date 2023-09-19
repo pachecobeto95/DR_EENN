@@ -145,7 +145,7 @@ def main(args):
 	#	"inference_time_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 
 	missed_deadline_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet", 
-		"missed_deadline_prob_%s_branches_id_%s_final.csv"%(args.n_branches, args.model_id))
+		"missed_deadline_prob_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
 	
 	inference_data_path = os.path.join(config.DIR_NAME, "inference_data", "caltech256", "mobilenet",  
 		"inference_data_%s_branches_id_%s_final_final.csv"%(args.n_branches, args.model_id))
